@@ -52,12 +52,12 @@
   };
 </script>
 
-  <meta name="description" content="密码学复习这个复习资料应该会有大量从ppt截的图，毕竟知识都是老师教的（主要是自己懒的手打） 公钥密码对称密码的局限性  密钥分发通过安全信道分发密钥但安全信道不易实现  密钥管理n个用户每人需要存储n-1个密钥，故需要的总密钥为$$n*(n-1)&#x2F;2$$  认证签名通信双方共享密钥   12接收方可以伪造原文——不能实现鉴别认证发送方也可以否认——不能实现不可否认性  尤其在电子商务等网络应用中">
+  <meta name="description" content="密码学复习这个复习资料应该会有大量从ppt截的图，毕竟知识都是老师教的（主要是自己懒的手打）公钥密码对称密码的局限性 密钥分发通过安全信道分发密钥但安全信道不易实现  密钥管理n个用户每人需要存储n-1个密钥，故需要的总密钥为$$n*(n-1)&#x2F;2$$  认证签名通信双方共享密钥">
 <meta property="og:type" content="article">
 <meta property="og:title" content="密码学复习">
 <meta property="og:url" content="http:&#x2F;&#x2F;no-timing&#x2F;no-timing.github.io&#x2F;2019&#x2F;12&#x2F;16&#x2F;%E5%AF%86%E7%A0%81%E5%AD%A6%E5%A4%8D%E4%B9%A0&#x2F;index.html">
 <meta property="og:site_name" content="no-timing">
-<meta property="og:description" content="密码学复习这个复习资料应该会有大量从ppt截的图，毕竟知识都是老师教的（主要是自己懒的手打） 公钥密码对称密码的局限性  密钥分发通过安全信道分发密钥但安全信道不易实现  密钥管理n个用户每人需要存储n-1个密钥，故需要的总密钥为$$n*(n-1)&#x2F;2$$  认证签名通信双方共享密钥   12接收方可以伪造原文——不能实现鉴别认证发送方也可以否认——不能实现不可否认性  尤其在电子商务等网络应用中">
+<meta property="og:description" content="密码学复习这个复习资料应该会有大量从ppt截的图，毕竟知识都是老师教的（主要是自己懒的手打）公钥密码对称密码的局限性 密钥分发通过安全信道分发密钥但安全信道不易实现  密钥管理n个用户每人需要存储n-1个密钥，故需要的总密钥为$$n*(n-1)&#x2F;2$$  认证签名通信双方共享密钥">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;39131787&#x2F;70916780-30ba9800-2057-11ea-8c07-9c79f8633905.png">
 <meta property="og:image" content="https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;39131787&#x2F;70916782-30ba9800-2057-11ea-9e6f-af5bdc909bba.png">
@@ -280,16 +280,16 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="密码学复习"><a href="#密码学复习" class="headerlink" title="密码学复习"></a>密码学复习</h1><p><em>这个复习资料应该会有大量从ppt截的图，毕竟知识都是老师教的（主要是自己懒的手打）</em></p>
-<h2 id="公钥密码"><a href="#公钥密码" class="headerlink" title="公钥密码"></a>公钥密码</h2><p><strong>对称密码的局限性</strong></p>
-<ol>
+        <h1 id="密码学复习"><a href="#密码学复习" class="headerlink" title="密码学复习"></a>密码学复习</h1><p><em>这个复习资料应该会有大量从ppt截的图，毕竟知识都是老师教的（主要是自己懒的手打）</em></p><h2 id="公钥密码"><a href="#公钥密码" class="headerlink" title="公钥密码"></a>公钥密码</h2><p><strong>对称密码的局限性</strong></p><ol>
 <li><p>密钥分发<br>通过安全信道分发密钥但安全信道不易实现</p>
 </li>
 <li><p>密钥管理<br>n个用户每人需要存储n-1个密钥，故需要的总密钥为<br>$$<br>n*(n-1)/2<br>$$</p>
 </li>
 <li><p>认证签名<br>通信双方共享密钥</p>
 </li>
-</ol>
+</ol><a id="more"></a>
+
+
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">接收方可以伪造原文——不能实现鉴别认证</span><br><span class="line">发送方也可以否认——不能实现不可否认性</span><br></pre></td></tr></table></figure>
 
 <p>尤其在电子商务等网络应用中</p>
@@ -367,7 +367,7 @@
 <li><p>同模攻击<br><img src="https://user-images.githubusercontent.com/39131787/70916756-2bf5e400-2057-11ea-9912-b4646d80776d.png" alt="8"></p>
 </li>
 </ol>
-<p><font color=red>在使用RSA公钥密码通信中，不同用户的密钥不能有相同的模值</font></p>
+<p><font color="red">在使用RSA公钥密码通信中，不同用户的密钥不能有相同的模值</font></p>
 <ol start="4">
 <li><p>选择密文攻击<br>RSA模幂运算的性质：<br>$$<br>E_k(ab)=E_K(a)E_K(b)<br>$$</p>
 <ol>

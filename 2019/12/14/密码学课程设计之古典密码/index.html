@@ -52,12 +52,12 @@
   };
 </script>
 
-  <meta name="description" content="密码学课程设计之古典密码弱鸡的代码，看看就好。 1.仿射密码 仿射密码为单表加密的一种，字母系统中所有字母都藉一简单数学方程加密，对应至数值，或转回字母。   1.1输入内容输入的内容可能包含大写，小写和特殊字符，此时可以分别进行加解密，通过调用python的isupper(),islower()函数来判断。 大写字母加密&#x2F;解密后的结果仍是大写字母，小写字母加密&#x2F;解密后的结果仍是小写字母 。特殊字">
+  <meta name="description" content="密码学课程设计之古典密码弱鸡的代码，看看就好。1.仿射密码 仿射密码为单表加密的一种，字母系统中所有字母都藉一简单数学方程加密，对应至数值，或转回字母。  1.1输入内容输入的内容可能包含大写，小写和特殊字符，此时可以分别进行加解密，通过调用python的isupper(),islower()函数来判断。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="密码学课程设计之古典密码">
 <meta property="og:url" content="http:&#x2F;&#x2F;no-timing&#x2F;no-timing.github.io&#x2F;2019&#x2F;12&#x2F;14&#x2F;%E5%AF%86%E7%A0%81%E5%AD%A6%E8%AF%BE%E7%A8%8B%E8%AE%BE%E8%AE%A1%E4%B9%8B%E5%8F%A4%E5%85%B8%E5%AF%86%E7%A0%81&#x2F;index.html">
 <meta property="og:site_name" content="no-timing">
-<meta property="og:description" content="密码学课程设计之古典密码弱鸡的代码，看看就好。 1.仿射密码 仿射密码为单表加密的一种，字母系统中所有字母都藉一简单数学方程加密，对应至数值，或转回字母。   1.1输入内容输入的内容可能包含大写，小写和特殊字符，此时可以分别进行加解密，通过调用python的isupper(),islower()函数来判断。 大写字母加密&#x2F;解密后的结果仍是大写字母，小写字母加密&#x2F;解密后的结果仍是小写字母 。特殊字">
+<meta property="og:description" content="密码学课程设计之古典密码弱鸡的代码，看看就好。1.仿射密码 仿射密码为单表加密的一种，字母系统中所有字母都藉一简单数学方程加密，对应至数值，或转回字母。  1.1输入内容输入的内容可能包含大写，小写和特殊字符，此时可以分别进行加解密，通过调用python的isupper(),islower()函数来判断。">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https:&#x2F;&#x2F;gss1.bdstatic.com&#x2F;-vo3dSag_xI4khGkpoWK1HF6hhy&#x2F;baike&#x2F;c0%3Dbaike80%2C5%2C5%2C80%2C26&#x2F;sign=6d8ee1cfbd315c60579863bdecd8a076&#x2F;b8014a90f603738d240741f8b21bb051f919ec9f.jpg">
 <meta property="og:updated_time" content="2019-12-17T15:06:59.538Z">
@@ -258,11 +258,11 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="密码学课程设计之古典密码"><a href="#密码学课程设计之古典密码" class="headerlink" title="密码学课程设计之古典密码"></a>密码学课程设计之古典密码</h1><p>弱鸡的代码，看看就好。</p>
-<h2 id="1-仿射密码"><a href="#1-仿射密码" class="headerlink" title="1.仿射密码"></a>1.仿射密码</h2><blockquote>
+        <h1 id="密码学课程设计之古典密码"><a href="#密码学课程设计之古典密码" class="headerlink" title="密码学课程设计之古典密码"></a>密码学课程设计之古典密码</h1><p>弱鸡的代码，看看就好。</p><h2 id="1-仿射密码"><a href="#1-仿射密码" class="headerlink" title="1.仿射密码"></a>1.仿射密码</h2><blockquote>
 <p><strong>仿射密码</strong>为单表加密的一种，字母系统中所有字母都藉一简单数学方程加密，对应至数值，或转回字母。 </p>
-</blockquote>
-<h3 id="1-1输入内容"><a href="#1-1输入内容" class="headerlink" title="1.1输入内容"></a>1.1输入内容</h3><p>输入的内容可能包含大写，小写和特殊字符，此时可以分别进行加解密，通过调用python的<code>isupper()</code>,<code>islower()</code>函数来判断。</p>
+</blockquote><h3 id="1-1输入内容"><a href="#1-1输入内容" class="headerlink" title="1.1输入内容"></a>1.1输入内容</h3><p>输入的内容可能包含大写，小写和特殊字符，此时可以分别进行加解密，通过调用python的<code>isupper()</code>,<code>islower()</code>函数来判断。</p><a id="more"></a>
+
+
 <p>大写字母加密/解密后的结果仍是大写字母，小写字母加密/解密后的结果仍是小写字母 。特殊字符不做处理，直接照搬。</p>
 <h3 id="1-2加密算法"><a href="#1-2加密算法" class="headerlink" title="1.2加密算法"></a>1.2加密算法</h3><p>$$<br>c_i=(k_1⋅m_i+k_2)mod26<br>$$</p>
 <p>前提条件：<br>$$<br>gcd(k_1,26)=1<br>$$<br>假如不满足该条件，则不同的密文字符可以对应多个明文字符。</p>
