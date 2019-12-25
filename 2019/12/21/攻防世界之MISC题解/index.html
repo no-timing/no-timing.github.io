@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.5.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="痛定思痛，菜就是原罪，还是从基础开始叭[CTF Misc常用工具(一)][https:&#x2F;&#x2F;blog.csdn.net&#x2F;chenl_ce2009&#x2F;article&#x2F;details&#x2F;99772194][CTF Misc常用工具(二)][https:&#x2F;&#x2F;blog.csdn.net&#x2F;chenl_ce2009&#x2F;article&#x2F;details&#x2F;102632353]">
+<meta property="og:type" content="article">
+<meta property="og:title" content="攻防世界之MISC题解">
+<meta property="og:url" content="http:&#x2F;&#x2F;no-timing&#x2F;no-timing.github.io&#x2F;2019&#x2F;12&#x2F;21&#x2F;%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C%E4%B9%8BMISC%E9%A2%98%E8%A7%A3&#x2F;index.html">
+<meta property="og:site_name" content="no-timing">
+<meta property="og:description" content="痛定思痛，菜就是原罪，还是从基础开始叭[CTF Misc常用工具(一)][https:&#x2F;&#x2F;blog.csdn.net&#x2F;chenl_ce2009&#x2F;article&#x2F;details&#x2F;99772194][CTF Misc常用工具(二)][https:&#x2F;&#x2F;blog.csdn.net&#x2F;chenl_ce2009&#x2F;article&#x2F;details&#x2F;102632353]">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;39131787&#x2F;71309071-88ce1180-243e-11ea-9a4a-1c83e08fc96c.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;39131787&#x2F;71309068-879ce480-243e-11ea-8c40-cd6a6371f8e3.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;39131787&#x2F;71309069-88357b00-243e-11ea-9fb9-4d1890eb9087.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;39131787&#x2F;71309070-88ce1180-243e-11ea-9d5b-4b44a0f70a55.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;39131787&#x2F;71309561-3ee82a00-2444-11ea-93b2-90b64f8fe08b.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;39131787&#x2F;71309560-3e4f9380-2444-11ea-86cb-fea7dcd514d8.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;39131787&#x2F;71309592-bc139f00-2444-11ea-9eda-dd1e8c1d6ea3.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;39131787&#x2F;71309872-06e2e600-2448-11ea-955b-1a7cc0261a84.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;39131787&#x2F;71338412-cf308700-258a-11ea-8a69-2f719bf1d506.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;39131787&#x2F;71338406-cc359680-258a-11ea-8cf1-9f669d45b9dc.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;39131787&#x2F;71338407-cd66c380-258a-11ea-9244-aa30f644d301.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;39131787&#x2F;71338409-cdff5a00-258a-11ea-8335-4af6cad2bce2.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;39131787&#x2F;71339694-351f0d80-258f-11ea-9d54-09e04dcc3505.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;img-blog.csdnimg.cn&#x2F;20191003145750196.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;img-blog.csdnimg.cn&#x2F;20191003145912776.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;39131787&#x2F;71339689-32bcb380-258f-11ea-94d5-8e9128586155.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;39131787&#x2F;71339686-32241d00-258f-11ea-803e-f268da706254.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;39131787&#x2F;71339688-32241d00-258f-11ea-96bc-f6b4232c5b3f.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;img-blog.csdnimg.cn&#x2F;20191003144517589.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;img-blog.csdnimg.cn&#x2F;20191003144801340.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;39131787&#x2F;71341457-e2485480-2594-11ea-872c-05f8cbe9d955.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;39131787&#x2F;71341454-e1afbe00-2594-11ea-88e4-9f5fd1938d63.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;39131787&#x2F;71341455-e1afbe00-2594-11ea-9bef-d6cb6bc9ad1d.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;39131787&#x2F;71341456-e1afbe00-2594-11ea-9d48-7d935994ceff.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;39131787&#x2F;71341734-9fd34780-2595-11ea-8b92-e90a36b65e95.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;39131787&#x2F;71342511-f5a8ef00-2597-11ea-8b00-b6ea27ee7330.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;39131787&#x2F;71344166-c779de00-259c-11ea-861f-29f8c96dc234.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;39131787&#x2F;71344165-c6e14780-259c-11ea-9e96-9de56f2db3a5.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;39131787&#x2F;71344261-0740c580-259d-11ea-8b1b-c10c994ca2df.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;39131787&#x2F;71349760-b6d06480-25aa-11ea-97c2-f83378304bda.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;39131787&#x2F;71349756-b637ce00-25aa-11ea-9511-52bf96d58031.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;39131787&#x2F;71349759-b637ce00-25aa-11ea-91e7-954552d951ab.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;39131787&#x2F;71349758-b637ce00-25aa-11ea-9d76-de9f711400f7.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;39131787&#x2F;71350075-69082c00-25ab-11ea-9eec-40cdc91f5023.jpg">
+<meta property="og:image" content="https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;39131787&#x2F;71350185-b97f8980-25ab-11ea-9ccc-588356682160.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;39131787&#x2F;71358996-de80f600-25c5-11ea-9960-0964e5788613.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;39131787&#x2F;71358995-de80f600-25c5-11ea-9a3c-91606ff15f1c.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;39131787&#x2F;71359083-2011a100-25c6-11ea-866c-fb1445273011.jpg">
+<meta property="og:image" content="https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;39131787&#x2F;71359823-d5455880-25c8-11ea-9afd-4fbd43b6dcbd.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;39131787&#x2F;71360868-2b67cb00-25cc-11ea-91e0-041800c6cb9f.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;img-blog.csdnimg.cn&#x2F;20190318213541924.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;39131787&#x2F;71361595-6e2aa280-25ce-11ea-8c32-17843bbf921c.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;39131787&#x2F;71362390-dbd7ce00-25d0-11ea-8991-986f0caafc7e.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;39131787&#x2F;71412567-44828180-2689-11ea-8323-37e382b8d89d.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;39131787&#x2F;71412714-e3a77900-2689-11ea-9b4d-2fb17dca3210.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;39131787&#x2F;71412831-544e9580-268a-11ea-8b21-2787e8194f44.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;39131787&#x2F;71412941-f40c2380-268a-11ea-827c-46388371abbc.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;39131787&#x2F;71412942-f40c2380-268a-11ea-8cc0-5096dd91663b.png">
+<meta property="og:updated_time" content="2019-12-25T04:05:41.539Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;39131787&#x2F;71309071-88ce1180-243e-11ea-9a4a-1c83e08fc96c.png">
+
+<link rel="canonical" href="http://no-timing/no-timing.github.io/2019/12/21/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C%E4%B9%8BMISC%E9%A2%98%E8%A7%A3/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>攻防世界之MISC题解 | no-timing</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">no-timing</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/no-timing" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://no-timing/no-timing.github.io/2019/12/21/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C%E4%B9%8BMISC%E9%A2%98%E8%A7%A3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/ame.jpg">
+      <meta itemprop="name" content="yzz">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="no-timing">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          攻防世界之MISC题解
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-12-21 21:26:05" itemprop="dateCreated datePublished" datetime="2019-12-21T21:26:05+08:00">2019-12-21</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2019-12-25 12:05:41" itemprop="dateModified" datetime="2019-12-25T12:05:41+08:00">2019-12-25</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%95%99%E7%A8%8B%E9%9B%86%E9%94%A6/" itemprop="url" rel="index">
+                    <span itemprop="name">教程集锦</span>
+                  </a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>6k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>5 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>痛定思痛，菜就是原罪，还是从基础开始叭</p><p>[CTF Misc常用工具(一)][<a href="https://blog.csdn.net/chenl_ce2009/article/details/99772194]" target="_blank" rel="noopener">https://blog.csdn.net/chenl_ce2009/article/details/99772194]</a></p><p>[CTF Misc常用工具(二)][<a href="https://blog.csdn.net/chenl_ce2009/article/details/102632353]" target="_blank" rel="noopener">https://blog.csdn.net/chenl_ce2009/article/details/102632353]</a></p><a id="more"></a>
+
+
+<p>[Misc做题总结][<a href="https://blog.csdn.net/Laurel_60/article/details/82154712]" target="_blank" rel="noopener">https://blog.csdn.net/Laurel_60/article/details/82154712]</a></p>
+<h1 id="ext3"><a href="#ext3" class="headerlink" title="ext3"></a>ext3</h1><p>题目描述：今天是菜狗的生日，他收到了一个linux系统光盘 </p>
+<p>那在linux环境下打开试试</p>
+<p>查看文件类型</p>
+<p><code>file ext3</code></p>
+<p><img src="https://user-images.githubusercontent.com/39131787/71309071-88ce1180-243e-11ea-9a4a-1c83e08fc96c.png" alt="1"></p>
+<p>ext3是liux的一个文件系统，用strngs查看有没有flag这样的字符</p>
+<p><code>strings ext3 | grep flag</code></p>
+<p><img src="https://user-images.githubusercontent.com/39131787/71309068-879ce480-243e-11ea-8c40-cd6a6371f8e3.png" alt="2"></p>
+<p>有一个flag.txt，那flag应该就在里面，把这个文件系统挂载到linux（root用户下）</p>
+<p>mount ext3 /mnt`</p>
+<p><img src="https://user-images.githubusercontent.com/39131787/71309069-88357b00-243e-11ea-9fb9-4d1890eb9087.png" alt="3"></p>
+<p>切换到mnt目录，对flag内容进行读取</p>
+<p><code>cat  O7avZhikgKgbF/flag.txt</code></p>
+<p><img src="https://user-images.githubusercontent.com/39131787/71309070-88ce1180-243e-11ea-9d5b-4b44a0f70a55.png" alt="4"></p>
+<p>发现是一个base64编码，解密后得到flag</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">flag&#123;sajbcibzskjjcnbhsbvcjbjszcszbkzj&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>知识点</strong></p>
+<p>[Linux strings][<a href="https://ipcmen.com/strings]" target="_blank" rel="noopener">https://ipcmen.com/strings]</a></p>
+<p>[Linux mount][<a href="https://www.runoob.com/linux/linux-comm-mount.html]" target="_blank" rel="noopener">https://www.runoob.com/linux/linux-comm-mount.html]</a></p>
+<p>[Linux cat][<a href="https://www.runoob.com/linux/linux-comm-cat.html]" target="_blank" rel="noopener">https://www.runoob.com/linux/linux-comm-cat.html]</a></p>
+<h1 id="give-you-flag"><a href="#give-you-flag" class="headerlink" title="give_you_flag"></a>give_you_flag</h1><p> 题目描述：菜狗找到了文件中的彩蛋很开心，给菜猫发了个表情包 </p>
+<p>打开附件，发现是一个gif动图，用 stegsolve的查看帧的功能模块查看，发现一个缺少三个定位部分的二维码</p>
+<p><img src="https://user-images.githubusercontent.com/39131787/71309561-3ee82a00-2444-11ea-93b2-90b64f8fe08b.png" alt="5"></p>
+<p>将其补全，扫一扫即可。 </p>
+<p><img src="https://user-images.githubusercontent.com/39131787/71309560-3e4f9380-2444-11ea-86cb-fea7dcd514d8.png" alt="6"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">flag&#123;e7d478cf6b915f50ab1277f78502a2c5&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>知识点</strong></p>
+<p><a href="https://links.jianshu.com/go?to=https%3A%2F%2Fcli.im%2Fnews%2Fhelp%2F10601" target="_blank" rel="noopener">https://cli.im/news/help/10601</a><br><a href="https://links.jianshu.com/go?to=https%3A%2F%2Fblog.csdn.net%2Fhk_5788%2Farticle%2Fdetails%2F50839790" target="_blank" rel="noopener">https://blog.csdn.net/hk_5788/article/details/50839790</a><br><a href="https://links.jianshu.com/go?to=https%3A%2F%2Fzhuanlan.zhihu.com%2Fp%2F21463650" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/21463650</a><br><a href="https://www.jianshu.com/p/8208aad537bb" target="_blank" rel="noopener">https://www.jianshu.com/p/8208aad537bb</a></p>
+<h1 id="pdf"><a href="#pdf" class="headerlink" title="pdf"></a>pdf</h1><p> 题目描述：菜猫给了菜狗一张图，说图下面什么都没有 </p>
+<p><img src="https://user-images.githubusercontent.com/39131787/71309592-bc139f00-2444-11ea-9eda-dd1e8c1d6ea3.png" alt="7"></p>
+<p>在线pdf转word（<a href="https://app.xunjiepdf.com/pdf2word/），删去图片" target="_blank" rel="noopener">https://app.xunjiepdf.com/pdf2word/），删去图片</a></p>
+<p><img src="https://user-images.githubusercontent.com/39131787/71309872-06e2e600-2448-11ea-955b-1a7cc0261a84.png" alt="8"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">flag&#123;security_through_obscurity&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="stegano"><a href="#stegano" class="headerlink" title="stegano"></a>stegano</h1><p> pdf文件，打开许多文字，linux中查看pdf信息：使用命令pdfinfo</p>
+<p><img src="https://user-images.githubusercontent.com/39131787/71338412-cf308700-258a-11ea-8a69-2f719bf1d506.png" alt="1"></p>
+<p>有个base64码，然而解码是：Nope , not here ;)<br>用pdftotext命令提取一下文件内容</p>
+<p><img src="https://user-images.githubusercontent.com/39131787/71338406-cc359680-258a-11ea-8cf1-9f669d45b9dc.png" alt="2"></p>
+<p> 同样也是没什么线索，火狐的开发者工具pdf.js排上用场了，用火狐打开之后，控制台输入</p>
+<p><img src="https://user-images.githubusercontent.com/39131787/71338407-cd66c380-258a-11ea-9244-aa30f644d301.png" alt="3"></p>
+<p> 得到</p>
+<p><img src="https://user-images.githubusercontent.com/39131787/71338409-cdff5a00-258a-11ea-8335-4af6cad2bce2.png" alt="4"></p>
+<p> 这一串AB字符串，把AB分别转成.-，得到摩斯密码， 摩斯解密为CONGRATULATIONSnullFLAGnull1NV151BL3M3554G3</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">flag&#123;1nv151bl3m3554g3&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="SimpleRAR"><a href="#SimpleRAR" class="headerlink" title="SimpleRAR"></a>SimpleRAR</h1><p> 附件是一个RAR压缩包，解压缩之后只有一个txt文件，上面写着</p>
+<p><img src="https://user-images.githubusercontent.com/39131787/71339694-351f0d80-258f-11ea-9d54-09e04dcc3505.png" alt="3"></p>
+<p>  既然没有flag，那么我们用winhex打开附件， 可以看到从here后面开始就应该是secret.png的部分了 </p>
+<p> 百度了一下rar每个块的开头 </p>
+<p> <img src="https://img-blog.csdnimg.cn/20191003145750196.png" alt="在这里插入图片描述"> </p>
+<p> <img src="https://img-blog.csdnimg.cn/20191003145912776.png" alt="在这里插入图片描述"> </p>
+<p> 我们要的是文件块而不是子块，于是更改7A为74</p>
+<p><img src="https://user-images.githubusercontent.com/39131787/71339689-32bcb380-258f-11ea-94d5-8e9128586155.png" alt="1"></p>
+<p>成功解压，发现是一张空白的图片</p>
+<p><img src="https://user-images.githubusercontent.com/39131787/71339686-32241d00-258f-11ea-803e-f268da706254.png" alt="4"></p>
+<p>用Stegsolve打开图片然后发现了半个二维码</p>
+<p><img src="https://user-images.githubusercontent.com/39131787/71339688-32241d00-258f-11ea-96bc-f6b4232c5b3f.png" alt="5"></p>
+<p>题目提示双图层， 将其重命名并用PhotoShop打开，发现有两个空白的图层 </p>
+<p> <img src="https://img-blog.csdnimg.cn/20191003144517589.png" alt="在这里插入图片描述"> </p>
+<p>将两个图层分别提取出来，用StegSolve打开，不断点击箭头直到显示出图像 </p>
+<p> <img src="https://img-blog.csdnimg.cn/20191003144801340.png" alt="在这里插入图片描述"> </p>
+<p> 将两幅二维码拼接到一起并补全定位点，扫描二维码得到flag </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">flag&#123;yanji4n_bu_we1shi&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="坚持60s"><a href="#坚持60s" class="headerlink" title="坚持60s"></a>坚持60s</h1><p> 直接运行附件，发现是个小游戏 </p>
+<p><img src="https://user-images.githubusercontent.com/39131787/71341457-e2485480-2594-11ea-872c-05f8cbe9d955.png" alt="1"></p>
+<p> 大致意思就是，你是左上角那个表情包，你要躲开那些绿帽并坚持60秒，通关就有flag<br> 试了一下发现有点难通关 </p>
+<p>解压该小程序</p>
+<p><img src="https://user-images.githubusercontent.com/39131787/71341454-e1afbe00-2594-11ea-88e4-9f5fd1938d63.png" alt="2"></p>
+<p>直接使用cmd中javap的命令完成反汇编指令</p>
+<p><img src="https://user-images.githubusercontent.com/39131787/71341455-e1afbe00-2594-11ea-9bef-d6cb6bc9ad1d.png" alt="3"></p>
+<p>查看反汇编后的代码</p>
+<p><img src="https://user-images.githubusercontent.com/39131787/71341456-e1afbe00-2594-11ea-9d48-7d935994ceff.png" alt="4"></p>
+<p>拿到flag，但这是base64加密，解密完就得到flag了</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">flag&#123;DajiDali_JinwanChiji&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="gif"><a href="#gif" class="headerlink" title="gif"></a>gif</h1><p>打开下载的附件</p>
+<p><img src="https://user-images.githubusercontent.com/39131787/71341734-9fd34780-2595-11ea-8b92-e90a36b65e95.png" alt="1"></p>
+<p>打开压缩包发现许多张黑白颜色的图片，将黑白图片分别记为1,0，得到01100110011011000110000101100111011110110100011001110101010011100101111101100111011010010100011001111101，转化为字符串形式即可。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># gif 二进制转字符串</span></span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line">a = <span class="string">'01100110011011000110000101100111011110110100011001110101010011100101111101100111011010010100011001111101'</span></span><br><span class="line">b = re.findall(<span class="string">r'.&#123;8&#125;'</span>,a)</span><br><span class="line">flag = <span class="string">''</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> b:</span><br><span class="line">    flag += chr(int(i,<span class="number">2</span>))</span><br><span class="line">print(flag)</span><br></pre></td></tr></table></figure>
+
+<p>运行得到flag</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">flag&#123;FuN_giF&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="掀桌子"><a href="#掀桌子" class="headerlink" title="掀桌子"></a>掀桌子</h1><p>题目给出的报文为</p>
+<p><code>c8e9aca0c6f2e5f3e8c4efe7a1a0d4e8e5a0e6ece1e7a0e9f3baa0e8eafae3f9e4eafae2eae4e3eaebfaebe3f5e7e9f3e4e3e8eaf9eaf3e2e4e6f2</code></p>
+<p> 通过观察，试着将16进制字符转为字符串，发现不能直接转化，试着将ascii码值减去128再转化，得到flag</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#十六进制转字符串</span></span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line">a = <span class="string">'c8e9aca0c6f2e5f3e8c4efe7a1a0d4e8e5a0e6ece1e7a0e9f3baa0e8eafae3f9e4eafae2eae4e3eaebfaebe3f5e7e9f3e4e3e8eaf9eaf3e2e4e6f2'</span></span><br><span class="line">b = re.findall(<span class="string">r'.&#123;2&#125;'</span>,a)</span><br><span class="line">flag = <span class="string">''</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> b:</span><br><span class="line">    flag += chr(int(int(i,<span class="number">16</span>)<span class="number">-128</span>))</span><br><span class="line">print(flag)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">flag&#123;hjzcydjzbjdcjkzkcugisdchjyjsbdfr&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="如来十三掌"><a href="#如来十三掌" class="headerlink" title="如来十三掌"></a>如来十三掌</h1><p>附件是一个word</p>
+<p>内容为</p>
+<p><code>夜哆悉諳多苦奢陀奢諦冥神哆盧穆皤三侄三即諸諳即冥迦冥隸數顛耶迦奢若吉怯陀諳怖奢智侄諸若奢數菩奢集遠俱老竟寫明奢若梵等盧皤豆蒙密離怯婆皤礙他哆提哆多缽以南哆心曰姪罰蒙呐神。舍切真怯勝呐得俱沙罰娑是怯遠得呐數罰輸哆遠薩得槃漫夢盧皤亦醯呐娑皤瑟輸諳尼摩罰薩冥大倒參夢侄阿心罰等奢大度地冥殿皤沙蘇輸奢恐豆侄得罰提哆伽諳沙楞缽三死怯摩大蘇者數一遮</code></p>
+<p> <a href="http://keyfc.net/bbs/tools/tudoucode.aspx" target="_blank" rel="noopener">与佛论禅</a> 解密</p>
+<p><img src="https://user-images.githubusercontent.com/39131787/71342511-f5a8ef00-2597-11ea-8b00-b6ea27ee7330.png" alt="1"></p>
+<p> 得到<code>MzkuM3gvMUAwnzuvn3cgozMlMTuvqzAenJchMUAeqzWenzEmLJW9</code><br> 由如来十三掌想到rot13，然后进行rot13编码，得到<code>ZmxhZ3tiZHNjamhia3ptbmZyZGhidmNraWpuZHNrdmJramRzYWJ9</code></p>
+<p>最后base64解码得到flag </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">flag&#123;bdscjhbkzmnfrdhbvckijndskvbkjdsab&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="base64stego"><a href="#base64stego" class="headerlink" title="base64stego"></a>base64stego</h1><p> 无法直接解压压缩包</p>
+<p><img src="https://user-images.githubusercontent.com/39131787/71344166-c779de00-259c-11ea-861f-29f8c96dc234.png" alt="1"></p>
+<p>将其放在winhex下，查找rar标志位，发现是一个RAR伪加密,将第二个504B后的0900改为0000</p>
+<p><img src="https://user-images.githubusercontent.com/39131787/71344165-c6e14780-259c-11ea-9e96-9de56f2db3a5.png" alt="2"></p>
+<p>解压得到一个内容全是base64编码的文件 </p>
+<p><img src="https://user-images.githubusercontent.com/39131787/71344261-0740c580-259d-11ea-8b1b-c10c994ca2df.png" alt="3"></p>
+<p>初步猜测是base64图片加密，但好像不对。网上查了一下，这个是base64隐写</p>
+<p>大佬的讲解<a href="https://www.tr0y.wang/2017/06/14/Base64steg/" target="_blank" rel="noopener">https://www.tr0y.wang/2017/06/14/Base64steg/</a></p>
+<p>直接用里面的代码解密</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#-*- coding:utf-8 -*-</span></span><br><span class="line">b64chars = <span class="string">'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'</span></span><br><span class="line"><span class="keyword">with</span> open(<span class="string">'E:\demo\stego.txt'</span>, <span class="string">'rb'</span>) <span class="keyword">as</span> f:</span><br><span class="line">    bin_str = <span class="string">''</span></span><br><span class="line">    <span class="keyword">for</span> line <span class="keyword">in</span> f.readlines():</span><br><span class="line">        stegb64 = <span class="string">''</span>.join(line.split())</span><br><span class="line">        rowb64 =  <span class="string">''</span>.join(stegb64.decode(<span class="string">'base64'</span>).encode(<span class="string">'base64'</span>).split())</span><br><span class="line">        offset = abs(b64chars.index(stegb64.replace(<span class="string">'='</span>,<span class="string">''</span>)[<span class="number">-1</span>])-b64chars.index(rowb64.replace(<span class="string">'='</span>,<span class="string">''</span>)[<span class="number">-1</span>]))</span><br><span class="line">        equalnum = stegb64.count(<span class="string">'='</span>) <span class="comment">#no equalnum no offset</span></span><br><span class="line">        <span class="keyword">if</span> equalnum:</span><br><span class="line">            bin_str += bin(offset)[<span class="number">2</span>:].zfill(equalnum * <span class="number">2</span>)</span><br><span class="line">        <span class="keyword">print</span> <span class="string">''</span>.join([chr(int(bin_str[i:i + <span class="number">8</span>], <span class="number">2</span>)) <span class="keyword">for</span> i <span class="keyword">in</span> xrange(<span class="number">0</span>, len(bin_str), <span class="number">8</span>)]) <span class="comment">#8 位一组</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">flag&#123;Base_sixty_four_point_five&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="功夫再高也怕菜刀"><a href="#功夫再高也怕菜刀" class="headerlink" title="功夫再高也怕菜刀"></a>功夫再高也怕菜刀</h1><p>附件类型为.pcapng</p>
+<p>第一次遇到这种文件，百度一下这是什么。</p>
+<p> 在linux平台下，用wireshark-1.12.2进行抓包并保存，文件格式是.pcapng格式。 </p>
+<p> foremost分离得到一个zip文件，但是有密码，所以得找到密码。 </p>
+<p><img src="https://user-images.githubusercontent.com/39131787/71349760-b6d06480-25aa-11ea-97c2-f83378304bda.png" alt="4"></p>
+<p> 分析流量包，wireshark按<code>Ctrl</code>+<code>f</code>，搜索字符串flag，分组选择分组字节流，在找flag的过程中找到一个6666.jpg </p>
+<p><img src="https://user-images.githubusercontent.com/39131787/71349756-b637ce00-25aa-11ea-9511-52bf96d58031.png" alt="5"></p>
+<p><img src="https://user-images.githubusercontent.com/39131787/71349759-b637ce00-25aa-11ea-91e7-954552d951ab.png" alt="7"></p>
+<p> 追踪该tcp流： </p>
+<p><img src="https://user-images.githubusercontent.com/39131787/71349758-b637ce00-25aa-11ea-9d76-de9f711400f7.png" alt="6"></p>
+<p>现在我们要把jpg搞下来，jpg文件头是FFD8，文件尾是FFD9，找到FFD8，和最后一个FFD9，把中间的数据复制下来，在winhex里粘贴并保存为jpg，注意粘贴的时候格式选择ASCII Hex。 </p>
+<p>打开发现了密码</p>
+<p><img src="https://user-images.githubusercontent.com/39131787/71350075-69082c00-25ab-11ea-9eec-40cdc91f5023.jpg" alt="7"></p>
+<p> 解压zip打开flag.txt得到flag </p>
+<p><img src="https://user-images.githubusercontent.com/39131787/71350185-b97f8980-25ab-11ea-9ccc-588356682160.png" alt="8"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">flag&#123;3OpWdJ-JP6FzK-koCMAK-VkfWBq-75Un2z&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="easycap"><a href="#easycap" class="headerlink" title="easycap"></a>easycap</h1><p><strong>流量分析题</strong></p>
+<p>流量分析题考察我们对于网络流量包的分析能力，可能需要我们从中提取出一个文件，也可能flag就隐藏在数据包中。遇到该类题型，可以使用Wireshark进行分析。Wireshark的过滤器可以帮助我们迅速定位到要分析的报文。还可以将HTTP流或TCP流汇聚或还原成数据显示出来。</p>
+<p>而pcap文件格式是常用的数据报存储格式，wireshark这类的主流抓包软件生成这种格式的数据包，格式什么的，就没仔细看过。。略过略过。</p>
+<p>一般来讲，拿到pcap文件的话，会先用过滤器-&gt;字符串查一下分组字节流有没有flag什么的，没有是正常的。<br>然后导一下TCP流，看看有没有flag图片啊什么的或者还有其他的操作。</p>
+<p><img src="https://user-images.githubusercontent.com/39131787/71358996-de80f600-25c5-11ea-9960-0964e5788613.png" alt="1"></p>
+<p><img src="https://user-images.githubusercontent.com/39131787/71358995-de80f600-25c5-11ea-9a3c-91606ff15f1c.png" alt="2"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">FLAG:385b87afc8671dee07550290d16a8071</span><br></pre></td></tr></table></figure>
+
+<h1 id="Avatar"><a href="#Avatar" class="headerlink" title="Avatar"></a>Avatar</h1><p><img src="https://user-images.githubusercontent.com/39131787/71359083-2011a100-25c6-11ea-866c-fb1445273011.jpg" alt="Avatar"></p>
+<p> 先用formost分离一下，没有什么东西，用stegsolve看一下也没发现什么，再放进winhex中看一下，依旧没收获， 用outguess时分离出来了隐藏信息 </p>
+<p><img src="https://user-images.githubusercontent.com/39131787/71359823-d5455880-25c8-11ea-9afd-4fbd43b6dcbd.png" alt="1"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">We should blow up the bridge at midnight</span><br></pre></td></tr></table></figure>
+
+<p><strong>知识点</strong></p>
+<p> <em>outguess</em></p>
+<p> -r是解密(加密是-d) ，后面接文件 hidden.txt是将解密的内容存放在这个txt文件中，如果你解密前后分别ls查看一下就会发现多了这个文件 ，这里直接cat查看</p>
+<h1 id="What-is-this"><a href="#What-is-this" class="headerlink" title="What-is-this"></a>What-is-this</h1><p>.gz后缀的压缩包，在linux环境下解压，之后又得到一个压缩包，在win10环境下解压，得到两个差不多的照片，放进stegsolve中比较一下 </p>
+<p><img src="https://user-images.githubusercontent.com/39131787/71360868-2b67cb00-25cc-11ea-91e0-041800c6cb9f.png" alt="2"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">AZADI TOWER</span><br></pre></td></tr></table></figure>
+
+<p><strong>知识点</strong></p>
+<p><em>stegsolve功能简介</em></p>
+<p> <img src="https://img-blog.csdnimg.cn/20190318213541924.png" alt="img"> </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">File Format: 文件格式，这个主要是查看图片的具体信息</span><br><span class="line">Data Extract: 数据抽取，图片中隐藏数据的抽取</span><br><span class="line">Frame Browser: 帧浏览器，主要是对GIF之类的动图进行分解，动图变成一张张图片，便于查看</span><br><span class="line">Image Combiner: 拼图，图片拼接</span><br></pre></td></tr></table></figure>
+
+<h1 id="embarrass"><a href="#embarrass" class="headerlink" title="embarrass"></a>embarrass</h1><p>这个题目下载下来是一个流量包，一般来说流量包要放入wireshark中进行流量分析，但可以先搜索一下他的字符串，说不定啥时候有神奇的收获<br>在kali中进行字符串的搜索 </p>
+<p><img src="https://user-images.githubusercontent.com/39131787/71361595-6e2aa280-25ce-11ea-8c32-17843bbf921c.png" alt="1"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">flag&#123;Good_b0y_W3ll_Done&#125;</span><br></pre></td></tr></table></figure>
+
+<p>emmmmmmmmmm，学到了，流量分析先搜索一下看看</p>
+<h1 id="肥宅快乐题"><a href="#肥宅快乐题" class="headerlink" title="肥宅快乐题"></a>肥宅快乐题</h1><p>这个题目下载到手是一个.swf后缀的文件，用到一个特殊的工具，叫做potplayer，把这个.swf文件使用这个工具打开，根据提示注意对话，一步一步往下走。</p>
+<p> 在第57帧的时候发现一串base64字符，解密base64</p>
+<p><img src="https://user-images.githubusercontent.com/39131787/71362390-dbd7ce00-25d0-11ea-8991-986f0caafc7e.png" alt="1"></p>
+<p>提取出来<code>U1lDe0YzaVpoYWlfa3U0aWxlX1QxMTF9</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SYC&#123;F3iZhai_ku4ile_T111&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="Get-the-key-txt"><a href="#Get-the-key-txt" class="headerlink" title="Get-the-key.txt"></a>Get-the-key.txt</h1><h1 id="pure-color"><a href="#pure-color" class="headerlink" title="pure_color"></a>pure_color</h1><p>打开是一张白色图片，用stegsolve打开分析得到flag</p>
+<p><img src="https://user-images.githubusercontent.com/39131787/71412567-44828180-2689-11ea-8323-37e382b8d89d.png" alt="1"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">flag&#123;true_steganographers_doesnt_need_any_tools&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="签到题"><a href="#签到题" class="headerlink" title="签到题"></a>签到题</h1><p>题目明显给了一个base64<code>Z2dRQGdRMWZxaDBvaHRqcHRfc3d7Z2ZoZ3MjfQ==</code></p>
+<p>解码得到</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ggQ@gQ1fqh0ohtjpt_sw&#123;gfhgs#&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>首先猜测栅栏密码</p>
+<p><img src="https://user-images.githubusercontent.com/39131787/71412714-e3a77900-2689-11ea-9b4d-2fb17dca3210.png" alt="1"></p>
+<p>得到4个结果，却都不对。</p>
+<p>再将</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ggqht&#123;ggQht_gsQ10jsf#@fopwh&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>进行凯撒密码解密</p>
+<p><img src="https://user-images.githubusercontent.com/39131787/71412831-544e9580-268a-11ea-8b21-2787e8194f44.png" alt="2"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssctf&#123;ssCtf_seC10ver#@rabit&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="小小的PDF"><a href="#小小的PDF" class="headerlink" title="小小的PDF"></a>小小的PDF</h1><p><img src="https://user-images.githubusercontent.com/39131787/71412941-f40c2380-268a-11ea-827c-46388371abbc.png" alt="1"></p>
+<p>题目给了一个pdf，但第二页是空的，猜测题目将flag隐写在空pdf那页，用 formost 分离一下，直接拿到flag</p>
+<p><img src="https://user-images.githubusercontent.com/39131787/71412942-f40c2380-268a-11ea-8cc0-5096dd91663b.png" alt="2"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SYC&#123;so_so_so_easy&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>至此，在攻防世界中已经遇到三种pdf 的隐写方式</strong></p>
+<ol>
+<li><p>新手区 ： pdf  ：将flag隐藏在图片的下面，需要先将格式转为 word  再将图片拖开 就能看到 flag</p>
+</li>
+<li><p>新手区 ：stegano ：利用类似水印的方法将flag隐藏在大量文字下面（不清粗具体方法） 全选复制 到 txt文件中就能 显示出密文</p>
+</li>
+<li><p>高手区： 小小的pdf：嵌入文件，直接用 formost 分析或用  binwalk分离</p>
+</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+                <a href="/2019/12/19/%E7%BC%96%E7%A0%81/" rel="next" title="编码">
+                  <i class="fa fa-chevron-left"></i> 编码
+                </a>
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+            </div>
+          </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#ext3"><span class="nav-text">ext3</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#give-you-flag"><span class="nav-text">give_you_flag</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#pdf"><span class="nav-text">pdf</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#stegano"><span class="nav-text">stegano</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#SimpleRAR"><span class="nav-text">SimpleRAR</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#坚持60s"><span class="nav-text">坚持60s</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#gif"><span class="nav-text">gif</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#掀桌子"><span class="nav-text">掀桌子</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#如来十三掌"><span class="nav-text">如来十三掌</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#base64stego"><span class="nav-text">base64stego</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#功夫再高也怕菜刀"><span class="nav-text">功夫再高也怕菜刀</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#easycap"><span class="nav-text">easycap</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Avatar"><span class="nav-text">Avatar</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#What-is-this"><span class="nav-text">What-is-this</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#embarrass"><span class="nav-text">embarrass</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#肥宅快乐题"><span class="nav-text">肥宅快乐题</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Get-the-key-txt"><span class="nav-text">Get-the-key.txt</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#pure-color"><span class="nav-text">pure_color</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#签到题"><span class="nav-text">签到题</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#小小的PDF"><span class="nav-text">小小的PDF</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="yzz"
+      src="/images/ame.jpg">
+  <p class="site-author-name" itemprop="name">yzz</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">14</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">yzz</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    <span title="站点总字数">80k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">1:13</span>
+</div>
+
+<!-- 新增访客统计代码 -->
+
+<div class="busuanzi-count">
+    <script async="" src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      访问用户： <span class="busuanzi-value" id="busuanzi_value_site_uv"></span> 人
+    </span>
+    <div class="powered-by"></div>
+    <span class="site-uv">
+      <i class="fa fa-eye"></i>
+      访问次数： <span class="busuanzi-value" id="busuanzi_value_site_pv"></span> 次
+    </span>
+</div>
+<!-- 新增访客统计代码 END-->
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/pisces.js"></script>
+<script src="/js/next-boot.js"></script>
+
+  <script defer src="/lib/three/three.min.js"></script>
+    <script defer src="/lib/three/canvas_lines.min.js"></script>
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

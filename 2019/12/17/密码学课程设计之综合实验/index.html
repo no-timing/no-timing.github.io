@@ -52,15 +52,16 @@
   };
 </script>
 
-  <meta name="description" content="Alice想要通过公共信道给Bob传输一份秘密文件（文件很大），又知道，很多人和机构想得到这份文件。如果你是Alice，你应该怎么做？请设计一个方案，并编程实现。审题：首先注意到秘密文件很大，这时候就需要比较各种加密算法的效率。">
+  <meta name="description" content="Alice想要通过公共信道给Bob传输一份秘密文件（文件很大），又知道，很多人和机构想得到这份文件。如果你是Alice，你应该怎么做？请设计一个方案，并编程实现。思路审题：首先注意到秘密文件很大，这时候就需要比较各种加密算法的效率。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="密码学课程设计之综合实验">
 <meta property="og:url" content="http:&#x2F;&#x2F;no-timing&#x2F;no-timing.github.io&#x2F;2019&#x2F;12&#x2F;17&#x2F;%E5%AF%86%E7%A0%81%E5%AD%A6%E8%AF%BE%E7%A8%8B%E8%AE%BE%E8%AE%A1%E4%B9%8B%E7%BB%BC%E5%90%88%E5%AE%9E%E9%AA%8C&#x2F;index.html">
 <meta property="og:site_name" content="no-timing">
-<meta property="og:description" content="Alice想要通过公共信道给Bob传输一份秘密文件（文件很大），又知道，很多人和机构想得到这份文件。如果你是Alice，你应该怎么做？请设计一个方案，并编程实现。审题：首先注意到秘密文件很大，这时候就需要比较各种加密算法的效率。">
+<meta property="og:description" content="Alice想要通过公共信道给Bob传输一份秘密文件（文件很大），又知道，很多人和机构想得到这份文件。如果你是Alice，你应该怎么做？请设计一个方案，并编程实现。思路审题：首先注意到秘密文件很大，这时候就需要比较各种加密算法的效率。">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;39131787&#x2F;70975118-432ee300-20e4-11ea-99c8-d18a96635911.png">
-<meta property="og:updated_time" content="2019-12-17T15:06:59.382Z">
+<meta property="og:image" content="https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;39131787&#x2F;71402617-599ae880-2668-11ea-964f-858adf3bde98.png">
+<meta property="og:updated_time" content="2019-12-24T11:58:28.108Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;39131787&#x2F;70975118-432ee300-20e4-11ea-99c8-d18a96635911.png">
 
@@ -211,10 +212,16 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2019-12-17 15:40:09 / 修改时间：23:06:59" itemprop="dateCreated datePublished" datetime="2019-12-17T15:40:09+08:00">2019-12-17</time>
+              <time title="创建时间：2019-12-17 15:40:09" itemprop="dateCreated datePublished" datetime="2019-12-17T15:40:09+08:00">2019-12-17</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2019-12-24 19:58:28" itemprop="dateModified" datetime="2019-12-24T19:58:28+08:00">2019-12-24</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="fa fa-folder-o"></i>
@@ -233,14 +240,14 @@
                 <i class="fa fa-file-word-o"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>553</span>
+              <span>3.8k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="fa fa-clock-o"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
+              <span>3 分钟</span>
             </span>
 
         </div>
@@ -252,16 +259,56 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p><strong>Alice想要通过公共信道给Bob传输一份秘密文件（文件很大），又知道，很多人和机构想得到这份文件。如果你是Alice，你应该怎么做？请设计一个方案，并编程实现。</strong></p><p>审题：<br>首先注意到秘密文件很大，这时候就需要比较各种加密算法的效率。</p><a id="more"></a>
+        <p><strong>Alice想要通过公共信道给Bob传输一份秘密文件（文件很大），又知道，很多人和机构想得到这份文件。如果你是Alice，你应该怎么做？请设计一个方案，并编程实现。</strong></p><h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>审题：<br>首先注意到秘密文件很大，这时候就需要比较各种加密算法的效率。</p><a id="more"></a>
 
 <p><img src="https://user-images.githubusercontent.com/39131787/70975118-432ee300-20e4-11ea-99c8-d18a96635911.png" alt="1"></p>
 <p>我只写了DES和RC4，所以就是比较DES和RC4的运算速度，看表可以看出，RC4的速度比DES快10倍，那就选<font color="red">RC4</font>对秘密文件进行加密。</p>
 <p>RC4属于对称密码，对称密码的密钥分发是需要通过<font color="red">安全信道</font>，题目说“很多人和机构都想得到这份文件”，说明，这个信道肯定是不安全的，所以我们需要对分发的密钥进行加密传输，这个时候使用<font color="red">公钥密码体制</font>对密钥进行加密。</p>
 <p>公钥密码体制选择<font color="red">RSA</font></p>
-<p>大致流程就是</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Alice查收Bob的公钥&#123;e,n&#125;并且选择一个私钥k</span><br><span class="line">Alice使用k1对秘密文件进行RC4加密，生成密文c1</span><br><span class="line">Alice使用公钥&#123;e,n&#125;对RC4私钥k进行加密生成密文c2</span><br><span class="line">Alice通过不安全信道，将密文c1与c2传输给Bob</span><br><span class="line">Bob拿到密文c1与c2后，先使用自己的私钥&#123;d&#125;对密文c2进行解密，拿到RC4的密钥k，然后用k对密文c1进行解密，从而完成安全传输</span><br></pre></td></tr></table></figure>
+<h2 id="流程"><a href="#流程" class="headerlink" title="流程"></a>流程</h2><p>大致流程就是</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Alice随机生成两个大素数p和q，计算出RSA的公钥&#123;e,n&#125;，私钥&#123;d,n&#125;</span><br><span class="line">Alice将公钥&#123;e,n&#125;发送给Bob</span><br><span class="line">Bob选择一个符合安全性要求的RC4密钥k，并使用RSA的公钥对k加密生成密文c2,传给Alice</span><br><span class="line">Alice使用私钥&#123;d,n&#125;对c2进行解密，得到RC4密钥k</span><br><span class="line">Alice使用k对秘密文件进行RC4加密，生成密文c1</span><br><span class="line">Alice通过不安全信道，将密文c1传输给Bob</span><br><span class="line">Bob拿到密文c1后，密钥k对密文c1进行解密，从而完成安全传输</span><br></pre></td></tr></table></figure>
 
-<p>假定Alice已经收到Bob的公钥{e,n}，并且选定好了RC4私钥k</p>
+<p><strong>生成密钥</strong></p>
+<p>先用RSA随机生成两个大素数p和q。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">p=create_prime()</span><br><span class="line">q=create_prime()</span><br></pre></td></tr></table></figure>
+
+<p>计算公钥{e,n}，私钥{d,n}。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">n=p*q</span><br><span class="line">fn=(p<span class="number">-1</span>)*(q<span class="number">-1</span>)</span><br><span class="line">e=E(fn)</span><br><span class="line">d=D(e,fn)</span><br></pre></td></tr></table></figure>
+
+<p><strong>Bob选取RC4密钥k进行RSA加密</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">k = <span class="string">"LGDISTHEBEST"</span></span><br><span class="line">c2=RSA_encrypt(e,n,int(str2bin(k),<span class="number">2</span>))</span><br><span class="line">c2=str(c2)</span><br></pre></td></tr></table></figure>
+
+<p><strong>Alice解密密钥k</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">k2=RSA_decrypt(d,n,int(k1))</span><br><span class="line">k2=str(k2)</span><br><span class="line">m=bin(int(k2, <span class="number">10</span>)).replace(<span class="string">"0b"</span>, <span class="string">"0"</span>)</span><br><span class="line">q=bin2str(m)</span><br></pre></td></tr></table></figure>
+
+<p><strong>Alice使用k对文件进行RC4加密</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">f4.write(RC4Encrypt(c1,q))</span><br></pre></td></tr></table></figure>
+
+<p><strong>Bob使用k对文件解密</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">f6.write(RC4Decrypt(message,k))</span><br></pre></td></tr></table></figure>
+
+<h2 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h2><p><em>这个程序改了好久，对RC4密钥k加密解密那里卡了好久！</em></p>
+<p>一开始，我想到是字符串k转成二进制，然后直接用RSA加解密，但是一想不对呀，这想法也太离谱了，一个二进制字符串也太大了！突然就想到可以先将二进制再转换成十进制，然后用RSA加密，传输的是加密得到的十进制数，解密的时候解出来是十进制，再转成二进制，最后转成字符串,就得到最初约定好的RC4密钥k！！！</p>
+<p>也就是说<br>$$<br>字符串K{\Longrightarrow}二进制K{\Longrightarrow}十进制K{\Longrightarrow}RSA加密<br>$$</p>
+<p>$$<br>RSA解密{\Longrightarrow}十进制K{\Longrightarrow}二进制K{\Longrightarrow}字符串K<br>$$</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#字符串转化为二进制</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">str2bin</span><span class="params">(message)</span>:</span></span><br><span class="line">    x = <span class="string">""</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> message:</span><br><span class="line">        tmp = bin(ord(i))[<span class="number">2</span>:]</span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> range(<span class="number">0</span>,<span class="number">8</span>-len(tmp)):</span><br><span class="line">            tmp = <span class="string">'0'</span>+ tmp </span><br><span class="line">        x += tmp</span><br><span class="line">    <span class="keyword">return</span> x</span><br><span class="line"></span><br><span class="line"><span class="comment">#二进制转化为字符串</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">bin2str</span><span class="params">(s)</span>:</span></span><br><span class="line">    res = <span class="string">''</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">0</span>, len(s),<span class="number">8</span>):</span><br><span class="line">        x = s[i:i+<span class="number">8</span>]</span><br><span class="line">        x = int(x,<span class="number">2</span>)</span><br><span class="line">        res += chr(x)</span><br><span class="line">    <span class="keyword">return</span> res</span><br></pre></td></tr></table></figure>
+
+<p>最后这个综合实验终于改完了！！！</p>
+<h2 id="完整代码"><a href="#完整代码" class="headerlink" title="完整代码"></a>完整代码</h2><p><strong>RC4.py</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#-*- coding:utf-8 -*-</span></span><br><span class="line"><span class="keyword">import</span> base64</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">RC4</span><span class="params">(text,key)</span>:</span></span><br><span class="line">    <span class="comment">## 将0到255的互不重复的元素装入S盒。</span></span><br><span class="line">    lk = len(key)</span><br><span class="line">    S = [<span class="number">0</span>] * <span class="number">256</span><span class="comment">#S数组S</span></span><br><span class="line">    T=<span class="string">''</span><span class="comment">#临时向量T</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">256</span>) :</span><br><span class="line">        S[i] = i<span class="comment">#S赋初值</span></span><br><span class="line">        T += key[i%lk]<span class="comment">#T赋初值，填充满T</span></span><br><span class="line">    <span class="comment">## 根据密钥打乱S盒</span></span><br><span class="line">    j = <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">256</span>):</span><br><span class="line">        j = (j+S[i]+ord(T[i]))%<span class="number">256</span></span><br><span class="line">        S[i],S[j] = S[j],S[i]</span><br><span class="line">    <span class="comment">## 生成伪随机数，构造密文</span></span><br><span class="line">    i = j = <span class="number">0</span></span><br><span class="line">    ans = <span class="string">""</span></span><br><span class="line">    <span class="keyword">for</span> x <span class="keyword">in</span> text:</span><br><span class="line">        i = (i+<span class="number">1</span>)%<span class="number">256</span></span><br><span class="line">        j = (j+S[i])%<span class="number">256</span></span><br><span class="line">        S[i],S[j] = S[j],S[i]</span><br><span class="line">        t = (S[i]+S[j])%<span class="number">256</span></span><br><span class="line">        k = S[t]</span><br><span class="line">        <span class="comment">#加密时，将k与明文异或；解密时，k与密文异或</span></span><br><span class="line">        ans += chr(ord(x)^k)</span><br><span class="line">    <span class="keyword">return</span> ans</span><br><span class="line"><span class="comment"># RC4加密: 明文转成base64编码的密文</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">RC4Encrypt</span><span class="params">(message,key)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> base64.b64encode(RC4(message,key))</span><br><span class="line"><span class="comment"># RC4解密: base64编码的密文转成明文</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">RC4Decrypt</span><span class="params">(cipher,key)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> RC4(base64.b64decode(cipher),key)</span><br></pre></td></tr></table></figure>
+
+<p><strong>RSA.py</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#-*- coding:utf-8 -*-</span></span><br><span class="line"><span class="keyword">import</span> random</span><br><span class="line"><span class="keyword">import</span> math</span><br><span class="line"></span><br><span class="line"><span class="comment">#Miller-Rabin测试：不断选取不超过n-1的基b(s次)，</span></span><br><span class="line"><span class="comment">#计算是否每次都有bn-1 ≡ 1(mod n)，若每次都成立则n是素数，否则为合数。</span></span><br><span class="line"><span class="comment">#Miller_Rabin算法</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">miller_rabin</span><span class="params">(a,n)</span>:</span></span><br><span class="line">    temp=n<span class="number">-1</span></span><br><span class="line">    j=<span class="number">0</span></span><br><span class="line">    <span class="keyword">while</span> temp&amp;<span class="number">1</span>==<span class="number">0</span>:</span><br><span class="line">        temp=temp&gt;&gt;<span class="number">1</span></span><br><span class="line">        j+=<span class="number">1</span></span><br><span class="line">    x=fast_mod(a,temp,n)</span><br><span class="line">    <span class="keyword">if</span> x==<span class="number">1</span> <span class="keyword">or</span> x==n<span class="number">-1</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line">    <span class="keyword">while</span> j:</span><br><span class="line">        x=fast_mod(x,<span class="number">2</span>,n)</span><br><span class="line">        <span class="keyword">if</span> x==n<span class="number">-1</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line">        j-=<span class="number">1</span></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">#判断是否为素数</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">is_prime</span><span class="params">(n)</span>:</span></span><br><span class="line">    times=<span class="number">100</span></span><br><span class="line">    <span class="keyword">if</span> n==<span class="number">2</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line">    <span class="keyword">if</span> n&lt;<span class="number">2</span> <span class="keyword">or</span> n%<span class="number">2</span>==<span class="number">0</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">    i=<span class="number">1</span></span><br><span class="line">    <span class="keyword">while</span> i&lt;=times:</span><br><span class="line">        a=random.randint(<span class="number">1</span>,n<span class="number">-2</span>)+<span class="number">1</span></span><br><span class="line">        <span class="keyword">if</span> miller_rabin(a,n)==<span class="literal">False</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">        i+=<span class="number">1</span></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">#模重复平方计算法</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">fast_mod</span><span class="params">(b,n,m)</span>:</span></span><br><span class="line">    a=<span class="number">1</span></span><br><span class="line">    <span class="keyword">while</span> n!=<span class="number">0</span>:</span><br><span class="line">        temp=n&amp;<span class="number">1</span></span><br><span class="line">        n=n&gt;&gt;<span class="number">1</span></span><br><span class="line">        <span class="keyword">if</span> temp==<span class="number">1</span>:</span><br><span class="line">            a=(a*b)%m</span><br><span class="line">        b=(b*b)%m</span><br><span class="line">    <span class="keyword">return</span> a</span><br><span class="line"></span><br><span class="line"><span class="comment">#生成素数</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">create_prime</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">        <span class="comment">#p=random.randrange(1&lt;&lt;64,1&lt;&lt;128,3)</span></span><br><span class="line">        p=random.randrange(<span class="number">1</span>&lt;&lt;<span class="number">512</span>,<span class="number">1</span>&lt;&lt;<span class="number">1024</span>,<span class="number">3</span>)</span><br><span class="line">        <span class="keyword">if</span>(is_prime(p)):</span><br><span class="line">            <span class="keyword">return</span> p</span><br><span class="line"></span><br><span class="line"><span class="comment">#生成公钥，随机得到小素数，（e，Φ（n）)=1</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">E</span><span class="params">(fn)</span>:</span></span><br><span class="line">    <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">        e=random.randint(<span class="number">1</span>&lt;&lt;<span class="number">16</span>,fn)</span><br><span class="line">        temp=e</span><br><span class="line">        t=fn</span><br><span class="line">        d=<span class="number">1</span></span><br><span class="line">        <span class="keyword">while</span> d!=<span class="number">0</span>:</span><br><span class="line">           d=t%temp</span><br><span class="line">           t=temp</span><br><span class="line">           temp=d</span><br><span class="line">        <span class="keyword">if</span> t==<span class="number">1</span>:</span><br><span class="line">            <span class="keyword">return</span> e</span><br><span class="line"></span><br><span class="line"><span class="comment">#计算私钥,e求逆，欧几里得扩展算法</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">D</span><span class="params">(e,fn)</span>:</span></span><br><span class="line">    r1,r2=e,fn</span><br><span class="line">    s1,s2=<span class="number">1</span>,<span class="number">0</span></span><br><span class="line">    t1,t2=<span class="number">0</span>,<span class="number">1</span></span><br><span class="line">    <span class="keyword">while</span>(r2 &gt; <span class="number">0</span>):</span><br><span class="line">        q=r1//r2</span><br><span class="line">        r= r1-q*r2</span><br><span class="line">        r1=r2</span><br><span class="line">        r2=r</span><br><span class="line">        s=s1-q*s2</span><br><span class="line">        s1=s2</span><br><span class="line">        s2=s</span><br><span class="line">        t=t1-q*t2</span><br><span class="line">        t1=t2</span><br><span class="line">        t2=t</span><br><span class="line">    <span class="keyword">return</span> s1%fn</span><br><span class="line"></span><br><span class="line"><span class="comment">#RSA加密</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">RSA_encrypt</span><span class="params">(e,n,plaintext)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> fast_mod(plaintext,e,n)</span><br><span class="line"></span><br><span class="line"><span class="comment">#RSA解密</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">RSA_decrypt</span><span class="params">(d,n,ciphertext)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> fast_mod(ciphertext,d,n)</span><br></pre></td></tr></table></figure>
+
+<h2 id="存在的问题"><a href="#存在的问题" class="headerlink" title="存在的问题"></a>存在的问题</h2><p>缺少身份认证机制</p>
+<p><img src="https://user-images.githubusercontent.com/39131787/71402617-599ae880-2668-11ea-964f-858adf3bde98.png" alt="1"></p>
+<p> 因为可能存在中间人 Eve ，Bob 首先要验证通信对方是不是 Alice，所以需要再写一个数字签名（保证消息的完整性、不可抵赖性）</p>
+<h2 id="基于RSA和MD5的数字签名"><a href="#基于RSA和MD5的数字签名" class="headerlink" title="基于RSA和MD5的数字签名"></a>基于RSA和MD5的数字签名</h2><p><strong>签名算法</strong></p>
+<p><em>对应RSA密码体制中的解密过程</em> </p>
+<p>设待签名的消息为m，则签名者A先利用一个安全的Hash函数 h 来产生一个消息摘要 h(m)，然后签名者用自己的私钥计算签名 s  ≡  h(m)<sup>d</sup>  mod  n ，将 (s,m) 发送给消息接收者 B。 </p>
+<p><strong>验证算法</strong></p>
+<p><em>对应RSA密码体制中的加密过程</em></p>
+<p>签名接收者B收到消息m和签名s后，先利用A使用的Hash函数h来产生一个消息摘要h<em>(</em>m)，然后检验同余式 <em>h</em>(<em>m</em>)  ≡  s<sup>e</sup>  mod  n是否成立。若成立，则说明签名有效，否则签名无效。 </p>
 
     </div>
 
@@ -324,6 +371,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#思路"><span class="nav-text">思路</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#流程"><span class="nav-text">流程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#注意事项"><span class="nav-text">注意事项</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#完整代码"><span class="nav-text">完整代码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#存在的问题"><span class="nav-text">存在的问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基于RSA和MD5的数字签名"><span class="nav-text">基于RSA和MD5的数字签名</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -339,7 +387,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">12</span>
+          <span class="site-state-item-count">14</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -380,12 +428,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-area-chart"></i>
     </span>
-    <span title="站点总字数">58k</span>
+    <span title="站点总字数">80k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">53 分钟</span>
+    <span title="站点阅读时长">1:13</span>
 </div>
 
 <!-- 新增访客统计代码 -->

@@ -52,13 +52,26 @@
   };
 </script>
 
-  <meta name="description" content="密码学复习这个复习资料应该会有大量从ppt截的图，毕竟知识都是老师教的（主要是自己懒的手打）公钥密码对称密码的局限性 密钥分发通过安全信道分发密钥但安全信道不易实现  密钥管理n个用户每人需要存储n-1个密钥，故需要的总密钥为$$n*(n-1)&#x2F;2$$  认证签名通信双方共享密钥">
+  <meta name="description" content="密码学复习这个复习资料应该会有大量从ppt截的图（主要是自己懒的手打）密码学基础基本概念密码编码学：研究密码编制的科学密码分析学：研究密码破译的科学主要任务 机密性 完整性 认证性（消息认证和实体认证） 不可否认性">
 <meta property="og:type" content="article">
 <meta property="og:title" content="密码学复习">
 <meta property="og:url" content="http:&#x2F;&#x2F;no-timing&#x2F;no-timing.github.io&#x2F;2019&#x2F;12&#x2F;16&#x2F;%E5%AF%86%E7%A0%81%E5%AD%A6%E5%A4%8D%E4%B9%A0&#x2F;index.html">
 <meta property="og:site_name" content="no-timing">
-<meta property="og:description" content="密码学复习这个复习资料应该会有大量从ppt截的图，毕竟知识都是老师教的（主要是自己懒的手打）公钥密码对称密码的局限性 密钥分发通过安全信道分发密钥但安全信道不易实现  密钥管理n个用户每人需要存储n-1个密钥，故需要的总密钥为$$n*(n-1)&#x2F;2$$  认证签名通信双方共享密钥">
+<meta property="og:description" content="密码学复习这个复习资料应该会有大量从ppt截的图（主要是自己懒的手打）密码学基础基本概念密码编码学：研究密码编制的科学密码分析学：研究密码破译的科学主要任务 机密性 完整性 认证性（消息认证和实体认证） 不可否认性">
 <meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;39131787&#x2F;71321755-166e3780-24f9-11ea-8ae7-b047a850d440.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;39131787&#x2F;71321756-166e3780-24f9-11ea-9485-747bfa9c8e39.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;39131787&#x2F;71321757-1706ce00-24f9-11ea-898d-7dc5a32ea37e.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;39131787&#x2F;71321758-1706ce00-24f9-11ea-9564-36a68819af0e.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;39131787&#x2F;71321759-179f6480-24f9-11ea-88a7-c65be3b81245.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;39131787&#x2F;71429665-bf3bb300-2702-11ea-9ffa-8f3f6a292ee2.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;39131787&#x2F;71429717-045fe500-2703-11ea-9d4b-6452f8832824.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;39131787&#x2F;71429659-bd71ef80-2702-11ea-9d48-bb64a6f18b70.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;39131787&#x2F;71429660-be0a8600-2702-11ea-9095-8be843fd0352.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;39131787&#x2F;71429661-be0a8600-2702-11ea-9171-d8c7950678b4.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;39131787&#x2F;71429662-be0a8600-2702-11ea-94e3-f0b99475841e.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;39131787&#x2F;71429663-bea31c80-2702-11ea-9929-118bd3b72da8.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;39131787&#x2F;71429664-bea31c80-2702-11ea-814a-2424b04e9572.png">
 <meta property="og:image" content="https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;39131787&#x2F;70916780-30ba9800-2057-11ea-8c07-9c79f8633905.png">
 <meta property="og:image" content="https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;39131787&#x2F;70916782-30ba9800-2057-11ea-9e6f-af5bdc909bba.png">
 <meta property="og:image" content="https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;39131787&#x2F;70916743-2a2c2080-2057-11ea-8a39-f062e606a4ec.png">
@@ -82,9 +95,9 @@
 <meta property="og:image" content="https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;39131787&#x2F;70916774-2f896b00-2057-11ea-825c-4acf397ed7e4.png">
 <meta property="og:image" content="https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;39131787&#x2F;70916776-2f896b00-2057-11ea-8a5d-e4bc74fc5c23.png">
 <meta property="og:image" content="https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;39131787&#x2F;70916778-30220180-2057-11ea-8b06-8999c2a05981.png">
-<meta property="og:updated_time" content="2019-12-17T01:50:44.397Z">
+<meta property="og:updated_time" content="2019-12-25T03:47:14.553Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;39131787&#x2F;70916780-30ba9800-2057-11ea-8c07-9c79f8633905.png">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;39131787&#x2F;71321755-166e3780-24f9-11ea-8ae7-b047a850d440.png">
 
 <link rel="canonical" href="http://no-timing/no-timing.github.io/2019/12/16/%E5%AF%86%E7%A0%81%E5%AD%A6%E5%A4%8D%E4%B9%A0/">
 
@@ -241,7 +254,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2019-12-17 09:50:44" itemprop="dateModified" datetime="2019-12-17T09:50:44+08:00">2019-12-17</time>
+                <time title="修改时间：2019-12-25 11:47:14" itemprop="dateModified" datetime="2019-12-25T11:47:14+08:00">2019-12-25</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -261,14 +274,14 @@
                 <i class="fa fa-file-word-o"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>2.8k</span>
+              <span>6.8k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="fa fa-clock-o"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>3 分钟</span>
+              <span>6 分钟</span>
             </span>
 
         </div>
@@ -280,16 +293,318 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="密码学复习"><a href="#密码学复习" class="headerlink" title="密码学复习"></a>密码学复习</h1><p><em>这个复习资料应该会有大量从ppt截的图，毕竟知识都是老师教的（主要是自己懒的手打）</em></p><h2 id="公钥密码"><a href="#公钥密码" class="headerlink" title="公钥密码"></a>公钥密码</h2><p><strong>对称密码的局限性</strong></p><ol>
+        <h1 id="密码学复习"><a href="#密码学复习" class="headerlink" title="密码学复习"></a>密码学复习</h1><p><em>这个复习资料应该会有大量从ppt截的图（主要是自己懒的手打）</em></p><h2 id="密码学基础"><a href="#密码学基础" class="headerlink" title="密码学基础"></a>密码学基础</h2><p><strong>基本概念</strong></p><p>密码编码学：研究密码编制的科学</p><p>密码分析学：研究密码破译的科学</p><p><strong>主要任务</strong></p><ol>
+<li>机密性</li>
+<li>完整性</li>
+<li>认证性（消息认证和实体认证）</li>
+<li>不可否认性</li>
+</ol><a id="more"></a>
+
+
+
+
+
+<p><strong>基本思想</strong></p>
+<p> 伪装信息 ,使未授权者不能理解它的含义  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">明⽂(plaintext,Message):伪装前的原始数据</span><br><span class="line">密文(Ciphertext):伪装后的数据</span><br><span class="line">密钥(Key):参与密码变换的参数</span><br><span class="line">加密(Encrypt):伪装的过程</span><br><span class="line">加密算法:⽤于对数据加密的一组数学变换</span><br><span class="line">解密(Decrypt)):将密文恢复成明文</span><br><span class="line">解密算法:⽤于解密的一组数学变换</span><br></pre></td></tr></table></figure>
+
+<p><strong>密码体制（系统）</strong></p>
+<p>五元组（M,C,K,E,D）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">明文空间M:全体明文的集合</span><br><span class="line">密文空间C:全体密文的集合</span><br><span class="line">密钥空间K:全体密钥的集合。其中每个密钥K均由加密密钥Ke和解密密钥Kd组成，即K=&lt;Ke,Kd&gt;</span><br><span class="line">加密算法E:一组由M到C的加密变换</span><br><span class="line">加密算法D:一组由C到M的解密变换</span><br></pre></td></tr></table></figure>
+
+<p><strong>简化模型</strong></p>
+<p><img src="https://user-images.githubusercontent.com/39131787/71321755-166e3780-24f9-11ea-8ae7-b047a850d440.png" alt="7"></p>
+<p><strong>设计原理</strong></p>
+<p>科克霍夫原则：密码系统的安全性不应取决于不易改变的算法，而应取决于可随时改变的密钥</p>
+<p><strong>分类</strong></p>
+<ol>
+<li><p>对称密码：K<sub>d</sub>=K<sub>e</sub>或由其中一个很容易推出另一个</p>
+<ol>
+<li>分组密码：DES,3DES,AES,IDEA</li>
+<li>序列密码：RC4,A5</li>
+</ol>
+</li>
+<li><p>公钥密码：在计算上K<sub>d</sub>不能由K<sub>e</sub>推出，故可K<sub>e</sub>公开</p>
+<p>​    RSA,ECC,Rabin,Elgamal,NTRU</p>
+</li>
+</ol>
+<p><strong>对比</strong></p>
+<p><em>对称密码优点</em></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">速度快</span><br><span class="line">密钥较短</span><br><span class="line">密文与明文长度相同</span><br></pre></td></tr></table></figure>
+
+<p><em>对称密码缺点</em></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">密钥分发需要安全通道</span><br><span class="line">密钥量大，难于管理</span><br><span class="line">难以解决不可否认问题</span><br></pre></td></tr></table></figure>
+
+<p><em>公钥密码优点</em></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">密钥分发相对容易</span><br><span class="line">密钥管理简单</span><br><span class="line">可以实现数字签名</span><br></pre></td></tr></table></figure>
+
+<p><em>公钥密码缺点</em></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">加解密速度慢</span><br><span class="line">密钥较长</span><br><span class="line">密文长度大于明文长度</span><br></pre></td></tr></table></figure>
+
+<p><strong>密码分析</strong></p>
+<p>攻击者破译或攻击密码的方法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">穷举攻击法</span><br><span class="line">统计分析法：根据明文、密文和密钥由统计规律来破译，多用于对称密码</span><br><span class="line">数学分析攻击法：针对加解密算法的数学基础和某些密码学特性，通过数学求解的方法来破解，多适用于公钥密码</span><br></pre></td></tr></table></figure>
+
+<p>根据密码分析者对明⽂密⽂等数据资源的掌握程度 ,可以将密码分析攻分为以下几种类型</p>
+<p><img src="https://user-images.githubusercontent.com/39131787/71321756-166e3780-24f9-11ea-9485-747bfa9c8e39.png" alt="3"></p>
+<p><img src="https://user-images.githubusercontent.com/39131787/71321757-1706ce00-24f9-11ea-898d-7dc5a32ea37e.png" alt="4"></p>
+<p><img src="https://user-images.githubusercontent.com/39131787/71321758-1706ce00-24f9-11ea-9564-36a68819af0e.png" alt="5"></p>
+<p><img src="https://user-images.githubusercontent.com/39131787/71321759-179f6480-24f9-11ea-88a7-c65be3b81245.png" alt="6"></p>
+<p><strong>安全性</strong></p>
+<ol>
+<li>从密文恢复明文是困难的</li>
+<li>从密文计算出明文部分信息是困难的</li>
+<li>从密文探测出简单却有用的是事实困难的</li>
+</ol>
+<p>评价密码体制安全性的不同途径</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">无条件安全性（理论安全）</span><br><span class="line">计算安全性</span><br><span class="line">可证明安全性（规约安全性）</span><br></pre></td></tr></table></figure>
+
+<h2 id="古典密码"><a href="#古典密码" class="headerlink" title="古典密码"></a>古典密码</h2><p>替换密码：单表替换、多表替换</p>
+<p>单表替换：移位代换密码、乘数密码、仿射密码</p>
+<p>置换密码</p>
+<h3 id="替换密码"><a href="#替换密码" class="headerlink" title="替换密码"></a>替换密码</h3><p>根据预先建立的替换表，将明文依次通过查表，替换为相应字符，生成密文。</p>
+<p>单表替换：使用一个固定的替换表，明文、密文字符一一对应</p>
+<p>多表替换：使用多个替换表</p>
+<p><em>移位密码</em></p>
+<p>加密：<br>$$<br>E_k(i){\equiv}(i+k)modq{\equiv}j<br>$$<br>其中<br>$$<br>0≤i,j&lt;q,{k|0≤k&lt;q}<br>$$<br>解密：<br>$$<br>D_k(j){\equiv}(j-k)modq{\equiv}i<br>$$<br><font color="red">凯撒密码  k=3</font></p>
+<p>字母-数字对应表</p>
+<table>
+<thead>
+<tr>
+<th>A</th>
+<th>B</th>
+<th>C</th>
+<th>D</th>
+<th>E</th>
+<th>F</th>
+<th>G</th>
+<th>H</th>
+<th>I</th>
+<th>J</th>
+<th>K</th>
+<th>L</th>
+<th>M</th>
+<th>N</th>
+<th>O</th>
+<th>P</th>
+<th>Q</th>
+<th>R</th>
+<th>S</th>
+<th>T</th>
+<th>U</th>
+<th>V</th>
+<th>W</th>
+<th>X</th>
+<th>Y</th>
+<th>Z</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0</td>
+<td>1</td>
+<td>2</td>
+<td>3</td>
+<td>4</td>
+<td>5</td>
+<td>6</td>
+<td>7</td>
+<td>8</td>
+<td>9</td>
+<td>10</td>
+<td>11</td>
+<td>12</td>
+<td>13</td>
+<td>14</td>
+<td>15</td>
+<td>16</td>
+<td>17</td>
+<td>18</td>
+<td>19</td>
+<td>20</td>
+<td>21</td>
+<td>22</td>
+<td>23</td>
+<td>24</td>
+<td>25</td>
+</tr>
+</tbody></table>
+<p><em>乘数密码</em></p>
+<p>加密：<br>$$<br>E_k(i){\equiv}i<em>kmodq{\equiv}j<br>$$<br>其中<br>$$<br>0≤j&lt;q,gcd(k,q)=1<br>$$<br>解密：<br>$$<br>D_k(j){\equiv}j*k^{-1}modq{\equiv}i<br>$$<br>*仿射密码</em></p>
+<p>加密：<br>$$<br>C{\equiv}(k_1<em>m+k_2)mod26<br>$$<br>解密：<br>$$<br>M{\equiv}(c-k_2)*k_1^{-1}mod26<br>$$<br>*一次一密</em></p>
+<p>每个明文字母都采用不同的替换表或密钥进行加密，理论上不可破译，却受到很大限制</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">密钥是真正的随机序列</span><br><span class="line">密钥长度≥名明文长度</span><br><span class="line">每个密钥只用一次</span><br></pre></td></tr></table></figure>
+
+<p><em>维吉尼亚密码</em></p>
+<p>密钥：<br>$$<br>k=k_1k_2k_3…k_m<br>$$<br>明文：<br>$$<br>k=k_1k_2k_3…k_m<br>$$<br>加密：<br>$$<br>E(m)=C=c_1c_2c_3…c_m<br>$$</p>
+<p>$$<br>c_i{\equiv}m_i+k_imod26<br>$$</p>
+<p>密钥：<br>$$<br>m_i{\equiv}c_i-k_imod26<br>$$</p>
+<h3 id="置换密码"><a href="#置换密码" class="headerlink" title="置换密码"></a>置换密码</h3><p>明文字符集保持不变，但顺序被打乱</p>
+<p><strong>统计分析</strong></p>
+<p>任何自然语言都有固有的统计特性。如果这种统计特性在密文中有所反映，便可以通过分析明文和密文的统计规律来破译密码。许多古典密码都可用统计分析法破译</p>
+<p><font color="red">课本P56例3.10</font></p>
+<p><font color="red">P65.5.(5)</font></p>
+<h2 id="分组密码"><a href="#分组密码" class="headerlink" title="分组密码"></a>分组密码</h2><p><strong>概念</strong></p>
+<p>将明文划分成长为𝑚(如𝑚=64或128)的分组𝑃＝(𝑝0, 𝑝1, 𝑝2, ….,𝑝<em>(𝑚−1))，各明文分组分别在长为t的密钥𝐾＝(𝑘0, 𝑘1, 𝑘2, ….,𝑘</em>(𝑡−1)) 的控制下变换成长为𝑛的密文分组𝐶＝(𝑐0, 𝑐1, 𝑐2, …,𝑐_(𝑛−1))。(一般 𝑚=𝑛)</p>
+<p><strong>原理</strong></p>
+<p><img src="https://user-images.githubusercontent.com/39131787/71429665-bf3bb300-2702-11ea-9ffa-8f3f6a292ee2.png" alt="1"></p>
+<p><strong>特点</strong></p>
+<p>速度快、安全性较高、易于标准化和便于软硬件实现</p>
+<p><strong>设计要求</strong></p>
+<ol>
+<li>分组长度要足够大<br>假设𝑛为分组长度，则要使2𝑛足够大，防止明文穷举攻击</li>
+<li>密钥量要足够大<br>防止密钥穷举攻击</li>
+<li>密码变换要足够复杂<br>使攻击者除穷举攻击外，找不到其他简洁的数学攻击方法</li>
+<li>加密和解密运算简单<br>便于软件和硬件的实现</li>
+<li>无数据扩展和压缩</li>
+</ol>
+<p><strong>三个基本原则</strong></p>
+<ol>
+<li><p>扩散(diffusion)</p>
+<p>密钥或明文的每一比特变化影响密文的许多比特的变化，以便隐蔽明文的统计特性(形象的称为雪崩效应)</p>
+</li>
+<li><p>混淆(confusion)</p>
+<p>又称混乱原则，指密钥和明文以及密文之间的依赖关系尽可能的复杂化，以防通过统计分析法进行破译(如使用非线性变换)</p>
+<p><font color="red">混乱必须是可逆的</font></p>
+</li>
+<li><p>乘积密码</p>
+<p>多个密码复合的方法</p>
+</li>
+</ol>
+<p><strong>两种迭代网络结构</strong></p>
+<ol>
+<li><p>Feistel网络</p>
+<p> <img src="https://user-images.githubusercontent.com/39131787/71429717-045fe500-2703-11ea-9d4b-6452f8832824.png" alt="2"></p>
+<p>优点在于<font color="red">加解密相似性</font>，它只需要一个逆转的密钥编排算法，其加解密部分几乎完全相同</p>
+</li>
+<li><p>SP网络</p>
+<p>由S代换和P置换交替进行多次迭代形成的网络</p>
+<p><img src="https://user-images.githubusercontent.com/39131787/71429659-bd71ef80-2702-11ea-9d48-bb64a6f18b70.png" alt="3"></p>
+<p>S盒起到混乱作用，P盒起到扩散的作用</p>
+</li>
+</ol>
+<p><strong>轮函数F的设计准则</strong></p>
+<p>轮函数F是分组密码的核心，是分组密码中单轮加解密函数，其基本准则：</p>
+<ol>
+<li>非线性(主要依赖S盒)</li>
+<li>可逆性(能够实现解密)</li>
+<li>雪崩效应</li>
+<li>位独立(要求输入中某一位的变化，引起输出中其他位的变化应是彼此无关的)</li>
+</ol>
+<p>其主要性能指标是安全性、速度、灵活性</p>
+<p><strong>子密钥的生成方法</strong></p>
+<p>子密钥的生成是从初始（种子）密钥产生迭代的各轮要使用的子密钥的算法。轮函数F的功能是在子密钥的参与和控制下实现的，其评价指标：</p>
+<ol>
+<li>实现简单、速度满足要求</li>
+<li>种子密钥的所有比特对每个子密钥比特的影响应大致相同</li>
+<li>密钥和密文之间符合雪崩效应准则</li>
+<li>没有弱密钥或弱密钥容易确定 </li>
+</ol>
+<p><strong>迭代的轮数</strong></p>
+<p>决定迭代轮数的准则：使密码分析的难度大于简单穷举搜索攻击的难度</p>
+<h3 id="DES"><a href="#DES" class="headerlink" title="DES"></a>DES</h3><p><font color="red"><strong>算法过程</strong></font></p>
+<p>加密过程<br>$$<br>L_0R_0{\leftarrow}IP(&lt;64位明文&gt;)<br>$$</p>
+<p>$$<br>L_i{\leftarrow}R_{i-1}<br>$$</p>
+<p>$$<br>R_i{\leftarrow}L_{i-1}{\bigoplus}F(R_{i-1},K_i)<br>$$</p>
+<p>$$<br>R_{16}{\leftarrow}L_{15}{\bigoplus}F(R_{15},K_{16})<br>$$</p>
+<p>$$<br>L_{16}{\leftarrow}R_{15}<br>$$</p>
+<p>$$<br>&lt;64位密文&gt;{\leftarrow}IP^{-1}(L_{16}R_{16})<br>$$</p>
+<p>解密过程</p>
+<p>$$<br>L_{16}R_{16}{\leftarrow}IP(&lt;64位密文&gt;)<br>$$</p>
+<p>$$<br>R_{i-1}{\leftarrow}L_{i}{\bigoplus}F(R_{i},K_i)<br>$$</p>
+<p>$$<br>L_{i-1}{\leftarrow}R_i<br>$$</p>
+<p>$$<br>L_{0}{\leftarrow}L_{1}{\bigoplus}F(R_{1},K_{1})<br>$$</p>
+<p>$$<br>R_{0}{\leftarrow}R_{1}<br>$$</p>
+<p>$$<br>&lt;64位明文&gt;{\leftarrow}IP^{-1}(L_{0}R_{0})<br>$$</p>
+<p><font color="red"><strong>计算：S盒</strong></font></p>
+<p>查表，最高位和最低位对应行号，中间位对应列号。</p>
+<p><strong>安全性</strong></p>
+<p><strong>互补性</strong></p>
+<p><strong>弱密钥</strong></p>
+<p><strong>双重、三重DES分析（加密的强度：密钥空间）</strong></p>
+<p><font color="red"><strong>详见密码学课程设计之分组密码</strong></font></p>
+<h3 id="AES"><a href="#AES" class="headerlink" title="AES"></a>AES</h3><p><strong>数学基础</strong></p>
+<p>AES中运算是按字节或（4字节的）字定义的</p>
+<ol>
+<li>一个字节看成是系数在有限域GF(2)上的次数小于8的多项式(即看成有限域GF(28)中的一个元素)</li>
+<li>一个字看成是系数在有限域GF(28) 上，且次数小于4的多项式</li>
+</ol>
+<p><img src="https://user-images.githubusercontent.com/39131787/71429660-be0a8600-2702-11ea-9095-8be843fd0352.png" alt="4"><br><img src="https://user-images.githubusercontent.com/39131787/71429661-be0a8600-2702-11ea-9171-d8c7950678b4.png" alt="5"><br><img src="https://user-images.githubusercontent.com/39131787/71429662-be0a8600-2702-11ea-94e3-f0b99475841e.png" alt="6"><br><img src="https://user-images.githubusercontent.com/39131787/71429663-bea31c80-2702-11ea-9929-118bd3b72da8.png" alt="7"><br><img src="https://user-images.githubusercontent.com/39131787/71429664-bea31c80-2702-11ea-814a-2424b04e9572.png" alt="8"></p>
+<p><strong>加解密流程</strong></p>
+<p>图1</p>
+<p><strong>字节代换（S 盒）</strong></p>
+<p>简单的查表。</p>
+<p>逆：也是查表。</p>
+<p><strong>行移位</strong></p>
+<p>简单的移位。</p>
+<p>第0行不变，第1行左移1个字节，第2行左移2个字节，第3行左移3个字节。</p>
+<p>逆：变成右移。</p>
+<p><strong>列混合</strong></p>
+<p>这应该是 AES 考察的重中之重。</p>
+<p>加法：异或</p>
+<p>乘法两种方法：</p>
+<ol>
+<li>用定义</li>
+<li>用简便方法（乘2情况下）<ul>
+<li>最高位是0：直接左移1位。</li>
+<li>最高位是1：左移1位后和 <code>00011011</code> 异或。</li>
+</ul>
+</li>
+</ol>
+<p>乘3情况：(<code>00000011=00000010⊕00000001</code>)</p>
+<p>逆：太难，不要求掌握。</p>
+<p><strong>轮密钥加</strong></p>
+<p>逐位异或。</p>
+<p><strong>密钥扩展</strong></p>
+<p>128 位密钥形成4个4字节组成的（32位）字：<em>w</em>[0],<em>w</em>[1],<em>w</em>[2],<em>w</em>[3] ，这是初始密钥加用到的。</p>
+<p>扩充40个新列，以如下算法生成：</p>
+<ol>
+<li>若 <em>i</em>不是4的倍数，那么 <em>w</em>[<em>i</em>]=<em>w</em>[<em>i</em>−4]⊕<em>w</em>[<em>i</em>−1]</li>
+<li>若 <em>i</em>是4的倍数，那么 <em>w</em>[<em>i</em>]=<em>w</em>[<em>i</em>−4]⊕<em>T</em>(<em>w</em>[<em>i</em>−1])</li>
+</ol>
+<p>其中，<em>T</em>()是一个很复杂的函数，定义如下：</p>
+<ol>
+<li>字循环：循环左移一个字节，即有 [<em>b</em>0,<em>b</em>1,<em>b</em>2,<em>b</em>3]→[<em>b</em>1,<em>b</em>2,<em>b</em>3,<em>b</em>4]。</li>
+<li>字节代换：用字节代换中的 S 盒，直接查表。</li>
+<li>轮常量异或。</li>
+</ol>
+<p><strong>安全性分析</strong></p>
+<h3 id="IDEA"><a href="#IDEA" class="headerlink" title="IDEA"></a>IDEA</h3><h3 id="SMS4"><a href="#SMS4" class="headerlink" title="SMS4"></a>SMS4</h3><h3 id="分组密码的工作模式"><a href="#分组密码的工作模式" class="headerlink" title="分组密码的工作模式"></a>分组密码的工作模式</h3><p>根据加密图画出解密图。</p>
+<p>根据图写出算法。</p>
+<p>错误传播分析。</p>
+<p><strong>电码本模式(ECB)</strong><br><strong>密码分组链接模式(CBC) **<br>**输出反馈模式(OFB)</strong><br><strong>密码反馈模式(CFB)</strong><br><strong>计数器模式(CTR)</strong></p>
+<h2 id="序列密码"><a href="#序列密码" class="headerlink" title="序列密码"></a>序列密码</h2><p>给定初始状态，写出输出序列。线性反馈移位寄存器（LFSR）。</p>
+<p>周期、游程分析。</p>
+<p>本原多项式、m序列。</p>
+<p><font color="red"><strong>详见密码学课程设计之序列密码</strong></font></p>
+<h2 id="Hash-函数"><a href="#Hash-函数" class="headerlink" title="Hash 函数"></a>Hash 函数</h2><p><strong>基本概念</strong></p>
+<p><strong>Hash</strong> 函数是密码学的一个重要分支，是将<strong>任意长度的输入</strong>变换为<strong>固定长度的输出</strong>的不可逆的<strong>单向</strong>密码体制。</p>
+<p><strong>性质</strong></p>
+<ol>
+<li>任意长度输入。</li>
+<li>固定长度输出。</li>
+<li>对于任意给定的消息x，计算H(x)比较容易，硬件软件都可实现。</li>
+<li>单向性（抗原像性）：从散列值h=H(m)推回消息m在计算上不可行。</li>
+<li>抗弱碰撞性：对任意给定的消息x，找到y≠x且H(x)=H(y)在计算上不可行。</li>
+<li>抗强碰撞性：找到任意满足H(x)=H(y)的两个不同消息x，y在计算上不可行。</li>
+</ol>
+<p><font color="red"><strong>数据填充</strong></font></p>
+<p>填充一个1和若干个0，使得消息长度模 512 与 448 同余。</p>
+<p>特别注意：若原消息长度刚好满足这个条件，则再填充 512 位（1 个 1 和 511 个 0）。</p>
+<p>填充完后再把原始消息长度以 64 比特表示附加在后面。</p>
+<p>这样，最终消息长度恰好为 512 的整数倍。</p>
+<h3 id="MD5"><a href="#MD5" class="headerlink" title="MD5"></a>MD5</h3><p>分组长度为 512 比特，最终输出 128 位（即 16 字节，32 个十六进制位）的消息摘要。</p>
+<p>过程为 4 轮，每轮 16 步，共 64 步。</p>
+<h3 id="SHA1"><a href="#SHA1" class="headerlink" title="SHA1"></a>SHA1</h3><p>最终输出 160 位（即 20 字节，40 个十六进制位）的消息摘要。（因此比 MD5 抗穷举能力更强）</p>
+<p>过程为 4 轮，每轮 20 步，共 80 步。</p>
+<h2 id="公钥密码"><a href="#公钥密码" class="headerlink" title="公钥密码"></a>公钥密码</h2><p><strong>对称密码的局限性</strong></p>
+<ol>
 <li><p>密钥分发<br>通过安全信道分发密钥但安全信道不易实现</p>
 </li>
 <li><p>密钥管理<br>n个用户每人需要存储n-1个密钥，故需要的总密钥为<br>$$<br>n*(n-1)/2<br>$$</p>
 </li>
 <li><p>认证签名<br>通信双方共享密钥</p>
 </li>
-</ol><a id="more"></a>
-
-
+</ol>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">接收方可以伪造原文——不能实现鉴别认证</span><br><span class="line">发送方也可以否认——不能实现不可否认性</span><br></pre></td></tr></table></figure>
 
 <p>尤其在电子商务等网络应用中</p>
@@ -427,20 +742,23 @@
 <h2 id="数字签名技术"><a href="#数字签名技术" class="headerlink" title="数字签名技术"></a>数字签名技术</h2><blockquote>
 <p>数字签名（Digital Signature），也称电子签名，是指附加在某一电子文档中的一组特定的符号或代码，它是利用数学方法和密码算法对该电子文档进行关键信息提取并进行加密而形成的，用于标识签发者的身份以及签发者对电子文档的认可，并能被接收者用来验证该电子文档在传输过程中是否被篡改或伪造</p>
 </blockquote>
-<p>数字签名是手写签名数字化的产物，每个消息的签名都不同。<br>数字签名的基础是公钥密码学<br><strong>目的和要求</strong><br><em>目的</em><br>保证信息的完整性和真实性，即消息没有被篡改，而且签名也没有被篡改，消息只能始发于所声称的一方<br><em>要求</em></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">不可否认性：签名者事后不能否认或抵赖自己的签名</span><br><span class="line">不可伪造性：其他任何人均不能伪造签名，也不能对接收或发送的信息进行篡改、伪造和冒充</span><br><span class="line">公正的仲裁：若当事双方对签名真伪发生争执时，能通过公正的仲裁者验证签名来确定其真伪</span><br></pre></td></tr></table></figure>
-
-<p><strong>*性质</strong></p>
-<p> <em>完整性</em></p>
-<p>一个被签了名的消息，无法分割成为若干个被签了名的子消息。这一性质保证了被签名的消息不能被断章取义</p>
-<p>本质：当一个签名消息被分割子消息发送出去，则签名已经被破坏了，收到消息的人会辨认出签名是无效的（不合法的）</p>
-<p><em>身份唯一性（不可伪造性）</em></p>
-<p>被Alice签名的消息只能由Alice生成</p>
-<p>本质： Bob在收到一个“被Alice签名的消息”时，他有办法检验，该签名是否真的被Alice签名的消息；或许攻击者Eve截获了大量的被Alice签名的消息，但他仍然不能伪造出一个新的，别人认可的“被Alice签名的消息”</p>
-<p>如果无论Eve截获多少被Alice签名的消息，他伪造新的“被Alice签名的消息”的成功概率仍然没有丝毫提高，则称该签名算法是零知识的</p>
-<p><em>不可否认性（公开可验证性）</em></p>
-<p>被Alice签名的消息，在未来不能被Alice否认</p>
-<p>本质：Bob在收到一个被Alice签名的消息时，他有办法向第三方证明该签名是真的被Alice签名的消息</p>
+<p> 签名用私钥，验证用公钥 。</p>
+<p><strong>RSA</strong></p>
+<p><strong>ElGamal（如果考会给出算法）</strong></p>
+<p><strong>特殊：盲签名</strong></p>
+<p><strong>安全性分析</strong></p>
+<p>若不加 Hash 会怎么样？（没有Hash函数有什么缺点？）</p>
+<p>可以伪造签名。</p>
+<p>看P246 6.</p>
+<p><strong>正确性分析</strong></p>
+<h2 id="密码协议"><a href="#密码协议" class="headerlink" title="密码协议"></a>密码协议</h2><p>联系《密码学课程设计》的综合实验。</p>
+<p>对称密码用到的密钥用公钥密码体制传输。</p>
+<ol>
+<li>Alice 用 Bob 的公钥加密对称密码的密钥，发送给 Bob 。</li>
+<li>Bob 用自己的私钥解密，得到密钥。</li>
+</ol>
+<p>给出具体密码协议，分析合理性，验证可靠性，证明安全性。</p>
+<p>综合，会涉及到前面学的。</p>
 
     </div>
 
@@ -503,7 +821,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#密码学复习"><span class="nav-text">密码学复习</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#公钥密码"><span class="nav-text">公钥密码</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#公钥密码体制RSA"><span class="nav-text">公钥密码体制RSA</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#公钥密码体制ElGamal"><span class="nav-text">公钥密码体制ElGamal</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#公钥密码体制ECC"><span class="nav-text">公钥密码体制ECC</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#基于身份的加密体制IBE"><span class="nav-text">基于身份的加密体制IBE</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#公钥密码体制分析"><span class="nav-text">公钥密码体制分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#混合加密"><span class="nav-text">混合加密</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数字签名技术"><span class="nav-text">数字签名技术</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#密码学复习"><span class="nav-text">密码学复习</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#密码学基础"><span class="nav-text">密码学基础</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#古典密码"><span class="nav-text">古典密码</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#替换密码"><span class="nav-text">替换密码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#置换密码"><span class="nav-text">置换密码</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#分组密码"><span class="nav-text">分组密码</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#DES"><span class="nav-text">DES</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AES"><span class="nav-text">AES</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#IDEA"><span class="nav-text">IDEA</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SMS4"><span class="nav-text">SMS4</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#分组密码的工作模式"><span class="nav-text">分组密码的工作模式</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#序列密码"><span class="nav-text">序列密码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Hash-函数"><span class="nav-text">Hash 函数</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#MD5"><span class="nav-text">MD5</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SHA1"><span class="nav-text">SHA1</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#公钥密码"><span class="nav-text">公钥密码</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#公钥密码体制RSA"><span class="nav-text">公钥密码体制RSA</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#公钥密码体制ElGamal"><span class="nav-text">公钥密码体制ElGamal</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#公钥密码体制ECC"><span class="nav-text">公钥密码体制ECC</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#基于身份的加密体制IBE"><span class="nav-text">基于身份的加密体制IBE</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#公钥密码体制分析"><span class="nav-text">公钥密码体制分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#混合加密"><span class="nav-text">混合加密</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数字签名技术"><span class="nav-text">数字签名技术</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#密码协议"><span class="nav-text">密码协议</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -519,7 +837,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">12</span>
+          <span class="site-state-item-count">14</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -560,12 +878,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-area-chart"></i>
     </span>
-    <span title="站点总字数">58k</span>
+    <span title="站点总字数">80k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">53 分钟</span>
+    <span title="站点阅读时长">1:13</span>
 </div>
 
 <!-- 新增访客统计代码 -->
