@@ -61,7 +61,7 @@
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;39131787&#x2F;70975118-432ee300-20e4-11ea-99c8-d18a96635911.png">
 <meta property="og:image" content="https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;39131787&#x2F;71402617-599ae880-2668-11ea-964f-858adf3bde98.png">
-<meta property="og:updated_time" content="2019-12-25T03:51:40.864Z">
+<meta property="og:updated_time" content="2019-12-26T03:30:37.214Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;39131787&#x2F;70975118-432ee300-20e4-11ea-99c8-d18a96635911.png">
 
@@ -220,7 +220,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2019-12-25 11:51:40" itemprop="dateModified" datetime="2019-12-25T11:51:40+08:00">2019-12-25</time>
+                <time title="修改时间：2019-12-26 11:30:37" itemprop="dateModified" datetime="2019-12-26T11:30:37+08:00">2019-12-26</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -240,14 +240,14 @@
                 <i class="fa fa-file-word-o"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>3.8k</span>
+              <span>4.7k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="fa fa-clock-o"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>3 分钟</span>
+              <span>4 分钟</span>
             </span>
 
         </div>
@@ -306,9 +306,18 @@
 <h2 id="基于RSA和MD5的数字签名"><a href="#基于RSA和MD5的数字签名" class="headerlink" title="基于RSA和MD5的数字签名"></a>基于RSA和MD5的数字签名</h2><p><strong>签名算法</strong></p>
 <p><em>对应RSA密码体制中的解密过程</em> </p>
 <p>设待签名的消息为m，则签名者A先利用一个安全的Hash函数 h 来产生一个消息摘要 h(m)，然后签名者用自己的私钥计算签名 s  ≡  h(m)<sup>d</sup>  mod  n ，将 (s,m) 发送给消息接收者 B。 </p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">Sign</span><span class="params">(m,d,n)</span>:</span></span><br><span class="line">    H = MD5(m)</span><br><span class="line">    H = str2Num(H)</span><br><span class="line">    s = RSA_decrypt(d,n,H)</span><br><span class="line">    <span class="keyword">return</span> s</span><br></pre></td></tr></table></figure>
+
 <p><strong>验证算法</strong></p>
 <p><em>对应RSA密码体制中的加密过程</em></p>
 <p>签名接收者B收到消息m和签名s后，先利用A使用的Hash函数h来产生一个消息摘要h<em>(</em>m)，然后检验同余式 <em>h</em>(<em>m</em>)  ≡  s<sup>e</sup>  mod  n是否成立。若成立，则说明签名有效，否则签名无效。 </p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">Ver</span><span class="params">(m,s,n,e)</span>:</span></span><br><span class="line">    H = MD5(m)</span><br><span class="line">    H = str2Num(H)</span><br><span class="line">    H= fast_mod(H,<span class="number">1</span>,n)<span class="comment">##H要对n取模！！！</span></span><br><span class="line">    H1 = RSA_encrypt(e,n,s)</span><br><span class="line">    <span class="keyword">return</span> H == H1</span><br></pre></td></tr></table></figure>
+
+<p><strong>注意点</strong></p>
+<p><font color="red">验证算法中，求出消息Hash值以后，进行验证的时候要对n取模！！！</font></p>
+<p><strong>完整代码</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#-*- coding:utf-8 -*-</span></span><br><span class="line"><span class="keyword">from</span> MD5 <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> RSA <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line"><span class="comment"># str to num</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">str2Num</span><span class="params">(s)</span>:</span></span><br><span class="line">    x = <span class="string">""</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> s:</span><br><span class="line">        tmp = bin(ord(i))[<span class="number">2</span>:]</span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> range(<span class="number">0</span>,<span class="number">8</span>-len(tmp)):</span><br><span class="line">            tmp = <span class="string">'0'</span>+ tmp </span><br><span class="line">        x += tmp</span><br><span class="line">    x = int(x,<span class="number">2</span>)</span><br><span class="line">    <span class="keyword">return</span> x</span><br><span class="line"></span><br><span class="line"><span class="comment"># num to str</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">num2Str</span><span class="params">(n)</span>:</span></span><br><span class="line">    ans = <span class="string">'&#123;:x&#125;'</span>.format(n).decode(<span class="string">'hex'</span>)</span><br><span class="line">    <span class="keyword">return</span> ans</span><br><span class="line"></span><br><span class="line"><span class="comment"># Signature</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">Sign</span><span class="params">(m,d,n)</span>:</span></span><br><span class="line">    H = MD5(m)</span><br><span class="line">    H = str2Num(H)</span><br><span class="line">    s = RSA_decrypt(d,n,H)</span><br><span class="line">    <span class="keyword">return</span> s</span><br><span class="line"></span><br><span class="line"><span class="comment"># Verification</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">Ver</span><span class="params">(m,s,n,e)</span>:</span></span><br><span class="line">    H = MD5(m)</span><br><span class="line">    H = str2Num(H)</span><br><span class="line">    H= fast_mod(H,<span class="number">1</span>,n)<span class="comment">##H要对n取模！！！</span></span><br><span class="line">    H1 = RSA_encrypt(e,n,s)</span><br><span class="line">    <span class="keyword">return</span> H == H1</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</span><br><span class="line">    m=<span class="string">"ame"</span></span><br><span class="line">    p=create_prime()</span><br><span class="line">    q=create_prime()</span><br><span class="line">    n=p*q</span><br><span class="line">    fn=(p<span class="number">-1</span>)*(q<span class="number">-1</span>)</span><br><span class="line">    e=E(fn)</span><br><span class="line">    d=D(e,fn)</span><br><span class="line">    s = Sign(m,d,n)</span><br><span class="line">    v = Ver(m,s,n,e)</span><br><span class="line">    <span class="keyword">if</span> v:</span><br><span class="line">        <span class="keyword">print</span> <span class="string">"签名正确！"</span>.decode(<span class="string">'utf-8'</span>).encode(<span class="string">'gbk'</span>)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">print</span> <span class="string">"验证失败"</span>.decode(<span class="string">'utf-8'</span>).encode(<span class="string">'gbk'</span>)</span><br></pre></td></tr></table></figure>
+
 
     </div>
 
@@ -428,7 +437,7 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-area-chart"></i>
     </span>
-    <span title="站点总字数">80k</span>
+    <span title="站点总字数">81k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
