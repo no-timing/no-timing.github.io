@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.5.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="A1：注入简介 将不受信任的数据作为命令或查询的一部分发送到解析器时，注入漏洞产生  注入漏洞通常发生 在SQL、LDAP、XPath或NoSQL查询语句、OS命令、XML解析器、SMTP包头、表达式语句及ORM查询语句中  攻击可以诱使解析器在没有适当授权的情况下执行非预期命令或访问数据  导致数据丢失、破坏或泄露给无授权方，缺乏可审计性或是拒绝服务 甚至能导致主机被完全接管">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Web安全学习——OWASP-Top-10">
+<meta property="og:url" content="http:&#x2F;&#x2F;no-timing&#x2F;no-timing.github.io&#x2F;2020&#x2F;04&#x2F;05&#x2F;Web%E5%AE%89%E5%85%A8%E5%AD%A6%E4%B9%A0%E2%80%94%E2%80%94OWASP-Top-10&#x2F;index.html">
+<meta property="og:site_name" content="no-timing">
+<meta property="og:description" content="A1：注入简介 将不受信任的数据作为命令或查询的一部分发送到解析器时，注入漏洞产生  注入漏洞通常发生 在SQL、LDAP、XPath或NoSQL查询语句、OS命令、XML解析器、SMTP包头、表达式语句及ORM查询语句中  攻击可以诱使解析器在没有适当授权的情况下执行非预期命令或访问数据  导致数据丢失、破坏或泄露给无授权方，缺乏可审计性或是拒绝服务 甚至能导致主机被完全接管">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2020-04-13T07:29:47.444Z">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://no-timing/no-timing.github.io/2020/04/05/Web%E5%AE%89%E5%85%A8%E5%AD%A6%E4%B9%A0%E2%80%94%E2%80%94OWASP-Top-10/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>Web安全学习——OWASP-Top-10 | no-timing</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">no-timing</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/no-timing" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://no-timing/no-timing.github.io/2020/04/05/Web%E5%AE%89%E5%85%A8%E5%AD%A6%E4%B9%A0%E2%80%94%E2%80%94OWASP-Top-10/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/ame.jpg">
+      <meta itemprop="name" content="yzz">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="no-timing">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Web安全学习——OWASP-Top-10
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-04-05 14:04:08" itemprop="dateCreated datePublished" datetime="2020-04-05T14:04:08+08:00">2020-04-05</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-04-13 15:29:47" itemprop="dateModified" datetime="2020-04-13T15:29:47+08:00">2020-04-13</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Web%E5%AE%89%E5%85%A8%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index">
+                    <span itemprop="name">Web安全学习</span>
+                  </a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>3.6k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>3 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="A1：注入"><a href="#A1：注入" class="headerlink" title="A1：注入"></a>A1：注入</h2><h4 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h4><ul>
+<li><p>将不受信任的数据作为命令或查询的一部分发送到解析器时，注入漏洞产生</p>
+</li>
+<li><p>注入漏洞通常发生 在SQL、LDAP、XPath或NoSQL查询语句、OS命令、XML解析器、SMTP包头、表达式语句及ORM查询语句中</p>
+</li>
+<li><p>攻击可以诱使解析器在没有适当授权的情况下执行非预期命令或访问数据</p>
+<ul>
+<li>导致数据丢失、破坏或泄露给无授权方，缺乏可审计性或是拒绝服务</li>
+<li>甚至能导致主机被完全接管</li>
+</ul>
+</li>
+</ul><a id="more"></a>
+<h4 id="防止"><a href="#防止" class="headerlink" title="防止"></a>防止</h4><p><strong>将数据与命令语句、查询语句分割开来</strong></p>
+<ul>
+<li>最佳选择：使用安全的API，完全避免使用解释器，或提供参数化界面的接口，或迁移到ORM或实体框架</li>
+<li>使用正确的或“白名单”的具有恰当规范化 的输入验证方法有助于防止注入攻击，但这不是一个完整的防御，因为许多应用程序在输入中需要特殊字符，例如文本区域或移动应用程序的API</li>
+<li>对于任何剩余的动态查询，可以使用该解释器的特定转义语法转义特殊字符——OWASP的Java Enconder</li>
+</ul>
+<h2 id="A2：失效的身份认证"><a href="#A2：失效的身份认证" class="headerlink" title="A2：失效的身份认证"></a>A2：失效的身份认证</h2><h4 id="简介-1"><a href="#简介-1" class="headerlink" title="简介"></a>简介</h4><p>通过错误使用应用程序的身份认证和会话管理功能，<strong>攻击者能够破译密码</strong>、<strong>密钥</strong>或<strong>会话令牌</strong>，或利用其它开发缺陷来暂时性或永久性<strong>冒充其他用户身份</strong></p>
+<h4 id="攻击方式"><a href="#攻击方式" class="headerlink" title="攻击方式"></a>攻击方式</h4><ul>
+<li>凭证填充（撞库攻击）</li>
+<li>暴力破解或其他自动攻击</li>
+<li>默认的、弱的或众所周知的密码</li>
+<li>使用弱的或失效的验证凭证，忘记密码程序</li>
+<li>使用明文、加密或弱散列密码</li>
+<li>缺少或失效的多因素身份验证</li>
+<li>成功登录后不更新会话ID</li>
+<li>不正确地使会话ID失效。当用户不活跃时，用户会话或认证令牌（特别是单点登录（SSO）令牌）没有正确注销或失效</li>
+</ul>
+<h4 id="防止方式"><a href="#防止方式" class="headerlink" title="防止方式"></a>防止方式</h4><ul>
+<li>多因素身份验证：防止自动、凭证填充、暴力破解和被盗凭据再利用攻击</li>
+<li>执行弱密码检查：测试新或变更的密码，以纠正弱密码</li>
+<li>设置合适的密码长度、复杂性和循环策略</li>
+<li>确认注册、凭据恢复，通过对所有输出结果使用相同的消息，用以抵御账户枚举攻击</li>
+<li>限制或逐渐延迟<strong>失败的登录尝试</strong>。记录所有失败信息并在凭据填充、暴力破解或其他攻击被检测时提醒管理员</li>
+<li>使用服务器端安全的内置会话管理器，在登录后生成高度复杂的新随机会话ID，会话ID不能再URL中</li>
+</ul>
+<h2 id="A3：敏感信息泄露"><a href="#A3：敏感信息泄露" class="headerlink" title="A3：敏感信息泄露"></a>A3：敏感信息泄露</h2><h4 id="简介-2"><a href="#简介-2" class="headerlink" title="简介"></a>简介</h4><ul>
+<li><p>许多Web应用程序和API都无法正确保护敏感数据，例如：财务数据、医疗数据、个人敏感信息（PII）</p>
+</li>
+<li><p>攻击者可以通过窃取或修改未加密的数据来实施信用卡诈骗、身份盗窃或其他犯罪行为</p>
+</li>
+<li><p>未加密的敏感数据容易受到破坏，因此需要对敏感数据加密，包括：</p>
+<ul>
+<li>传输过程中的数据（是否明文传输）</li>
+<li>存储的数据（是否被加密）</li>
+<li>浏览器的交互数据</li>
+</ul>
+</li>
+</ul>
+<h4 id="案例"><a href="#案例" class="headerlink" title="案例"></a>案例</h4><ul>
+<li>应用程序加密数据库中的信用卡信息，但数据库设置为对信用卡表列的查询进行自动解密，使得SQL注入漏洞能够获得所有信用卡信息的明文</li>
+<li>需要身份验证的网页都没有使用SSL，攻击者只需要嗅探网络数据流，并窃取已验证者的会话cookie，然后利用cookie执行重放攻击并接管用户会话从而访问用户的隐私数据</li>
+<li>密码数据库使用unsalted的Hash算法。文件上传漏洞使黑客能够过去密码文件，所有unsalted哈希密码可通过彩虹表暴力破解方式破解</li>
+</ul>
+<h4 id="防止-1"><a href="#防止-1" class="headerlink" title="防止"></a>防止</h4><ul>
+<li>对系统处理、存储或传输的数据分类，并根据分类进行访问控制</li>
+<li>熟悉与敏感数据保护相关的法律和条例，并根据法规要求保护敏感数据</li>
+<li>对于没必要存放的、重要的敏感数据，应尽快清楚，或者通过PCIDSS（支付行业数据安全标准）标记或拦截</li>
+<li>确保存储的敏感数据被加密</li>
+<li>确保使用了最新的、强大的标准算法或密码、参数、协议和密钥，并且密钥管理到位</li>
+<li>确保传输过程中的数据被加密，如TLS。确保数据加密被强制执行，如HTTP严格安全传输协议（HSTS）</li>
+<li>禁止缓存包含敏感数据的响应</li>
+</ul>
+<h2 id="A4：XML外部实体（XXE）"><a href="#A4：XML外部实体（XXE）" class="headerlink" title="A4：XML外部实体（XXE）"></a>A4：XML外部实体（XXE）</h2><h4 id="简介-3"><a href="#简介-3" class="headerlink" title="简介"></a>简介</h4><p>XXE漏洞（XML外部实体注入攻击）：如果可以上传XML文档或在XML文档中添加恶意内容，通过易受攻击的代码、依赖项，攻击者就能够攻击含有缺陷的XML处理器。</p>
+<p>攻击者可以利用外部实体窃取使用URI的文件处理器的内部文件和共享文件、监听内部扫描端口、执行远程代码和实施拒绝服务攻击</p>
+<h4 id="XML"><a href="#XML" class="headerlink" title="XML"></a>XML</h4><ul>
+<li>可扩展标记语言</li>
+<li>类似HTML</li>
+<li>设计宗旨是传输数据，而非显示数据</li>
+<li>XML标签没有被预定义，需要自行定义标签</li>
+</ul>
+<h4 id="防止-2"><a href="#防止-2" class="headerlink" title="防止"></a>防止</h4><ul>
+<li>尽可能使用简单的数据格式（JSON），避免对敏感数据进行序列化</li>
+<li>及时修复或更新应用程序或操作系统使用的XML处理器和库</li>
+<li>在XML解析器中禁用XML外部实体和DTD进程</li>
+<li>在服务器端实施积极的（白名单）输入验证、过滤和清理</li>
+<li>验证XML或XSL文件上传功能是否使用XSD验证或其他类似验证方法来验证上传的XML文件</li>
+<li>使用SAST工具检测源代码中的部分XXE漏洞</li>
+<li>使用API安全网关、WAF检测、监控和防止XXE攻击</li>
+</ul>
+<h2 id="A5：失效的访问控制"><a href="#A5：失效的访问控制" class="headerlink" title="A5：失效的访问控制"></a>A5：失效的访问控制</h2><h4 id="简介-4"><a href="#简介-4" class="headerlink" title="简介"></a>简介</h4><p>未对用户实施恰当的访问控制。</p>
+<p>攻击者可以访问未经授权的功能或 数据：</p>
+<ul>
+<li>访问其他用户账户</li>
+<li>查看敏感文件</li>
+<li>修改其他用户的数据</li>
+<li>更改访问权限等</li>
+</ul>
+<h4 id="攻击场景举例"><a href="#攻击场景举例" class="headerlink" title="攻击场景举例"></a>攻击场景举例</h4><ul>
+<li><p>应用程序再访问账户信息的SQL调用中使用未经验证的数据：</p>
+</li>
+<li><pre><code>pstmt.setString(1,request.getParameter(&quot;acct&quot;));
+ResultSetresults=pstmt.executeQuery();
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">* 攻击者 知需修改“acct”参数即可发送想要的任何账号信息：</span><br><span class="line"></span><br><span class="line">*</span><br></pre></td></tr></table></figure>
+http://example.com/app/accountInfo?acc=notmyacct</code></pre></li>
+</ul>
+<h2 id="A6：安全配置错误"><a href="#A6：安全配置错误" class="headerlink" title="A6：安全配置错误"></a>A6：安全配置错误</h2><h4 id="简介-5"><a href="#简介-5" class="headerlink" title="简介"></a>简介</h4><ul>
+<li>最常见，通常包括<ul>
+<li>不安全的默认配置</li>
+<li>不完整的临时配置</li>
+<li>开源云存储</li>
+<li>错误的HTTP报头配置</li>
+<li>包含敏感信息的详细错误信息</li>
+</ul>
+</li>
+<li>不仅需要对操作系统、框架、库和应用程序进行安全配置，而且必须及时修补和升级</li>
+</ul>
+<h4 id="实例"><a href="#实例" class="headerlink" title="实例"></a>实例</h4><ul>
+<li>服务器管理员控制台自动安装后没有被删除，默认账户没有被改变。攻击者发现标准的管理员页面，通过 默认密码登录，从而接管服务器</li>
+<li>目录列表功能未被禁用。攻击者发现只需列出目录就可以找到服务器上的任意文件</li>
+<li>应用服务器配置允许堆栈跟踪返回给用户，暴露潜在的漏洞</li>
+<li>应用服务器自带的示例应用程序没有从 生产服务器中删除</li>
+</ul>
+<h2 id="A7：跨站脚本（XSS）"><a href="#A7：跨站脚本（XSS）" class="headerlink" title="A7：跨站脚本（XSS）"></a>A7：跨站脚本（XSS）</h2><h4 id="简介-6"><a href="#简介-6" class="headerlink" title="简介"></a>简介</h4><ul>
+<li>当网页中包含不受信任的、未经恰当验证或转义的数据，或使用可以创建HTML或JavaScript的浏览器API更新现有的网页时，会出现XSS缺陷</li>
+<li>攻击者能够在受害者的浏览器中执行脚本，并劫持用户会话、破坏网站或将用户重定向到恶意站点</li>
+</ul>
+<h2 id="A8：不安全的反序列化"><a href="#A8：不安全的反序列化" class="headerlink" title="A8：不安全的反序列化"></a>A8：不安全的反序列化</h2><h2 id="A9：使用含有已知漏洞的组件"><a href="#A9：使用含有已知漏洞的组件" class="headerlink" title="A9：使用含有已知漏洞的组件"></a>A9：使用含有已知漏洞的组件</h2><h4 id="使用含有已知漏洞的组件简介"><a href="#使用含有已知漏洞的组件简介" class="headerlink" title="使用含有已知漏洞的组件简介"></a>使用含有已知漏洞的组件简介</h4><ul>
+<li><p>使用组件开发的多数团队根本不了解其应用或API中使用的组件，更谈不上及时更新</p>
+</li>
+<li><p><font color="red">组件（库、框架和其他软件模块）拥有和应用程序相同的权限</font></p>
+</li>
+</ul>
+<h4 id="使用含有已知漏洞的组件后果"><a href="#使用含有已知漏洞的组件后果" class="headerlink" title="使用含有已知漏洞的组件后果"></a>使用含有已知漏洞的组件后果</h4><ul>
+<li>如果应用程序中含有已知漏洞的组件被攻击者利用，可能会造成严重的数据丢失或服务器接管</li>
+<li>使用含有已知漏洞的组件的应用程序和API可能会破坏应用程序防御、造成各种攻击并产生严重影响</li>
+</ul>
+<h4 id="应用程序脆弱性"><a href="#应用程序脆弱性" class="headerlink" title="应用程序脆弱性"></a>应用程序脆弱性</h4><ul>
+<li>不知道所有使用 的组件版本信息（包括服务端和客户端），包括直接使用的组件或其依赖的组件</li>
+<li>软件易受攻击，不再支持或者过时。包括：OS、Web服务器、应用程序服务器、数据库管理系统给（DBMS）、应用程序、API和所有的组件、运行环境和库</li>
+<li>不做漏洞扫描和订阅使用组件的安全公告</li>
+<li>不基于风险并及时修复或升级底层平台、框架和依赖库。很可能发生的情况：根据变更控制，每月或每季度进行升级，这使组织在这段时间内会受到已修复但未修补的漏洞和威胁</li>
+<li>工程师没有对更新的、升级的或打过补丁的组件进行兼容性测试</li>
+<li>没有对组件进行安全配置</li>
+</ul>
+<h2 id="A10：不足的日志记录和监控"><a href="#A10：不足的日志记录和监控" class="headerlink" title="A10：不足的日志记录和监控"></a>A10：不足的日志记录和监控</h2><h4 id="简介-7"><a href="#简介-7" class="headerlink" title="简介"></a>简介</h4><ul>
+<li>不足的日志记录和监控，以及事件响应缺失或无效的集成，使攻击者能够进一步攻击系统、保持持续性或转向更多系统，以及篡改、提取或销毁数据</li>
+<li>研究显示，缺陷被检测出的时间超过200天，且通常通过外部检测方检测，而不是通过内部流程或监控检测</li>
+</ul>
+<h4 id="导致不足的日志记录、检测、监控和响应的情况"><a href="#导致不足的日志记录、检测、监控和响应的情况" class="headerlink" title="导致不足的日志记录、检测、监控和响应的情况"></a>导致不足的日志记录、检测、监控和响应的情况</h4><ul>
+<li>未记录可审计性事件，如：登录、登录失败和高额交易</li>
+<li>告警和错误事件未能产生或产生不足的和不清晰的日志信息</li>
+<li>没有利用应用系统和API的日志信息来监控可疑活动</li>
+<li>日志信息仅在本地存储</li>
+<li>没有定义合理的告警阈值和制定响应处理流程</li>
+<li>渗透测试和使用工具（如ZAP）扫描没有触发告警</li>
+<li>对于实时或准实时的攻击，应用程序无法检测、处理和告警</li>
+</ul>
+<h4 id="开发人员"><a href="#开发人员" class="headerlink" title="开发人员"></a>开发人员</h4><h4 id="建立并使用可重复使用的安全流程和标准安全控制"><a href="#建立并使用可重复使用的安全流程和标准安全控制" class="headerlink" title="建立并使用可重复使用的安全流程和标准安全控制"></a>建立并使用可重复使用的安全流程和标准安全控制</h4><p><strong>应用程序安全需求</strong></p>
+<p>定义安全对该应用程序的意义</p>
+<p><strong>应用程序安全架构</strong></p>
+<p>与其费力去提升应用程序和接口的安全，不如在应用程序开发阶段就进行安全设计，更能节约成本</p>
+<p><strong>标准的安全控制</strong></p>
+<p>提供一套标准的安全控制会极大简化应用程序和接口的安全开发过程</p>
+<p><strong>安全开发生命周期</strong></p>
+<p>遵循应用程序开发流程</p>
+<p><strong>应用程序安全教育</strong></p>
+<p>为开发人员提供安全培训</p>
+<h4 id="建立持续性的应用安全测试"><a href="#建立持续性的应用安全测试" class="headerlink" title="建立持续性的应用安全测试"></a>建立持续性的应用安全测试</h4><p><strong>理解威胁模型</strong></p>
+<p>测试之前，了解企业中需要耗时的重要部分。优先级来源于威胁模型</p>
+<p><strong>理解SDLC</strong></p>
+<p>测试方法必须与软件开发流程（SDLC）中的人员、工具和流程高度匹配</p>
+<p><strong>测试策略</strong></p>
+<p>选择最简单、快速、准确的方法去验证每项需求</p>
+<p><strong>实现全面性和准确性</strong></p>
+<p>不需要一切都要立刻测试，先关注重要的方面，然后随着时间扩展全面性</p>
+<p><strong>体现报告的价值</strong></p>
+<p>有效于别人沟通，清楚描述漏洞的滥用风险，然后在某场景下实现展现攻击</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+                <a href="/2020/04/04/Web%E5%AE%89%E5%85%A8%E5%AD%A6%E4%B9%A0%E2%80%94%E2%80%94XSS%E6%94%BB%E5%87%BB/" rel="next" title="Web安全学习——XSS攻击">
+                  <i class="fa fa-chevron-left"></i> Web安全学习——XSS攻击
+                </a>
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+                <a href="/2020/04/05/Web%E5%AE%89%E5%85%A8%E5%AD%A6%E4%B9%A0%E2%80%94%E2%80%94%E5%BA%8F%E5%88%97%E5%8C%96%E5%92%8C%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/" rel="prev" title="Web安全学习——序列化和反序列化">
+                  Web安全学习——序列化和反序列化 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#A1：注入"><span class="nav-text">A1：注入</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#简介"><span class="nav-text">简介</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#防止"><span class="nav-text">防止</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#A2：失效的身份认证"><span class="nav-text">A2：失效的身份认证</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#简介-1"><span class="nav-text">简介</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#攻击方式"><span class="nav-text">攻击方式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#防止方式"><span class="nav-text">防止方式</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#A3：敏感信息泄露"><span class="nav-text">A3：敏感信息泄露</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#简介-2"><span class="nav-text">简介</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#案例"><span class="nav-text">案例</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#防止-1"><span class="nav-text">防止</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#A4：XML外部实体（XXE）"><span class="nav-text">A4：XML外部实体（XXE）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#简介-3"><span class="nav-text">简介</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#XML"><span class="nav-text">XML</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#防止-2"><span class="nav-text">防止</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#A5：失效的访问控制"><span class="nav-text">A5：失效的访问控制</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#简介-4"><span class="nav-text">简介</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#攻击场景举例"><span class="nav-text">攻击场景举例</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#A6：安全配置错误"><span class="nav-text">A6：安全配置错误</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#简介-5"><span class="nav-text">简介</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#实例"><span class="nav-text">实例</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#A7：跨站脚本（XSS）"><span class="nav-text">A7：跨站脚本（XSS）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#简介-6"><span class="nav-text">简介</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#A8：不安全的反序列化"><span class="nav-text">A8：不安全的反序列化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#A9：使用含有已知漏洞的组件"><span class="nav-text">A9：使用含有已知漏洞的组件</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#使用含有已知漏洞的组件简介"><span class="nav-text">使用含有已知漏洞的组件简介</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#使用含有已知漏洞的组件后果"><span class="nav-text">使用含有已知漏洞的组件后果</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#应用程序脆弱性"><span class="nav-text">应用程序脆弱性</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#A10：不足的日志记录和监控"><span class="nav-text">A10：不足的日志记录和监控</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#简介-7"><span class="nav-text">简介</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#导致不足的日志记录、检测、监控和响应的情况"><span class="nav-text">导致不足的日志记录、检测、监控和响应的情况</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#开发人员"><span class="nav-text">开发人员</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#建立并使用可重复使用的安全流程和标准安全控制"><span class="nav-text">建立并使用可重复使用的安全流程和标准安全控制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#建立持续性的应用安全测试"><span class="nav-text">建立持续性的应用安全测试</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="yzz"
+      src="/images/ame.jpg">
+  <p class="site-author-name" itemprop="name">yzz</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">44</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">yzz</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    <span title="站点总字数">286k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">4:20</span>
+</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/pisces.js"></script>
+<script src="/js/next-boot.js"></script>
+
+  <script defer src="/lib/three/three.min.js"></script>
+    <script defer src="/lib/three/canvas_lines.min.js"></script>
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

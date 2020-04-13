@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.5.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="命令行注入利用可以调用系统命令的web应用，通过构造特殊命令字符串的方式，把恶意代码输入一个编辑域(例如缺乏有效验证的输入框)来改变网页动态生成的内容，最终实现本应在服务端才能工作的系统命令。一个恶意黑客可以利用这种攻击方法来非法获取数据或者网络资源。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Web安全学习——命令行注入">
+<meta property="og:url" content="http:&#x2F;&#x2F;no-timing&#x2F;no-timing.github.io&#x2F;2020&#x2F;04&#x2F;11&#x2F;Web%E5%AE%89%E5%85%A8%E5%AD%A6%E4%B9%A0%E2%80%94%E2%80%94%E5%91%BD%E4%BB%A4%E8%A1%8C%E6%B3%A8%E5%85%A5&#x2F;index.html">
+<meta property="og:site_name" content="no-timing">
+<meta property="og:description" content="命令行注入利用可以调用系统命令的web应用，通过构造特殊命令字符串的方式，把恶意代码输入一个编辑域(例如缺乏有效验证的输入框)来改变网页动态生成的内容，最终实现本应在服务端才能工作的系统命令。一个恶意黑客可以利用这种攻击方法来非法获取数据或者网络资源。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;39131787&#x2F;79039770-1912ab00-7c16-11ea-859f-a633a00065cb.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;39131787&#x2F;79040067-7dcf0500-7c18-11ea-954f-6b9f52a7451f.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;39131787&#x2F;79040078-963f1f80-7c18-11ea-9c71-511f607b4e47.png">
+<meta property="og:updated_time" content="2020-04-13T07:30:32.459Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;39131787&#x2F;79039770-1912ab00-7c16-11ea-859f-a633a00065cb.png">
+
+<link rel="canonical" href="http://no-timing/no-timing.github.io/2020/04/11/Web%E5%AE%89%E5%85%A8%E5%AD%A6%E4%B9%A0%E2%80%94%E2%80%94%E5%91%BD%E4%BB%A4%E8%A1%8C%E6%B3%A8%E5%85%A5/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>Web安全学习——命令行注入 | no-timing</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">no-timing</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/no-timing" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://no-timing/no-timing.github.io/2020/04/11/Web%E5%AE%89%E5%85%A8%E5%AD%A6%E4%B9%A0%E2%80%94%E2%80%94%E5%91%BD%E4%BB%A4%E8%A1%8C%E6%B3%A8%E5%85%A5/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/ame.jpg">
+      <meta itemprop="name" content="yzz">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="no-timing">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Web安全学习——命令行注入
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-04-11 16:18:19" itemprop="dateCreated datePublished" datetime="2020-04-11T16:18:19+08:00">2020-04-11</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-04-13 15:30:32" itemprop="dateModified" datetime="2020-04-13T15:30:32+08:00">2020-04-13</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Web%E5%AE%89%E5%85%A8%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index">
+                    <span itemprop="name">Web安全学习</span>
+                  </a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>2.8k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>3 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h4 id="命令行注入"><a href="#命令行注入" class="headerlink" title="命令行注入"></a>命令行注入</h4><p>利用可以调用系统命令的web应用，通过构造特殊命令字符串的方式，把恶意代码输入一个编辑域(例如缺乏有效验证的输入框)来改变网页动态生成的内容，最终实现本应在服务端才能工作的系统命令。一个恶意黑客可以利用这种攻击方法来非法获取数据或者网络资源。</p><a id="more"></a>
+<p>命令注入攻击最初被关注到，是Shell命令注入攻击(所以最初也被称为Shell命令注入攻击)，由挪威一名程序员在1997年意外发现的。</p>
+<p><strong>常见拼接命令</strong></p>
+<ul>
+<li><strong>ipconfig</strong> 查看本地网络</li>
+<li><strong>net  user</strong>   查看系统用户</li>
+<li><strong>dir</strong>  查看当前目录</li>
+<li><strong>find</strong> 查找包含指定字符的行</li>
+<li><strong>whoami</strong> 查看系统当前有效用户名</li>
+</ul>
+<p><strong>&amp;，&amp;&amp;，|，||命令拼接符的区别</strong></p>
+<table>
+<thead>
+<tr>
+<th>A&amp;B</th>
+<th>拼接，A和B之间无制约关系</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>A&amp;&amp;B</strong></td>
+<td><strong>A执行成功，之后才会执行B</strong></td>
+</tr>
+<tr>
+<td><strong>A|B</strong></td>
+<td><strong>A的输出作为B的输入</strong></td>
+</tr>
+<tr>
+<td><strong>A||B</strong></td>
+<td><strong>A执行失败，之后才会执行B</strong></td>
+</tr>
+</tbody></table>
+<p><font color="red">注：由于&amp;在url中用于分隔参数所以在命令注入中需要转码为 %26 </font></p>
+<h4 id="DVWA实例"><a href="#DVWA实例" class="headerlink" title="DVWA实例"></a>DVWA实例</h4><ul>
+<li><strong>low</strong></li>
+</ul>
+<p><strong>源码</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">if</span>( <span class="keyword">isset</span>( $_POST[ <span class="string">'Submit'</span> ]  ) ) &#123;</span><br><span class="line">    <span class="comment">// Get input</span></span><br><span class="line">    $target = $_REQUEST[ <span class="string">'ip'</span> ];</span><br><span class="line">    <span class="comment">// Determine OS and execute the ping command.</span></span><br><span class="line">    <span class="keyword">if</span>( stristr( php_uname( <span class="string">'s'</span> ), <span class="string">'Windows NT'</span> ) ) &#123;</span><br><span class="line">        <span class="comment">// Windows</span></span><br><span class="line">        $cmd = shell_exec( <span class="string">'ping  '</span> . $target );</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// *nix</span></span><br><span class="line">        $cmd = shell_exec( <span class="string">'ping  -c 4 '</span> . $target );</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// Feedback for the end user</span></span><br><span class="line">    <span class="keyword">echo</span> <span class="string">"&lt;pre&gt;&#123;$cmd&#125;&lt;/pre&gt;"</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p> 输入会与’ping拼接在一起，然后当做命令执行 </p>
+<p><strong>相关函数</strong></p>
+<ul>
+<li><strong>stristr(string,search,before_search)</strong></li>
+</ul>
+<p>stristr函数搜索字符串在另一字符串中的第一次出现，返回字符串的剩余部分（从匹配点），如果未找到所搜索的字符串，则返回 FALSE。参数string规定被搜索的字符串，参数search规定要搜索的字符串（如果该参数是数字，则搜索匹配该数字对应的 ASCII 值的字符），可选参数before_true为布尔型，默认为“false” ，如果设置为 “true”，函数将返回 search 参数第一次出现之前的字符串部分。</p>
+<ul>
+<li><strong>php_uname(mode)</strong></li>
+</ul>
+<p>这个函数会返回运行php的操作系统的相关描述，参数mode可取值</p>
+<p>”a” （此为默认，包含序列”s n r v m”里的所有模式）</p>
+<p>”s ”（返回操作系统名称）</p>
+<p>”n”（返回主机名）</p>
+<p>”r”（返回版本名称）</p>
+<p>”v”（返回版本信息）             </p>
+<p> ”m”（返回机器类型）<br>可以看到，服务器通过判断操作系统执行不同ping命令，但是对ip参数并未做任何的过滤，导致了严重的命令注入漏洞。</p>
+<p><strong>漏洞利用</strong></p>
+<p>输入命令</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1&amp;&amp;ipconfig</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://user-images.githubusercontent.com/39131787/79039770-1912ab00-7c16-11ea-859f-a633a00065cb.png" alt="1"></p>
+<p>命令执行成功</p>
+<ul>
+<li><strong>Medium</strong></li>
+</ul>
+<p><strong>源码</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> </span><br><span class="line"><span class="keyword">if</span>( <span class="keyword">isset</span>( $_POST[ <span class="string">'Submit'</span> ]  ) ) &#123; </span><br><span class="line">    <span class="comment">// Get input </span></span><br><span class="line">    $target = $_REQUEST[ <span class="string">'ip'</span> ]; </span><br><span class="line">    <span class="comment">// Set blacklist </span></span><br><span class="line">    $substitutions = <span class="keyword">array</span>( </span><br><span class="line">        <span class="string">'&amp;&amp;'</span> =&gt; <span class="string">''</span>, </span><br><span class="line">        <span class="string">';'</span>  =&gt; <span class="string">''</span>, </span><br><span class="line">    ); </span><br><span class="line">    <span class="comment">// Remove any of the charactars in the array (blacklist). </span></span><br><span class="line">    $target = str_replace( array_keys( $substitutions ), $substitutions, $target );</span><br><span class="line">    <span class="comment">// Determine OS and execute the ping command. </span></span><br><span class="line">    <span class="keyword">if</span>( stristr( php_uname( <span class="string">'s'</span> ), <span class="string">'Windows NT'</span> ) ) &#123; </span><br><span class="line">        <span class="comment">// Windows </span></span><br><span class="line">        $cmd = shell_exec( <span class="string">'ping  '</span> . $target ); </span><br><span class="line">    &#125; </span><br><span class="line">    <span class="keyword">else</span> &#123; </span><br><span class="line">        <span class="comment">// *nix </span></span><br><span class="line">        $cmd = shell_exec( <span class="string">'ping  -c 4 '</span> . $target ); </span><br><span class="line">    &#125; </span><br><span class="line">    <span class="comment">// Feedback for the end user </span></span><br><span class="line">    <span class="keyword">echo</span> <span class="string">"&lt;pre&gt;&#123;$cmd&#125;&lt;/pre&gt;"</span>; </span><br><span class="line">&#125; </span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>和low级别相比，这里有几处过滤，将&amp;&amp;和;分别用空格代替，所以绕过的方法还挺多的</p>
+<ol>
+<li>使用&amp;</li>
+<li>使用&amp;;&amp;</li>
+</ol>
+<p>这里尝试第二种绕过方法，输入命令</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1 &amp;;&amp; ipconfig</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://user-images.githubusercontent.com/39131787/79040067-7dcf0500-7c18-11ea-954f-6b9f52a7451f.png" alt="2"></p>
+<ul>
+<li><strong>High</strong></li>
+</ul>
+<p><strong>源码</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> </span><br><span class="line"><span class="keyword">if</span>( <span class="keyword">isset</span>( $_POST[ <span class="string">'Submit'</span> ]  ) ) &#123; </span><br><span class="line">    <span class="comment">// Get input </span></span><br><span class="line">    $target = trim($_REQUEST[ <span class="string">'ip'</span> ]); </span><br><span class="line">    <span class="comment">// Set blacklist </span></span><br><span class="line">    $substitutions = <span class="keyword">array</span>( </span><br><span class="line">        <span class="string">'&amp;'</span>  =&gt; <span class="string">''</span>, </span><br><span class="line">        <span class="string">';'</span>  =&gt; <span class="string">''</span>, </span><br><span class="line">        <span class="string">'| '</span> =&gt; <span class="string">''</span>, </span><br><span class="line">        <span class="string">'-'</span>  =&gt; <span class="string">''</span>, </span><br><span class="line">        <span class="string">'$'</span>  =&gt; <span class="string">''</span>, </span><br><span class="line">        <span class="string">'('</span>  =&gt; <span class="string">''</span>, </span><br><span class="line">        <span class="string">')'</span>  =&gt; <span class="string">''</span>, </span><br><span class="line">        <span class="string">'`'</span>  =&gt; <span class="string">''</span>, </span><br><span class="line">        <span class="string">'||'</span> =&gt; <span class="string">''</span>, </span><br><span class="line">    ); </span><br><span class="line">    <span class="comment">// Remove any of the charactars in the array (blacklist). </span></span><br><span class="line">    $target = str_replace( array_keys( $substitutions ), $substitutions, $target );</span><br><span class="line">    <span class="comment">// Determine OS and execute the ping command. </span></span><br><span class="line">    <span class="keyword">if</span>( stristr( php_uname( <span class="string">'s'</span> ), <span class="string">'Windows NT'</span> ) ) &#123; </span><br><span class="line">        <span class="comment">// Windows </span></span><br><span class="line">        $cmd = shell_exec( <span class="string">'ping  '</span> . $target ); </span><br><span class="line">    &#125; ；</span><br><span class="line">    <span class="keyword">else</span> &#123; </span><br><span class="line">        <span class="comment">// *nix </span></span><br><span class="line">        $cmd = shell_exec( <span class="string">'ping  -c 4 '</span> . $target ); </span><br><span class="line">    &#125; </span><br><span class="line">    <span class="comment">// Feedback for the end user </span></span><br><span class="line">    <span class="keyword">echo</span> <span class="string">"&lt;pre&gt;&#123;$cmd&#125;&lt;/pre&gt;"</span>; </span><br><span class="line">&#125; </span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>观察源码，发现此级别依旧是黑名单过滤，只是过滤的增多了，黑名单看似过滤了所有的非法字符，但仔细观察到是把”| ”（注意这里|后有一个空格）替换为空字符，于是可以使用    ”|” 绕过。</p>
+<p>输入指令</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1 |ifconfig</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://user-images.githubusercontent.com/39131787/79040078-963f1f80-7c18-11ea-9c71-511f607b4e47.png" alt="3"></p>
+<p>绕过成功</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+                <a href="/2020/04/08/%E5%AE%89%E5%85%A8%E7%AC%94%E8%AF%95%E9%A2%98%E9%9B%86/" rel="next" title="安全笔试题集">
+                  <i class="fa fa-chevron-left"></i> 安全笔试题集
+                </a>
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+                <a href="/2020/04/12/TCP%E7%9A%84%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E4%B8%8E%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B/" rel="prev" title="TCP的三次握手与四次挥手">
+                  TCP的三次握手与四次挥手 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#命令行注入"><span class="nav-text">命令行注入</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#DVWA实例"><span class="nav-text">DVWA实例</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="yzz"
+      src="/images/ame.jpg">
+  <p class="site-author-name" itemprop="name">yzz</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">44</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">yzz</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    <span title="站点总字数">286k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">4:20</span>
+</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/pisces.js"></script>
+<script src="/js/next-boot.js"></script>
+
+  <script defer src="/lib/three/three.min.js"></script>
+    <script defer src="/lib/three/canvas_lines.min.js"></script>
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

