@@ -90,7 +90,9 @@
 <meta property="og:image" content="https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;39131787&#x2F;74800165-93593a00-530d-11ea-94c8-eab08eb477be.png">
 <meta property="og:image" content="https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;39131787&#x2F;74800168-9522fd80-530d-11ea-86f4-245d13fff04d.png">
 <meta property="og:image" content="https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;39131787&#x2F;74800170-96542a80-530d-11ea-9a2a-87adcdf03684.png">
-<meta property="og:updated_time" content="2020-04-04T06:55:14.814Z">
+<meta property="og:image" content="https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;39131787&#x2F;78857489-19674680-7a5c-11ea-8b29-f5a6ddab06c2.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;39131787&#x2F;78857769-e4a7bf00-7a5c-11ea-8476-e665a72a2466.png">
+<meta property="og:updated_time" content="2020-04-13T07:39:59.152Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;39131787&#x2F;74799823-a7e90280-530c-11ea-8c9d-61ed2949451a.png">
 
@@ -249,7 +251,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-04-04 14:55:14" itemprop="dateModified" datetime="2020-04-04T14:55:14+08:00">2020-04-04</time>
+                <time title="修改时间：2020-04-13 15:39:59" itemprop="dateModified" datetime="2020-04-13T15:39:59+08:00">2020-04-13</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -606,7 +608,7 @@
 <p><strong>2020-2-23</strong></p>
 <p>鸽了一个月多了，lei了lei了</p>
 <h4 id="Less-32-宽字节注入"><a href="#Less-32-宽字节注入" class="headerlink" title="Less-32-宽字节注入"></a>Less-32-宽字节注入</h4><p>[<strong>宽字节注入参考链接</strong>][<a href="https://www.cnblogs.com/Rain99-/p/10583406.html]" target="_blank" rel="noopener">https://www.cnblogs.com/Rain99-/p/10583406.html]</a></p>
-<p>32-1</p>
+<p><img src="https://user-images.githubusercontent.com/39131787/78857489-19674680-7a5c-11ea-8b29-f5a6ddab06c2.png" alt="32-1"></p>
 <p>后端源代码</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">check_addslashes</span><span class="params">($string)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    $string = preg_replace(<span class="string">'/'</span>. preg_quote(<span class="string">'\\'</span>) .<span class="string">'/'</span>, <span class="string">"\\\\\\"</span>, $string);          <span class="comment">//escape any backslash</span></span><br><span class="line">    $string = preg_replace(<span class="string">'/\'/i'</span>, <span class="string">'\\\''</span>, $string);                               <span class="comment">//escape single quote with a backslash</span></span><br><span class="line">    $string = preg_replace(<span class="string">'/\"/'</span>, <span class="string">"\\\""</span>, $string);                                <span class="comment">//escape double quote with a backslash</span></span><br><span class="line">    <span class="keyword">return</span> $string;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>($_GET[<span class="string">'id'</span>]))</span><br><span class="line">&#123;</span><br><span class="line">$id=check_addslashes($_GET[<span class="string">'id'</span>]);</span><br><span class="line"><span class="comment">//echo "The filtered request is :" .$id . "&lt;br&gt;";</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
@@ -645,7 +647,7 @@
 <p>还可以对数据库进行操作</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=1&apos;&apos;;insert into users(id,username,password) values(&apos;233&apos;,&apos;no-timing&apos;,&apos;no-timing&apos;)--+</span><br></pre></td></tr></table></figure>
 
-<p>38-1</p>
+<p><img src="https://user-images.githubusercontent.com/39131787/78857769-e4a7bf00-7a5c-11ea-8476-e665a72a2466.png" alt="38-1"></p>
 <h4 id="Less-39-堆叠查询"><a href="#Less-39-堆叠查询" class="headerlink" title="Less-39-堆叠查询"></a>Less-39-堆叠查询</h4><p> 同上一关，id不闭合</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=-1 union select 1,database(),3%23</span><br></pre></td></tr></table></figure>
 
