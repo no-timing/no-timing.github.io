@@ -52,12 +52,14 @@
   };
 </script>
 
-  <meta property="og:type" content="article">
+  <meta name="description" content="收录一下遇到的笔试题，希望每做一套都有收获，而不是盲目刷题。 小米2020运维工程师数据库事务特性 原子性 ​        原子性是指事务包含的所有操作要么全部成功，要么全部失败回滚，因此事务的操作如果成功就必须要完全应用到数据库，如果操作失败则不能对数据库有任何影响。">
+<meta property="og:type" content="article">
 <meta property="og:title" content="笔试题记">
 <meta property="og:url" content="http:&#x2F;&#x2F;no-timing&#x2F;no-timing.github.io&#x2F;2020&#x2F;04&#x2F;13&#x2F;%E7%AC%94%E8%AF%95%E9%A2%98%E8%AE%B0&#x2F;index.html">
 <meta property="og:site_name" content="no-timing">
+<meta property="og:description" content="收录一下遇到的笔试题，希望每做一套都有收获，而不是盲目刷题。 小米2020运维工程师数据库事务特性 原子性 ​        原子性是指事务包含的所有操作要么全部成功，要么全部失败回滚，因此事务的操作如果成功就必须要完全应用到数据库，如果操作失败则不能对数据库有任何影响。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2020-04-13T07:32:30.040Z">
+<meta property="og:updated_time" content="2020-04-15T12:05:42.056Z">
 <meta name="twitter:card" content="summary">
 
 <link rel="canonical" href="http://no-timing/no-timing.github.io/2020/04/13/%E7%AC%94%E8%AF%95%E9%A2%98%E8%AE%B0/">
@@ -207,10 +209,16 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2020-04-13 15:28:38 / 修改时间：15:32:30" itemprop="dateCreated datePublished" datetime="2020-04-13T15:28:38+08:00">2020-04-13</time>
+              <time title="创建时间：2020-04-13 15:28:38" itemprop="dateCreated datePublished" datetime="2020-04-13T15:28:38+08:00">2020-04-13</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-04-15 20:05:42" itemprop="dateModified" datetime="2020-04-15T20:05:42+08:00">2020-04-15</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="fa fa-folder-o"></i>
@@ -229,14 +237,14 @@
                 <i class="fa fa-file-word-o"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>0</span>
+              <span>3.6k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="fa fa-clock-o"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
+              <span>3 分钟</span>
             </span>
 
         </div>
@@ -248,7 +256,210 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        
+        <blockquote>
+<p>收录一下遇到的笔试题，希望每做一套都有收获，而不是盲目刷题。</p>
+</blockquote><h3 id="小米2020运维工程师"><a href="#小米2020运维工程师" class="headerlink" title="小米2020运维工程师"></a>小米2020运维工程师</h3><h4 id="数据库事务特性"><a href="#数据库事务特性" class="headerlink" title="数据库事务特性"></a>数据库事务特性</h4><ul>
+<li><strong>原子性</strong></li>
+</ul><p>​        原子性是指事务包含的所有操作要么全部成功，要么全部失败回滚，因此事务的操作如果成功就必须要完全应用到数据库，如果操作失败则不能对数据库有任何影响。 </p><a id="more"></a>
+
+
+<ul>
+<li><strong>一致性</strong></li>
+</ul>
+<p>​        一致性是指事务必须使数据库从一个一致性状态变换到另一个一致性状态，也就是说一个事务执行之前和执行之后都必须处于一致性状态。<br>​        拿转账来说，假设用户A和用户B两者的钱加起来一共是5000，那么不管A和B之间如何转账，转几次账，事务结束后两个用户的钱相加起来应该还得是5000，这就是事务的一致性。</p>
+<ul>
+<li><strong>隔离性</strong></li>
+</ul>
+<p>​        隔离性是当多个用户并发访问数据库时，比如操作同一张表时，数据库为每一个用户开启的事务，不能被其他事务的操作所干扰，多个并发事务之间要相互隔离。</p>
+<p>​        即要达到这么一种效果：对于任意两个并发的事务T1和T2，在事务T1看来，T2要么在T1开始之前就已经结束，要么在T1结束之后才开始，这样每个事务都感觉不到有其他事务在并发地执行。</p>
+<ul>
+<li><strong>持久性</strong></li>
+</ul>
+<p>​        持久性是指一个事务一旦被提交了，那么对数据库中的数据的改变就是永久性的，即便是在数据库系统遇到故障的情况下也不会丢失提交事务的操作。<br>​        例如我们在使用JDBC操作数据库时，在提交事务方法后，提示用户事务操作完成，当我们程序执行完成直到看到提示后，就可以认定事务以及正确提交，即使这时候数据库出现了问题，也必须要将我们的事务完全执行完成，否则就会造成我们看到提示事务处理完毕，但是数据库因为故障而没有执行事务的重大错误。 </p>
+<h4 id="HTTP协议请求类型"><a href="#HTTP协议请求类型" class="headerlink" title="HTTP协议请求类型"></a>HTTP协议请求类型</h4><ul>
+<li><strong>GET</strong>： 请求指定的页面信息，并返回实体主体。 </li>
+<li><strong>HEAD</strong>： 只请求页面的首部。 </li>
+<li><strong>POST</strong>： 请求服务器接受所指定的文档作为对所标识的URI的新的从属实体。 </li>
+<li><strong>PUT</strong>： 从客户端向服务器传送的数据取代指定的文档的内容。</li>
+<li><strong>DELETE</strong>： 请求服务器删除指定的页面。 </li>
+<li><strong>OPTIONS</strong>： 允许客户端查看服务器的性能。 </li>
+<li><strong>TRACE</strong>： 请求服务器在响应中的实体主体部分返回所得到的内容。 </li>
+<li><strong>PATCH</strong>： 实体中包含一个表，表中说明与该URI所表示的原内容的区别。 </li>
+<li><strong>MOVE</strong>： 请求服务器将指定的页面移至另一个网络地址。 </li>
+<li><strong>COPY</strong>： 请求服务器将指定的页面拷贝至另一个网络地址。 </li>
+<li><strong>LINK</strong>： 请求服务器建立链接关系。 </li>
+<li><strong>UNLINK</strong>： 断开链接关系。 </li>
+<li><strong>WRAPPED</strong>： 允许客户端发送经过封装的请求。 </li>
+<li><strong>Extension-mothed</strong>：在不改动协议的前提下，可增加另外的方法。</li>
+</ul>
+<h4 id="当每类资源只有一个个体时"><a href="#当每类资源只有一个个体时" class="headerlink" title="当每类资源只有一个个体时"></a>当每类资源只有一个个体时</h4><ul>
+<li><strong>死锁必有环</strong></li>
+<li><strong>被锁者一定全在环中</strong></li>
+<li><strong>有环必死锁</strong></li>
+</ul>
+<h4 id="提高前后端交互中cookie安全性方法"><a href="#提高前后端交互中cookie安全性方法" class="headerlink" title="提高前后端交互中cookie安全性方法"></a>提高前后端交互中cookie安全性方法</h4><ul>
+<li><strong>服务端对Cookie内容加密</strong></li>
+<li><strong>设置HttpOnly</strong></li>
+<li><strong>对Cookie设置有效时间</strong></li>
+</ul>
+<h4 id="常用的企业级监控方案"><a href="#常用的企业级监控方案" class="headerlink" title="常用的企业级监控方案"></a>常用的企业级监控方案</h4><ul>
+<li><strong>Zabbix</strong></li>
+<li>*<em>Nagios XL *</em></li>
+<li><strong>GroundWork</strong> </li>
+<li><strong>Hyperic</strong></li>
+<li><strong>NetXMS</strong> </li>
+<li><strong>Pandora FMS</strong></li>
+<li><strong>OpenNMS</strong></li>
+<li><strong>Open Falcon</strong></li>
+</ul>
+<p>[<strong>常用的17个运维监控系统</strong>][<a href="https://blog.csdn.net/t8116189520/article/details/81737694]" target="_blank" rel="noopener">https://blog.csdn.net/t8116189520/article/details/81737694]</a></p>
+<h4 id="软件目前提供了权限控制功能"><a href="#软件目前提供了权限控制功能" class="headerlink" title="软件目前提供了权限控制功能"></a>软件目前提供了权限控制功能</h4><ul>
+<li><strong>Redis</strong></li>
+<li><strong>memcache</strong></li>
+<li><strong>MongoDB</strong></li>
+<li><strong>MySQL</strong></li>
+</ul>
+<h4 id="Python2和Python3区别"><a href="#Python2和Python3区别" class="headerlink" title="Python2和Python3区别"></a>Python2和Python3区别</h4><ul>
+<li>Python3使用 print 必须要以小括号包裹打印内容</li>
+<li>Python2中使用ascii编码，Python3中使用utf-8编码</li>
+<li>Python2中是raw_input()函数，Python3中是input()函数</li>
+<li>Python2中range(1,10)返回列表，Python3中返回迭代器</li>
+</ul>
+<h4 id="零散的题目"><a href="#零散的题目" class="headerlink" title="零散的题目"></a>零散的题目</h4><ol>
+<li><p>数据库集群、数据库和表的关系：<strong>一个数据库集群可以管理多个数据库，一个数据库只能包含一个表</strong></p>
+</li>
+<li><p>Linux下查看服务器本地网络链接各种状态的命令：<strong>netstat</strong></p>
+</li>
+<li><p>一个虚拟存储器系统中,主存容量为200MB，辅存容量为800MB，地址寄存器有36位，那么该系统中，虚存的最大容量：<strong>64GB</strong>   计算方法：<strong>Min(内存+外存，2^地址寄存器位数)</strong> </p>
+</li>
+<li><p>若一台计算机的内存为128MB，则交换分区的大小通常是 <strong>256MB</strong>  计算方法： *<em>当内存小于2g，交换空间大小为内存的两倍，当内存大于2g，交换空间大小为内存大小加上2g *</em></p>
+</li>
+<li><p>在可变分区存储管理中，最优适应分配算法要求对空闲区表项按<strong>尺寸从小到大</strong>进行排列</p>
+</li>
+</ol>
+<h3 id="哔哩哔哩2019安全工程师"><a href="#哔哩哔哩2019安全工程师" class="headerlink" title="哔哩哔哩2019安全工程师"></a>哔哩哔哩2019安全工程师</h3><h4 id="转义函数"><a href="#转义函数" class="headerlink" title="转义函数"></a>转义函数</h4><ul>
+<li><strong>escapeshellarg</strong>：把字符串转码为可以在 shell 命令里使用的参数 </li>
+<li><strong>htmlentities</strong>：将字符转换为 HTML 转义字符</li>
+<li><strong>escapeshellcmd</strong>：shell 元字符转义</li>
+<li><strong>mysql_real_escape_string</strong>：转义 SQL 语句中使用的字符串中的特殊字符，并考虑到连接的当前字符集</li>
+</ul>
+<h4 id="获得域名解析的IP地址命令"><a href="#获得域名解析的IP地址命令" class="headerlink" title="获得域名解析的IP地址命令"></a>获得域名解析的IP地址命令</h4><ul>
+<li><strong>dig</strong>： 主要用来从 DNS 域名服务器查询主机地址信息 </li>
+<li><strong>ping</strong>： 可以检查网络是否连通，可以很好地帮助我们分析和判定网络故障。（输入域名地址会解析成IP地址） </li>
+<li><strong>nslookup</strong>： 可以指定查询的类型,可以查到DNS记录的生存时间还可以指定使用哪个DNS服务器进行解释 </li>
+</ul>
+<h4 id="可以抓取THHP数据包的工具"><a href="#可以抓取THHP数据包的工具" class="headerlink" title="可以抓取THHP数据包的工具"></a>可以抓取THHP数据包的工具</h4><ul>
+<li><strong>Burpsuite</strong></li>
+<li><strong>Wiresark</strong></li>
+<li><strong>Fiddler</strong></li>
+</ul>
+<h4 id="应急响应中常用查看信息的命令"><a href="#应急响应中常用查看信息的命令" class="headerlink" title="应急响应中常用查看信息的命令"></a>应急响应中常用查看信息的命令</h4><ul>
+<li><strong>ps -aux</strong></li>
+<li><strong>w</strong></li>
+<li><strong>more .bash_history</strong></li>
+</ul>
+<h4 id="WAF"><a href="#WAF" class="headerlink" title="WAF"></a>WAF</h4><p>WAF是通过预设规则来拦截异常请求，</p>
+<p>例如：</p>
+<ol>
+<li>xss payload中的敏感字符&lt; &gt;，和敏感语句script等</li>
+<li>sql语句中敏感字符 ’ 和select等</li>
+<li>cc攻击发起的大量异常数据包</li>
+</ol>
+<p>而弱口令密码是则是正常请求，例如密码123456被攻击者猜测到并以此密码通过验证，waf则无法拦截 </p>
+<h4 id="浏览器同源策略"><a href="#浏览器同源策略" class="headerlink" title="浏览器同源策略"></a>浏览器同源策略</h4><p><strong>定义</strong></p>
+<p>如果两个 URL 的 <a href="https://developer.mozilla.org/zh-CN/docs/Glossary/Protocol" target="_blank" rel="noopener">protocol</a>、<a href="https://developer.mozilla.org/en-US/docs/Glossary/port" target="_blank" rel="noopener">port</a> (如果有指定的话)和 <a href="https://developer.mozilla.org/en-US/docs/Glossary/host" target="_blank" rel="noopener">host</a> 都相同的话，则这两个 URL 是<em>同源</em>。这个方案也被称为“协议/主机/端口元组”，或者直接是 “元组”。（“元组” 是指一组项目构成的整体，双重/三重/四重/五重/等的通用形式）。 </p>
+<p>下表给出了与 URL <code>http://store.company.com/dir/page.html</code> 的源进行对比的示例: </p>
+<table>
+<thead>
+<tr>
+<th>URL</th>
+<th>结果</th>
+<th>原因</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>http://store.company.com/dir2/other.html</code></td>
+<td>同源</td>
+<td>只有路径不同</td>
+</tr>
+<tr>
+<td><code>http://store.company.com/dir/inner/another.html</code></td>
+<td>同源</td>
+<td>只有路径不同</td>
+</tr>
+<tr>
+<td><code>https://store.company.com/secure.html</code></td>
+<td>失败</td>
+<td>协议不同</td>
+</tr>
+<tr>
+<td><code>http://store.company.com:81/dir/etc.html</code></td>
+<td>失败</td>
+<td>端口不同 ( <code>http://</code> 默认端口是80)</td>
+</tr>
+<tr>
+<td><code>http://news.company.com/dir/other.html</code></td>
+<td>失败</td>
+<td>主机不同</td>
+</tr>
+</tbody></table>
+<h4 id="可以清理自己在服务器上操作的指令历史记录的指令"><a href="#可以清理自己在服务器上操作的指令历史记录的指令" class="headerlink" title="可以清理自己在服务器上操作的指令历史记录的指令"></a>可以清理自己在服务器上操作的指令历史记录的指令</h4><ul>
+<li><strong>history -c</strong></li>
+<li>*<em>echo &gt; ~/.bash_history *</em></li>
+</ul>
+<h4 id="零散的题目-1"><a href="#零散的题目-1" class="headerlink" title="零散的题目"></a>零散的题目</h4><ol>
+<li><p>可以执行的CSRF漏洞的修复方案：<strong>检测HTTP referer字段同域</strong></p>
+</li>
+<li><p>如果 <a href="https://security.bilibili.com/" target="_blank" rel="noopener">https://security.bilibili.com/</a> 存在 git 源码泄露你应该访问ur：l<strong><a href="https://security.bilibili.com/.git/config" target="_blank" rel="noopener">https://security.bilibili.com/.git/config</a></strong>进行验证</p>
+</li>
+<li><p>有一个一句话木马的代码为&lt;?php $x=$_GET[‘cmd’]; @eval(“$x;”);?&gt;, 那他的密码是：<strong>cmd</strong></p>
+</li>
+<li><p>aslr是对抗<strong>缓冲区溢出漏洞</strong>攻击的技术</p>
+</li>
+<li><p>当访问web网站某个资源不存在时，返回的HTTP状态码是<strong>404</strong></p>
+</li>
+<li><p>Flask 的修饰器 @login_requried 的作用是<strong>验证登录权限</strong></p>
+</li>
+</ol>
+<h3 id="浩鲸科技2019综合类"><a href="#浩鲸科技2019综合类" class="headerlink" title="浩鲸科技2019综合类"></a>浩鲸科技2019综合类</h3><h4 id="uname和who"><a href="#uname和who" class="headerlink" title="uname和who"></a>uname和who</h4><ul>
+<li><p><strong>uname</strong></p>
+<ul>
+<li>-a或–all 　显示全部的信息。</li>
+<li>-m或–machine 　显示电脑类型。</li>
+<li>-n或-nodename 　显示在网络上的主机名称。</li>
+<li>-r或–release 　显示操作系统的发行编号。</li>
+<li>-s或–sysname 　显示操作系统名称。</li>
+<li>-v 　显示操作系统的版本。</li>
+<li>–help 　显示帮助。</li>
+<li>–version 　显示版本信息。 </li>
+</ul>
+</li>
+<li><p><strong>who</strong></p>
+<ul>
+<li>who 可以查询当前登录在系统上的登录用户的信息</li>
+<li>who am i 等同于 who -m，只打印执行该命令的登录用户的信息</li>
+<li>whoami 可以查询当前有效用户的名字 </li>
+</ul>
+</li>
+</ul>
+<h4 id="find和grep"><a href="#find和grep" class="headerlink" title="find和grep"></a>find和grep</h4><ul>
+<li><strong>find</strong> 根据<strong>文件的属性</strong>进行查找，如文件名，文件大小，所有者，所属组，是否为空，访问时间，修改时间等。  </li>
+<li><strong>grep</strong>是根据<strong>文件的内容进行</strong>查找，会对文件的每一行按照给定的模式(patter)进行匹配查找。 </li>
+</ul>
+<h4 id="tar-gz"><a href="#tar-gz" class="headerlink" title="*.tar.gz"></a>*.tar.gz</h4><ul>
+<li>*<em>压缩文件： <code>tar -czvf file.tar.gz file</code> *</em></li>
+<li>*<em>解压文件： <code>tar -xzvf file.tar.gz</code> *</em></li>
+</ul>
+<h4 id="linux查看文件的命令"><a href="#linux查看文件的命令" class="headerlink" title="linux查看文件的命令"></a>linux查看文件的命令</h4><ul>
+<li>more只能用空格键下翻，不小心翻多了就没法反回看 </li>
+<li>less具有more相同的功能，同时支持方向键和前翻页，后翻页滚屏。 </li>
+<li>cat直接查看文件内容</li>
+</ul>
+<h4 id="数据库文件"><a href="#数据库文件" class="headerlink" title="数据库文件"></a>数据库文件</h4><ul>
+<li><strong>主数据文件扩展名：.mdf</strong></li>
+<li><strong>次数据文件扩展名：.ndf</strong></li>
+</ul>
+
     </div>
 
     
@@ -269,6 +480,9 @@
             <span class="post-nav-divider"></span>
 
             <div class="post-nav-prev post-nav-item">
+                <a href="/2020/04/13/%E6%B8%97%E9%80%8F%E5%B7%A5%E5%85%B7%E2%80%94%E2%80%94Nmap/" rel="prev" title="渗透工具——Namp">
+                  渗透工具——Namp <i class="fa fa-chevron-right"></i>
+                </a>
             </div>
           </div>
       </footer>
@@ -307,6 +521,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#小米2020运维工程师"><span class="nav-text">小米2020运维工程师</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#数据库事务特性"><span class="nav-text">数据库事务特性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#HTTP协议请求类型"><span class="nav-text">HTTP协议请求类型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#当每类资源只有一个个体时"><span class="nav-text">当每类资源只有一个个体时</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#提高前后端交互中cookie安全性方法"><span class="nav-text">提高前后端交互中cookie安全性方法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#常用的企业级监控方案"><span class="nav-text">常用的企业级监控方案</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#软件目前提供了权限控制功能"><span class="nav-text">软件目前提供了权限控制功能</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Python2和Python3区别"><span class="nav-text">Python2和Python3区别</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#零散的题目"><span class="nav-text">零散的题目</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#哔哩哔哩2019安全工程师"><span class="nav-text">哔哩哔哩2019安全工程师</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#转义函数"><span class="nav-text">转义函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#获得域名解析的IP地址命令"><span class="nav-text">获得域名解析的IP地址命令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#可以抓取THHP数据包的工具"><span class="nav-text">可以抓取THHP数据包的工具</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#应急响应中常用查看信息的命令"><span class="nav-text">应急响应中常用查看信息的命令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#WAF"><span class="nav-text">WAF</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#浏览器同源策略"><span class="nav-text">浏览器同源策略</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#可以清理自己在服务器上操作的指令历史记录的指令"><span class="nav-text">可以清理自己在服务器上操作的指令历史记录的指令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#零散的题目-1"><span class="nav-text">零散的题目</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#浩鲸科技2019综合类"><span class="nav-text">浩鲸科技2019综合类</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#uname和who"><span class="nav-text">uname和who</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#find和grep"><span class="nav-text">find和grep</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#tar-gz"><span class="nav-text">*.tar.gz</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#linux查看文件的命令"><span class="nav-text">linux查看文件的命令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#数据库文件"><span class="nav-text">数据库文件</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -322,14 +537,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">44</span>
+          <span class="site-state-item-count">48</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-count">8</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
   </nav>
@@ -363,12 +578,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-area-chart"></i>
     </span>
-    <span title="站点总字数">286k</span>
+    <span title="站点总字数">337k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">4:20</span>
+    <span title="站点阅读时长">5:07</span>
 </div>
 
 

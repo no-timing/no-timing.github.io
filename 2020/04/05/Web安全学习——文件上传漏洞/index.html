@@ -64,7 +64,7 @@
 <meta property="og:image" content="https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;39131787&#x2F;75601299-ba292480-5af4-11ea-86a3-0bbbaf5e8573.png">
 <meta property="og:image" content="https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;39131787&#x2F;75601346-27d55080-5af5-11ea-8e14-cfdfbeb55637.png">
 <meta property="og:image" content="https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;39131787&#x2F;78498701-7de58580-777e-11ea-853d-88364f1e3d8b.png">
-<meta property="og:updated_time" content="2020-04-13T07:30:17.947Z">
+<meta property="og:updated_time" content="2020-04-16T03:36:18.477Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;39131787&#x2F;75346921-a73b0800-58da-11ea-8b4a-0c9110f197bc.png">
 
@@ -223,7 +223,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-04-13 15:30:17" itemprop="dateModified" datetime="2020-04-13T15:30:17+08:00">2020-04-13</time>
+                <time title="修改时间：2020-04-16 11:36:18" itemprop="dateModified" datetime="2020-04-16T11:36:18+08:00">2020-04-16</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -330,11 +330,13 @@
 <h4 id="条件竞争"><a href="#条件竞争" class="headerlink" title="条件竞争"></a>条件竞争</h4><p>如果开发者设置的是先上传文件进行保存，在验证文件，如果不通过则删除文件。这样就可以利用批量提交请求，使其服务器端在删除文件之前执行木马。（和删除文件进行竞争，利用删除文件时间差）。 </p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>($_POST[<span class="string">'submit'</span>]))&#123;</span><br><span class="line">    $ext_arr = <span class="keyword">array</span>(<span class="string">'jpg'</span>,<span class="string">'png'</span>,<span class="string">'gif'</span>);</span><br><span class="line">    $file_name = $_FILES[<span class="string">'upload_file'</span>][<span class="string">'name'</span>];</span><br><span class="line">    $temp_file = $_FILES[<span class="string">'upload_file'</span>][<span class="string">'tmp_name'</span>];</span><br><span class="line">    $file_ext = substr($file_name,strrpos($file_name,<span class="string">"."</span>)+<span class="number">1</span>);</span><br><span class="line">    $upload_file = $UPLOAD_ADDR . <span class="string">'/'</span> . $file_name;</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">if</span>(move_uploaded_file($temp_file, $upload_file))&#123;</span><br><span class="line">        <span class="keyword">if</span>(in_array($file_ext,$ext_arr))&#123;</span><br><span class="line">             $img_path = $UPLOAD_ADDR . <span class="string">'/'</span>. rand(<span class="number">10</span>, <span class="number">99</span>).date(<span class="string">"YmdHis"</span>).<span class="string">"."</span>.$file_ext;</span><br><span class="line">             rename($upload_file, $img_path);</span><br><span class="line">             $is_upload = <span class="keyword">true</span>;</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            $msg = <span class="string">"只允许上传.jpg|.png|.gif类型文件！"</span>;</span><br><span class="line">            unlink($upload_file);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        $msg = <span class="string">'上传失败！'</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h4 id="解析漏洞"><a href="#解析漏洞" class="headerlink" title="解析漏洞"></a>解析漏洞</h4><p>如果WEB服务器存在解析漏洞，那么也可以利用文件解析漏洞绕过文件上传限制。<br>IIS6.0文件解析漏洞</p>
+<h4 id="解析漏洞"><a href="#解析漏洞" class="headerlink" title="解析漏洞"></a>解析漏洞</h4><p>如果WEB服务器存在解析漏洞，那么也可以利用文件解析漏洞绕过文件上传限制。</p>
+<p><strong>IIS6.0文件解析漏洞</strong></p>
 <p><strong>目录解析漏洞</strong>：</p>
 <p>xx.asp/xx.jpg     服务器会把xx.asp目录下的文件解析成asp文件</p>
 <p><strong>文件解析漏洞</strong>：</p>
-<p>xx.asp;.jpg    服务器默认不解析;后的内容，因此xx.asp;.jpg 变成了xx.asp文件了<br>IIS7/7.5文件按解析漏洞</p>
+<p>xx.asp;.jpg    服务器默认不解析;后的内容，因此xx.asp;.jpg 变成了xx.asp文件</p>
+<p><strong>IIS7/7.5文件按解析漏洞</strong></p>
 <p>IS7/7.5在Fast-CGI运行模式下,在一个文件路径(/xx.jpg)后面加上/xx.php会将/xx.jpg/xx.php 解析为 php 文件。<br><img src="https://user-images.githubusercontent.com/39131787/78498701-7de58580-777e-11ea-853d-88364f1e3d8b.png" alt="1"></p>
 <p><strong>Apache文件解析漏洞</strong></p>
 <p>低版本的Apache解析文件的规则是从右到左开始判断的，如果遇到后缀名为不可解析的，就在往左判断。利用这个特性，可以上传如xx.php.a。</p>
@@ -423,14 +425,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">44</span>
+          <span class="site-state-item-count">48</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-count">8</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
   </nav>
@@ -464,12 +466,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-area-chart"></i>
     </span>
-    <span title="站点总字数">286k</span>
+    <span title="站点总字数">337k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">4:20</span>
+    <span title="站点阅读时长">5:07</span>
 </div>
 
 

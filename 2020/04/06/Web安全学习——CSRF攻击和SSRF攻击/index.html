@@ -65,7 +65,16 @@
 <meta property="og:image" content="https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;39131787&#x2F;78530852-fd269800-7816-11ea-855b-3b1fdfdac5be.png">
 <meta property="og:image" content="https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;39131787&#x2F;78530862-00218880-7817-11ea-88ee-40bac3bef894.png">
 <meta property="og:image" content="https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;39131787&#x2F;78530868-0152b580-7817-11ea-9fbd-12ec8f58e87f.png">
-<meta property="og:updated_time" content="2020-04-13T07:30:07.175Z">
+<meta property="og:image" content="https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;39131787&#x2F;79413999-1defaa00-7fdc-11ea-9173-feb06c9bd326.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;39131787&#x2F;79414002-1f20d700-7fdc-11ea-87a3-249bd0612d8f.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;39131787&#x2F;79414124-67d89000-7fdc-11ea-872a-1842144ea2dc.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;39131787&#x2F;79414038-2ea02000-7fdc-11ea-9dc2-ca451b513858.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;39131787&#x2F;79414018-234cf480-7fdc-11ea-97f4-ed50ac8923eb.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;39131787&#x2F;79414021-2516b800-7fdc-11ea-9178-de6b03a8848f.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;39131787&#x2F;79414024-2647e500-7fdc-11ea-873d-789e93b2002f.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;39131787&#x2F;79414027-27791200-7fdc-11ea-8283-ac5fb098fe93.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;39131787&#x2F;79414031-2942d580-7fdc-11ea-8f4f-28697cbe3834.png">
+<meta property="og:updated_time" content="2020-04-16T04:19:02.410Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;39131787&#x2F;78530842-fa2ba780-7816-11ea-83f4-32599ae70a4d.png">
 
@@ -224,7 +233,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-04-13 15:30:07" itemprop="dateModified" datetime="2020-04-13T15:30:07+08:00">2020-04-13</time>
+                <time title="修改时间：2020-04-16 12:19:02" itemprop="dateModified" datetime="2020-04-16T12:19:02+08:00">2020-04-16</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -244,14 +253,14 @@
                 <i class="fa fa-file-word-o"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>8k</span>
+              <span>13k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="fa fa-clock-o"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>7 分钟</span>
+              <span>12 分钟</span>
             </span>
 
         </div>
@@ -464,6 +473,87 @@
 <li>黑名单内网IP，避免应用被用来获取内网数据</li>
 <li>禁用不需要的协议，仅使用HTTP和HTTPS请求，可以防止类似于file://、gopher://、ftp://等引起的问题</li>
 </ul>
+<h4 id="DVWA之CSRF实践"><a href="#DVWA之CSRF实践" class="headerlink" title="DVWA之CSRF实践"></a>DVWA之CSRF实践</h4><ul>
+<li><strong>low</strong></li>
+</ul>
+<p><img src="https://user-images.githubusercontent.com/39131787/79413999-1defaa00-7fdc-11ea-9173-feb06c9bd326.png" alt="7"></p>
+<p><strong>源码</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>( <span class="keyword">isset</span>( $_GET[ <span class="string">'Change'</span> ] ) ) &#123;</span><br><span class="line">    <span class="comment">// 获取用户的输入</span></span><br><span class="line">    $pass_new  = $_GET[ <span class="string">'password_new'</span> ];</span><br><span class="line">    $pass_conf = $_GET[ <span class="string">'password_conf'</span> ];</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 确认两次输入的密码是否相同，相同就更新数据库内的信息</span></span><br><span class="line">    <span class="keyword">if</span>( $pass_new == $pass_conf ) &#123;</span><br><span class="line">        <span class="comment">// 以下两段代码都是防止SQL注入</span></span><br><span class="line">        $pass_new = ((<span class="keyword">isset</span>($GLOBALS[<span class="string">"___mysqli_ston"</span>]) &amp;&amp; is_object($GLOBALS[<span class="string">"___mysqli_ston"</span>])) ? mysqli_real_escape_string($GLOBALS[<span class="string">"___mysqli_ston"</span>],  $pass_new ) : ((trigger_error(<span class="string">"[MySQLConverterToo] Fix the mysql_escape_string() call! This code does not work."</span>, E_USER_ERROR)) ? <span class="string">""</span> : <span class="string">""</span>));</span><br><span class="line">        $pass_new = md5( $pass_new );</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 更新数据库内的信息</span></span><br><span class="line">        $insert = <span class="string">"UPDATE `users` SET password = '$pass_new' WHERE user = '"</span> . dvwaCurrentUser() . <span class="string">"';"</span>;</span><br><span class="line">        $result = mysqli_query($GLOBALS[<span class="string">"___mysqli_ston"</span>],  $insert ) <span class="keyword">or</span> <span class="keyword">die</span>( <span class="string">'&lt;pre&gt;'</span> . ((is_object($GLOBALS[<span class="string">"___mysqli_ston"</span>])) ? mysqli_error($GLOBALS[<span class="string">"___mysqli_ston"</span>]) : (($___mysqli_res = mysqli_connect_error()) ? $___mysqli_res : <span class="keyword">false</span>)) . <span class="string">'&lt;/pre&gt;'</span> );</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 修改成功，返回信息给用户</span></span><br><span class="line">        <span class="keyword">echo</span> <span class="string">"&lt;pre&gt;Password Changed.&lt;/pre&gt;"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// 两次输入的密码不一样，返回错误信息</span></span><br><span class="line">        <span class="keyword">echo</span> <span class="string">"&lt;pre&gt;Passwords did not match.&lt;/pre&gt;"</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    ((is_null($___mysqli_res = mysqli_close($GLOBALS[<span class="string">"___mysqli_ston"</span>]))) ? <span class="keyword">false</span> : $___mysqli_res);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>可以看到，服务器收到修改密码的请求后，会检查参数password_new与password_conf是否相同，如果相同，就会修改密码，并没有任何的防CSRF机制（当然服务器对请求的发送者是做了身份验证的，是检查的cookie，只是这里的代码没有体现= =）。 </p>
+<p><strong>攻击方法</strong></p>
+<ol>
+<li>构造链接</li>
+</ol>
+<p><a href="http://127.0.0.1/DVWA/vulnerabilities/csrf/?password_new=admin&amp;password_conf=admin&amp;Change=Change#" target="_blank" rel="noopener">http://127.0.0.1/DVWA/vulnerabilities/csrf/?password_new=admin&amp;password_conf=admin&amp;Change=Change#</a></p>
+<p>当受害者点击了这个链接，他的密码就会被改成admin</p>
+<p><img src="https://user-images.githubusercontent.com/39131787/79414002-1f20d700-7fdc-11ea-87a3-249bd0612d8f.png" alt="8"></p>
+<p>但这种方法非常低级，一眼就能看出来，需要注意的是，CSRF最关键的是利用受害者的cookie向服务器发送伪造请求，所以如果受害者之前用Chrome浏览器登录的这个系统，而用搜狗浏览器点击这个链接，攻击是不会触发的，因为搜狗浏览器并不能利用Chrome浏览器的cookie，所以会自动跳转到登录界面。</p>
+<ol start="2">
+<li>短链接</li>
+</ol>
+<p>操作链接：<a href="https://dwz.cn/" target="_blank" rel="noopener">https://dwz.cn/</a></p>
+<p>可以使用该网站将真实的URL隐藏起来，但由于本地搭的环境，域名服务器是ip所以无法生成相应的短链接，虽然利用了短链接隐藏url，但受害者最终还是会看到密码修改成功的页面，所以这种攻击方法也并不高明。 </p>
+<ol start="3">
+<li>构造攻击页面</li>
+</ol>
+<p>实攻击场景下，这种方法需要事先在公网上传一个攻击页面，诱骗受害者去访问，真正能够在受害者不知情的情况下完成CSRF攻击。这里为了方便演示，就在本地写一个test.html，下面是具体代码。 </p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">"http://127.0.0.1/dvwa/vulnerabilities/csrf/?password_new=hack&amp;password_conf=hack&amp;Change=Change#"</span> <span class="attr">border</span>=<span class="string">"0"</span> <span class="attr">style</span>=<span class="string">"display:none;"</span>/&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">h1</span>&gt;</span>404<span class="tag">&lt;<span class="name">h1</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">h2</span>&gt;</span>file not found.<span class="tag">&lt;<span class="name">h2</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>当受害者访问test.html时，会误认为是自己点击的是一个失效的url，但实际上已经遭受了CSRF攻击，密码已经被修改为了hack。</p>
+<p><img src="https://user-images.githubusercontent.com/39131787/79414124-67d89000-7fdc-11ea-872a-1842144ea2dc.png" alt="9"></p>
+<ul>
+<li><strong>Medium</strong></li>
+</ul>
+<p><strong>源码</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>( <span class="keyword">isset</span>( $_GET[ <span class="string">'Change'</span> ] ) ) &#123;</span><br><span class="line">    <span class="comment">// 检查请求的来源</span></span><br><span class="line">    <span class="keyword">if</span>( stripos( $_SERVER[ <span class="string">'HTTP_REFERER'</span> ] ,$_SERVER[ <span class="string">'SERVER_NAME'</span> ]) !== <span class="keyword">false</span> ) &#123;</span><br><span class="line">        <span class="comment">// 获取用户输入</span></span><br><span class="line">        $pass_new  = $_GET[ <span class="string">'password_new'</span> ];</span><br><span class="line">        $pass_conf = $_GET[ <span class="string">'password_conf'</span> ];</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 以下代码和low级差不多</span></span><br><span class="line">        <span class="keyword">if</span>( $pass_new == $pass_conf ) &#123;</span><br><span class="line">            <span class="comment">// They do!</span></span><br><span class="line">            $pass_new = ((<span class="keyword">isset</span>($GLOBALS[<span class="string">"___mysqli_ston"</span>]) &amp;&amp; is_object($GLOBALS[<span class="string">"___mysqli_ston"</span>])) ? mysqli_real_escape_string($GLOBALS[<span class="string">"___mysqli_ston"</span>],  $pass_new ) : ((trigger_error(<span class="string">"[MySQLConverterToo] Fix the mysql_escape_string() call! This code does not work."</span>, E_USER_ERROR)) ? <span class="string">""</span> : <span class="string">""</span>));</span><br><span class="line">            $pass_new = md5( $pass_new );</span><br><span class="line"></span><br><span class="line">            <span class="comment">// Update the database</span></span><br><span class="line">            $insert = <span class="string">"UPDATE `users` SET password = '$pass_new' WHERE user = '"</span> . dvwaCurrentUser() . <span class="string">"';"</span>;</span><br><span class="line">            $result = mysqli_query($GLOBALS[<span class="string">"___mysqli_ston"</span>],  $insert ) <span class="keyword">or</span> <span class="keyword">die</span>( <span class="string">'&lt;pre&gt;'</span> . ((is_object($GLOBALS[<span class="string">"___mysqli_ston"</span>])) ? mysqli_error($GLOBALS[<span class="string">"___mysqli_ston"</span>]) : (($___mysqli_res = mysqli_connect_error()) ? $___mysqli_res : <span class="keyword">false</span>)) . <span class="string">'&lt;/pre&gt;'</span> );</span><br><span class="line"></span><br><span class="line">            <span class="comment">// Feedback for the user</span></span><br><span class="line">            <span class="keyword">echo</span> <span class="string">"&lt;pre&gt;Password Changed.&lt;/pre&gt;"</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">// Issue with passwords matching</span></span><br><span class="line">            <span class="keyword">echo</span> <span class="string">"&lt;pre&gt;Passwords did not match.&lt;/pre&gt;"</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// Didn't come from a trusted source</span></span><br><span class="line">        <span class="keyword">echo</span> <span class="string">"&lt;pre&gt;That request didn't look correct.&lt;/pre&gt;"</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    ((is_null($___mysqli_res = mysqli_close($GLOBALS[<span class="string">"___mysqli_ston"</span>]))) ? <span class="keyword">false</span> : $___mysqli_res);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>相关函数</strong></p>
+<p><strong>stripos() 函数</strong></p>
+<p><strong>作用</strong>： 查找字符串在另一字符串中第一次出现的位置（不区分大小写） </p>
+<p><strong>语法</strong>：stripos(string,find,start)</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><em>string</em></td>
+<td>必需。规定要搜索的字符串。</td>
+</tr>
+<tr>
+<td><em>find</em></td>
+<td>必需。规定要查找的字符。</td>
+</tr>
+<tr>
+<td><em>start</em></td>
+<td>可选。规定开始搜索的位置。</td>
+</tr>
+</tbody></table>
+<p>可以看到，该函数在HTTP_REFERER中搜索SERVER_NAME，其中HTTP_REFERER表示http包头中的Referer参数的值，表示来源地址，而SERVER_NAME表示http包头中的Host参数，表示要访问的主机名。</p>
+<p><img src="https://user-images.githubusercontent.com/39131787/79414038-2ea02000-7fdc-11ea-9dc2-ca451b513858.png" alt="10"></p>
+<p><strong>攻击方法</strong></p>
+<p>过滤规则是http包头的Referer参数的值当中必须包含有主机名（这里是127.0.0.1），我们可以将攻击页面命名为127.0.0.1.html就可以绕过</p>
+<p><img src="https://user-images.githubusercontent.com/39131787/79414018-234cf480-7fdc-11ea-97f4-ed50ac8923eb.png" alt="11"></p>
+<p>密码修改成功</p>
+<p><img src="https://user-images.githubusercontent.com/39131787/79414021-2516b800-7fdc-11ea-9178-de6b03a8848f.png" alt="12"></p>
+<ul>
+<li><strong>High</strong></li>
+</ul>
+<p><strong>源码</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>( <span class="keyword">isset</span>( $_GET[ <span class="string">'Change'</span> ] ) ) &#123;</span><br><span class="line">    <span class="comment">// 检查token</span></span><br><span class="line">    checkToken( $_REQUEST[ <span class="string">'user_token'</span> ], $_SESSION[ <span class="string">'session_token'</span> ], <span class="string">'index.php'</span> );</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Get input</span></span><br><span class="line">    $pass_new  = $_GET[ <span class="string">'password_new'</span> ];</span><br><span class="line">    $pass_conf = $_GET[ <span class="string">'password_conf'</span> ];</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Do the passwords match?</span></span><br><span class="line">    <span class="keyword">if</span>( $pass_new == $pass_conf ) &#123;</span><br><span class="line">        <span class="comment">// They do!</span></span><br><span class="line">        $pass_new = ((<span class="keyword">isset</span>($GLOBALS[<span class="string">"___mysqli_ston"</span>]) &amp;&amp; is_object($GLOBALS[<span class="string">"___mysqli_ston"</span>])) ? mysqli_real_escape_string($GLOBALS[<span class="string">"___mysqli_ston"</span>],  $pass_new ) : ((trigger_error(<span class="string">"[MySQLConverterToo] Fix the mysql_escape_string() call! This code does not work."</span>, E_USER_ERROR)) ? <span class="string">""</span> : <span class="string">""</span>));</span><br><span class="line">        $pass_new = md5( $pass_new );</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Update the database</span></span><br><span class="line">        $insert = <span class="string">"UPDATE `users` SET password = '$pass_new' WHERE user = '"</span> . dvwaCurrentUser() . <span class="string">"';"</span>;</span><br><span class="line">        $result = mysqli_query($GLOBALS[<span class="string">"___mysqli_ston"</span>],  $insert ) <span class="keyword">or</span> <span class="keyword">die</span>( <span class="string">'&lt;pre&gt;'</span> . ((is_object($GLOBALS[<span class="string">"___mysqli_ston"</span>])) ? mysqli_error($GLOBALS[<span class="string">"___mysqli_ston"</span>]) : (($___mysqli_res = mysqli_connect_error()) ? $___mysqli_res : <span class="keyword">false</span>)) . <span class="string">'&lt;/pre&gt;'</span> );</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Feedback for the user</span></span><br><span class="line">        <span class="keyword">echo</span> <span class="string">"&lt;pre&gt;Password Changed.&lt;/pre&gt;"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// Issue with passwords matching</span></span><br><span class="line">        <span class="keyword">echo</span> <span class="string">"&lt;pre&gt;Passwords did not match.&lt;/pre&gt;"</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    ((is_null($___mysqli_res = mysqli_close($GLOBALS[<span class="string">"___mysqli_ston"</span>]))) ? <span class="keyword">false</span> : $___mysqli_res);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 生成token</span></span><br><span class="line">generateSessionToken();</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>可以看到，High级别的代码加入了Anti-CSRF token机制，用户每次访问改密页面时，服务器会返回一个随机的token，向服务器发起请求时，需要提交token参数，而服务器在收到请求时，会优先检查token，只有token正确，才会处理客户端的请求。</p>
+<p><strong>攻击方法</strong></p>
+<p>利用bp的插件CSRF Token Tracker绕过token验证</p>
+<p><img src="https://user-images.githubusercontent.com/39131787/79414024-2647e500-7fdc-11ea-873d-789e93b2002f.png" alt="13"></p>
+<p>设置参数</p>
+<p><img src="https://user-images.githubusercontent.com/39131787/79414027-27791200-7fdc-11ea-8283-ac5fb098fe93.png" alt="14"></p>
+<p>抓包</p>
+<p><img src="https://user-images.githubusercontent.com/39131787/79414031-2942d580-7fdc-11ea-8f4f-28697cbe3834.png" alt="15"></p>
+<p>发现此时的token值已经变为我们设置的token值，直接执行就修改密码成功了。</p>
 
     </div>
 
@@ -526,7 +616,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#CSRF"><span class="nav-text">CSRF</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#CSRF简介"><span class="nav-text">CSRF简介</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#攻击原理"><span class="nav-text">攻击原理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#实例"><span class="nav-text">实例</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#CSRF的防御"><span class="nav-text">CSRF的防御</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SSRF"><span class="nav-text">SSRF</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#SSRF简介"><span class="nav-text">SSRF简介</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#SSRF用途"><span class="nav-text">SSRF用途</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#SSRF实例"><span class="nav-text">SSRF实例</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#从URL关键字中寻找SSRF"><span class="nav-text">从URL关键字中寻找SSRF</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#绕过方式"><span class="nav-text">绕过方式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#SSRF防御"><span class="nav-text">SSRF防御</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#CSRF"><span class="nav-text">CSRF</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#CSRF简介"><span class="nav-text">CSRF简介</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#攻击原理"><span class="nav-text">攻击原理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#实例"><span class="nav-text">实例</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#CSRF的防御"><span class="nav-text">CSRF的防御</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SSRF"><span class="nav-text">SSRF</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#SSRF简介"><span class="nav-text">SSRF简介</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#SSRF用途"><span class="nav-text">SSRF用途</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#SSRF实例"><span class="nav-text">SSRF实例</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#从URL关键字中寻找SSRF"><span class="nav-text">从URL关键字中寻找SSRF</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#绕过方式"><span class="nav-text">绕过方式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#SSRF防御"><span class="nav-text">SSRF防御</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#DVWA之CSRF实践"><span class="nav-text">DVWA之CSRF实践</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -542,14 +632,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">44</span>
+          <span class="site-state-item-count">48</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-count">8</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
   </nav>
@@ -583,12 +673,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-area-chart"></i>
     </span>
-    <span title="站点总字数">286k</span>
+    <span title="站点总字数">337k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">4:20</span>
+    <span title="站点阅读时长">5:07</span>
 </div>
 
 
